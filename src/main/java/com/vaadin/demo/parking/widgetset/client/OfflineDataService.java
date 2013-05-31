@@ -17,7 +17,7 @@ import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 public class OfflineDataService {
 
     private static final String LOCALSTORAGE_PREFIX = "VST_";
-    private static final String OBSCOUNT2_KEY = LOCALSTORAGE_PREFIX
+    private static final String TICKETCOUNT_KEY = LOCALSTORAGE_PREFIX
             + "obscount";
 
     public interface Callback {
@@ -65,67 +65,47 @@ public class OfflineDataService {
 
     public static void localStoreTicket(Ticket ticket) {
         StorageMap s = new StorageMap(Storage.getLocalStorageIfSupported());
-        String obscount = s.get(OBSCOUNT2_KEY);
+        String ticketCount = s.get(TICKETCOUNT_KEY);
         int id;
-        if (obscount == null) {
+        if (ticketCount == null) {
             id = 0;
-            obscount = "" + 1;
-            s.put(OBSCOUNT2_KEY, obscount);
+            ticketCount = "" + 1;
+            s.put(TICKETCOUNT_KEY, ticketCount);
         } else {
-            id = Integer.parseInt(obscount);
+            id = Integer.parseInt(ticketCount);
         }
-        s.put(LOCALSTORAGE_PREFIX + id, ticket.toString());
+        s.put(LOCALSTORAGE_PREFIX + id, ticket.serialize());
         id++;
-        s.put(OBSCOUNT2_KEY, "" + id);
+        s.put(TICKETCOUNT_KEY, "" + id);
     }
 
-    public static void localStoreObservation(Observation obs) {
+    public static int getStoredTicketCount() {
+        int result = 0;
         StorageMap s = new StorageMap(Storage.getLocalStorageIfSupported());
-        String obscount = s.get(OBSCOUNT2_KEY);
-        int id;
-        if (obscount == null) {
-            id = 0;
-            obscount = "" + 1;
-            s.put(OBSCOUNT2_KEY, obscount);
-        } else {
-            id = Integer.parseInt(obscount);
+        String ticketCount = s.get(TICKETCOUNT_KEY);
+        if (ticketCount != null) {
+            result = Integer.parseInt(ticketCount);
         }
-        s.put(LOCALSTORAGE_PREFIX + id, obs.toString());
-        id++;
-        s.put(OBSCOUNT2_KEY, "" + id);
+        return result;
     }
 
-    public static int getStoredObservations() {
+    public static List<Ticket> getAndResetLocallyStoredTickets() {
+        ArrayList<Ticket> al = new ArrayList<Ticket>();
         StorageMap s = new StorageMap(Storage.getLocalStorageIfSupported());
-        String obscount = s.get(OBSCOUNT2_KEY);
-        if (obscount == null) {
-            return 0;
-        }
-        return Integer.parseInt(obscount);
-    }
-
-    public static List<Observation> getAndResetLocallyStoredObservations() {
-        ArrayList<Observation> al = new ArrayList<Observation>();
-        StorageMap s = new StorageMap(Storage.getLocalStorageIfSupported());
-        String obscount = s.get(OBSCOUNT2_KEY);
+        String obscount = s.get(TICKETCOUNT_KEY);
         if (obscount != null) {
             int c = Integer.parseInt(obscount);
             for (int i = 0; i < c; i++) {
                 String key = LOCALSTORAGE_PREFIX + i;
                 String json = s.get(key);
-                Observation fromJSON = Observation.deserialize(json);
+                Ticket fromJSON = Ticket.deserialize(json);
                 al.add(fromJSON);
                 s.remove(key);
             }
             s.remove(obscount);
         }
-        s.put(OBSCOUNT2_KEY, "" + 0);
+        s.put(TICKETCOUNT_KEY, "" + 0);
         return al;
-    }
-
-    public static List<Ticket> getAndResetLocallyStoredTickets() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

@@ -42,6 +42,7 @@ import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.demo.parking.widgetset.client.ParkingOfflineConnector;
+import com.vaadin.demo.parking.widgetset.client.TicketViewConnector;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 
 /**
@@ -86,6 +87,7 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
         usedConnectors.add(UploadConnector.class.getName());
         usedConnectors.add(VerticalComponentGroupConnector.class.getName());
         usedConnectors.add(ParkingOfflineConnector.class.getName());
+        usedConnectors.add(TicketViewConnector.class.getName());
         usedConnectors.add(WindowConnector.class.getName());
 
     }
@@ -119,7 +121,6 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
          * 
          * If the application has big components which are rarely used or not on
          * the initial views, it is best to load those widgets lazily.
-         * 
          */
         return LoadStyle.EAGER;
     }

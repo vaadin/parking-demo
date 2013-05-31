@@ -11,9 +11,9 @@ import com.vaadin.data.Container;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.model.Observation;
 import com.vaadin.demo.parking.model.ObservationDB;
-import com.vaadin.demo.parking.model.Location;
 import com.vaadin.demo.parking.model.Species;
 import com.vaadin.demo.parking.util.Translations;
+import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ThemeResource;
@@ -37,8 +37,7 @@ public class LatestObservations extends NavigationView implements ClickListener 
         protected String formatPropertyValue(Object rowId, Object colId,
                 com.vaadin.data.Property<?> property) {
             if (colId.equals("location")) {
-                Location value2 = (Location) property
-                        .getValue();
+                Location value2 = (Location) property.getValue();
                 return value2.getName();
             } else if (colId.equals("species")) {
                 Species species = (Species) property.getValue();
@@ -91,6 +90,7 @@ public class LatestObservations extends NavigationView implements ClickListener 
         setLeftComponent(showObservations);
 
         table.addItemClickListener(new ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 Observation o = (Observation) event.getItemId();
                 showObservationDetails(o);
@@ -111,12 +111,13 @@ public class LatestObservations extends NavigationView implements ClickListener 
         table.setContainerDataSource(observationContainer);
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         if (addObservation == event.getButton()) {
             Popover popover = new Popover();
             popover.setSizeFull();
             popover.setModal(false);
-            popover.setContent(new AddObservationView(null, null));
+            popover.setContent(new TicketView());
             UI.getCurrent().addWindow(popover);
         } else if (showObservations == event.getButton()) {
             Popover popover = new Popover();

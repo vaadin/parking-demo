@@ -1,7 +1,7 @@
 package com.vaadin.demo.parking.widgetset.client;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
@@ -31,6 +32,7 @@ import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VDateField;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextField;
+import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
 
@@ -49,11 +51,17 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private FlowPanel panel;
     private Image image;
 
-    private void buildUi(final List<Species> birds) {
+    private VTabBar tabBar;
+
+    public TicketViewWidget() {
+        buildUi();
+    }
+
+    private void buildUi() {
         addStyleName("v-window");
         addStyleName("v-touchkit-offlinemode");
 
-        VTabBar tabBar = new VTabBar();
+        tabBar = new VTabBar();
         setWidget(tabBar);
         tabBar.getElement().getStyle().setPosition(Position.STATIC);
         tabBar.setHeight("100%");
@@ -105,7 +113,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         showRestartButton();
 
         navigationView.setContent(panel);
-
         tabBar.setToolbar(buildFakeToolbar());
 
         setShadowEnabled(false);
@@ -117,18 +124,33 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private void saveTicket() {
         Ticket ticket = new Ticket();
-        ticket.setTimeStamp(timeField.getCurrentDate());
+
+        Location location = new Location();
+        location.setLatitude(0.0);
+        location.setLongitude(0.0);
+        location.setName("Origo");
+        ticket.setLocation(location);
+
+        // ticket.setTimeStamp(timeField.getCurrentDate());
+        ticket.setTimeStamp(new Date());
         ticket.setRegisterPlateNumber(vehicleIdField.getText());
+
+        ticket.setViolation(Violation.valueOf(violationField
+                .getValue(violationField.getSelectedIndex())));
 
         Canvas canvas = Canvas.createIfSupported();
         canvas.getContext2d().drawImage(ImageElement.as(image.getElement()), 0,
                 0);
         ticket.setImageData(canvas.toDataUrl("image/jpeg"));
+
+        ticket.setNotes("test notes");
+
         if (isNetworkOnline() && listener != null) {
             listener.persistTickets(Arrays.asList(ticket));
         } else {
             OfflineDataService.localStoreTicket(ticket);
         }
+
     }
 
     private Widget buildInformationLayout() {
@@ -208,6 +230,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                                                                           var src = URL.createObjectURL(event.target.files[0]);
                                                                           widget.@com.vaadin.demo.parking.widgetset.client.TicketViewWidget::loadPhoto(Ljava/lang/String;)(src);
                                                                           }
+                                                                          }
+                                                                          
+                                                                          if(!("url" in window) && ("webkitURL" in window)) {
+                                                                          window.URL = window.webkitURL;   
                                                                           }
                                                                           }-*/;
 
@@ -295,16 +321,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     @Override
     public void activate(ActivationEvent event) {
-        /*
-         * OfflineDataService has async api that returns available species from
-         * a cached resources.
-         */
-        OfflineDataService.getSpecies(new OfflineDataService.Callback() {
-            @Override
-            public void setSpecies(final List<Species> birds) {
-                buildUi(birds);
-            }
-        });
+
     }
 
     @Override
@@ -313,7 +330,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     public interface TicketViewWidgetListener {
-        void persistTickets(Collection<Ticket> tickets);
+        void persistTickets(List<Ticket> tickets);
+    }
+
+    public void setTicketViewWidgetListener(TicketViewWidgetListener listener) {
+        this.listener = listener;
+        tabBar.setToolbar(new SimplePanel());
     }
 
 }

@@ -18,11 +18,10 @@ import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.model.ClassificationItem;
 import com.vaadin.demo.parking.model.Observation;
 import com.vaadin.demo.parking.model.ObservationDB;
-import com.vaadin.demo.parking.model.Location;
 import com.vaadin.demo.parking.model.Species;
-import com.vaadin.demo.parking.ui.AddObservationView.ObservationAddedCallback;
 import com.vaadin.demo.parking.util.Translations;
 import com.vaadin.demo.parking.util.WikiImageProxy;
+import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
@@ -57,8 +56,7 @@ import com.vaadin.ui.UI;
  * 
  */
 @SuppressWarnings("serial")
-public class SpeciesView extends NavigationView implements
-        Button.ClickListener, ObservationAddedCallback {
+public class SpeciesView extends NavigationView implements Button.ClickListener {
 
     private final Species species;
     private final Button addObservation = new Button(null, this);
@@ -228,15 +226,15 @@ public class SpeciesView extends NavigationView implements
              */
             Popover popover = new Popover();
             popover.setSizeFull();
-            popover.setContent(new AddObservationView(species, this));
+            popover.setContent(new TicketView());
             UI.getCurrent().addWindow(popover);
         }
     }
 
-    @Override
-    public void observationAdded(Observation observation) {
-        Bounds addObservations = addObservations(null, observation);
-        map.zoomToExtent(addObservations);
-    }
+    // @Override
+    // public void observationAdded(Observation observation) {
+    // Bounds addObservations = addObservations(null, observation);
+    // map.zoomToExtent(addObservations);
+    // }
 
 }

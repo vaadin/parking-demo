@@ -13,14 +13,13 @@ import com.vaadin.ui.TabSheet.Tab;
  */
 public class MainTabsheet extends TabBarView {
 
-    private MapView mapView;
-    private LatestObservations latestObservations;
-    private ClassificationHierarchy classificationHierarchy;
+    private final MapView mapView;
+    private final TicketView ticketView;
+    private final ClassificationHierarchy classificationHierarchy;
 
     public MainTabsheet() {
 
-        ResourceBundle tr = Translations.get(ParkingUI.getApp()
-                .getLocale());
+        ResourceBundle tr = Translations.get(ParkingUI.getApp().getLocale());
 
         /*
          * Populate main views
@@ -29,9 +28,9 @@ public class MainTabsheet extends TabBarView {
         Tab tab = addTab(classificationHierarchy);
         tab.setStyleName("birdtab");
         tab.setCaption(tr.getString("Aves"));
-        
-        latestObservations = new LatestObservations();
-        tab = addTab(latestObservations);
+
+        ticketView = new TicketView();
+        tab = addTab(ticketView);
         tab.setStyleName("observationstab");
         tab.setCaption(tr.getString("Observations"));
         mapView = new MapView();
@@ -51,17 +50,17 @@ public class MainTabsheet extends TabBarView {
 
     }
 
-    /**
-     * Latest observation view needs to do some cleanup to let garbage collector
-     * to do its job. This is due to our simple in memory "service layer"
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#detach()
-     */
-    @Override
-    public void detach() {
-        super.detach();
-        latestObservations.cleanup();
-    }
+    // /**
+    // * Latest observation view needs to do some cleanup to let garbage
+    // collector
+    // * to do its job. This is due to our simple in memory "service layer"
+    // *
+    // * @see com.vaadin.ui.AbstractComponentContainer#detach()
+    // */
+    // @Override
+    // public void detach() {
+    // super.detach();
+    // }
 
     public MapView getMapView() {
         return mapView;

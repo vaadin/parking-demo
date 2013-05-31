@@ -13,13 +13,17 @@ import com.vaadin.ui.AbstractComponent;
  * implements FormFieldFactory that return pre created fields based on the
  * property key.
  */
-@SuppressWarnings("serial")
-public class TicketView extends AbstractComponent implements TicketViewServerRpc {
+public class TicketView extends AbstractComponent implements
+        TicketViewServerRpc {
+
+    public TicketView() {
+        setSizeFull();
+        registerRpc(this);
+    }
 
     @Override
     public void persistTickets(List<Ticket> tickets) {
-        // TODO Auto-generated method stub
-
+        System.out.println(tickets.size());
     }
 
 }

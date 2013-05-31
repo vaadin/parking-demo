@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.demo.parking.ParkingUI;
+import com.vaadin.demo.parking.widgetset.client.model.Location;
 
 public class Observation implements Serializable {
     private Species species;

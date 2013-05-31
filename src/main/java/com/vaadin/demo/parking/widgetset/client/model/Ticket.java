@@ -3,15 +3,13 @@ package com.vaadin.demo.parking.widgetset.client.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.vaadin.demo.parking.model.Location;
-import com.vaadin.demo.parking.model.ViolationType;
-
 public class Ticket implements Serializable {
     private Location location;
-    private String registerPlateNumber;
     private Date timeStamp;
+    private String registerPlateNumber;
+    private Violation violation;
+
     private String imageData;
-    private ViolationType violationType;
     private String notes;
 
     public Location getLocation() {
@@ -22,6 +20,14 @@ public class Ticket implements Serializable {
         this.location = location;
     }
 
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
     public String getRegisterPlateNumber() {
         return registerPlateNumber;
     }
@@ -30,12 +36,12 @@ public class Ticket implements Serializable {
         this.registerPlateNumber = registerPlateNumber;
     }
 
-    public Date getTimeStamp() {
-        return timeStamp;
+    public Violation getViolation() {
+        return violation;
     }
 
-    public void setTimeStamp(Date timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setViolation(Violation violation) {
+        this.violation = violation;
     }
 
     public String getImageData() {
@@ -46,14 +52,6 @@ public class Ticket implements Serializable {
         this.imageData = imageData;
     }
 
-    public ViolationType getViolationType() {
-        return violationType;
-    }
-
-    public void setViolationType(ViolationType violationType) {
-        this.violationType = violationType;
-    }
-
     public String getNotes() {
         return notes;
     }
@@ -62,4 +60,31 @@ public class Ticket implements Serializable {
         this.notes = notes;
     }
 
+    private final static String delimiter = "<ticket-delimiter>";
+
+    public String serialize() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(location.serialize() + delimiter);
+        sb.append(timeStamp.getTime() + delimiter);
+        sb.append(registerPlateNumber + delimiter);
+        sb.append(violation.name() + delimiter);
+        sb.append(imageData + delimiter);
+        sb.append(notes + delimiter);
+        return sb.toString();
+    }
+
+    public static Ticket deserialize(String str) {
+        Ticket result = null;
+        if (str != null) {
+            result = new Ticket();
+            String[] split = str.split(delimiter);
+            result.setLocation(Location.deserialize(split[0]));
+            result.setTimeStamp(new Date(Long.parseLong(split[1])));
+            result.setRegisterPlateNumber(split[2]);
+            result.setViolation(Violation.valueOf(split[3]));
+            result.setImageData(split[4]);
+            result.setNotes(split[5]);
+        }
+        return result;
+    }
 }

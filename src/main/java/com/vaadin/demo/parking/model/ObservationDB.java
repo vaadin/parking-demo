@@ -17,6 +17,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.demo.parking.util.Translations;
+import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.ui.UI;
 
 /**
