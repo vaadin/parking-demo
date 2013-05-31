@@ -14,7 +14,6 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -32,32 +31,27 @@ import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VDateField;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextField;
+import com.vaadin.client.ui.VUpload;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
 
 public class TicketViewWidget extends VOverlay implements OfflineMode,
         RepeatingCommand {
-    // TODO: Parking
     private VTextField locationField;
     private VDateField timeField;
     private VTextField vehicleIdField;
     private ListBox violationField;
-    private VButton addTicketButton;
+    private final VButton addTicketButton;
 
     private TicketViewWidgetListener listener;
 
-    private Label networkStatus;
-    private FlowPanel panel;
+    private final FlowPanel panel;
     private Image image;
 
-    private VTabBar tabBar;
+    private final VTabBar tabBar;
 
     public TicketViewWidget() {
-        buildUi();
-    }
-
-    private void buildUi() {
         addStyleName("v-window");
         addStyleName("v-touchkit-offlinemode");
 
@@ -102,15 +96,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         p.add(addTicketButton);
 
         panel.add(p);
-
-        Label label = new Label("Unsynchronized observations");
-        label.setStyleName("v-label-grey-title");
-        panel.add(label);
-        p = new VerticalComponentGroupWidget();
-
-        panel.add(p);
-
-        showRestartButton();
 
         navigationView.setContent(panel);
         tabBar.setToolbar(buildFakeToolbar());
@@ -193,17 +178,16 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         VCssLayout layout = new VCssLayout();
         layout.addStyleName("photolayout");
 
-        // photoCanvas = Canvas.createIfSupported();
-        // Context2d context = photoCanvas.getContext2d();
-        // context.drawImage(image, dx, dy)
         image = new Image();
         image.setPixelSize(200, 100);
         layout.add(image);
 
-        final FileUpload takePhotoButton = new FileUpload();
-        takePhotoButton.getElement().setId("takephotobutton");
-        takePhotoButton.getElement().setAttribute("capture", "camera");
-        takePhotoButton.getElement().setAttribute("accept", "image/*");
+        final VUpload takePhotoButton = new VUpload();
+        takePhotoButton.setImmediate(true);
+        takePhotoButton.submitButton.setText("Take a photo");
+        takePhotoButton.fu.getElement().setId("takephotobutton");
+        takePhotoButton.fu.getElement().setAttribute("capture", "camera");
+        takePhotoButton.fu.getElement().setAttribute("accept", "image/*");
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
@@ -228,7 +212,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                                                                           if(event.target.files.length == 1 && 
                                                                           event.target.files[0].type.indexOf("image/") == 0) {
                                                                           var src = URL.createObjectURL(event.target.files[0]);
-                                                                          widget.@com.vaadin.demo.parking.widgetset.client.TicketViewWidget::loadPhoto(Ljava/lang/String;)(src);
+                                                                          widget.@com.vaadin.demo.parking.widgetset.client.TicketViewWidget::setImageSrc(Ljava/lang/String;)(src);
                                                                           }
                                                                           }
                                                                           
@@ -237,7 +221,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                                                                           }
                                                                           }-*/;
 
-    void loadPhoto(String src) {
+    void setImageSrc(String src) {
         image.setUrl(src);
     }
 
@@ -246,10 +230,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         toolBar.setWidth("100%");
         toolBar.addStyleName("v-touchkit-toolbar");
 
-        toolBar.addOrMove(buildFakeTab("birdtab", "Tickets", true), 0);
-        toolBar.addOrMove(buildFakeTab("observationstab", "24h Map", false), 1);
-        toolBar.addOrMove(buildFakeTab("maptab", "Shifts", false), 2);
-        toolBar.addOrMove(buildFakeTab("settingstab", "Stats", false), 3);
+        toolBar.addOrMove(buildFakeTab("observationstab", "Tickets", true), 0);
+        toolBar.addOrMove(buildFakeTab("maptab", "24h Map", false), 1);
+        toolBar.addOrMove(buildFakeTab("birdtab", "Shifts", false), 2);
+        toolBar.addOrMove(buildFakeTab("settingstab", "Settings", false), 3);
 
         return toolBar;
     }
@@ -270,26 +254,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         return tab;
     }
 
-    private void showRestartButton() {
-
-        Label label = new Label("Connection status");
-        label.setStyleName("v-label-grey-title");
-        panel.add(label);
-        VerticalComponentGroupWidget vVerticalComponentGroup = new VerticalComponentGroupWidget();
-        vVerticalComponentGroup
-                .addStyleName("v-touchkit-verticalcomponentgroup");
-
-        networkStatus = new Label();
-        networkStatus.getElement().getStyle().setPaddingTop(10, Unit.PX);
-        networkStatus.getElement().getStyle().setPaddingBottom(10, Unit.PX);
-
-        Scheduler.get().scheduleFixedPeriod(this, 1000);
-
-        vVerticalComponentGroup.add(networkStatus);
-
-        panel.add(vVerticalComponentGroup);
-    }
-
     @Override
     public boolean deactivate() {
         // Don't get out off offline mode automatically as user may be actively
@@ -299,18 +263,20 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     @Override
     public boolean execute() {
-        if (isActive()) {
-            if (networkStatus != null) {
-                if (isNetworkOnline()) {
-                    networkStatus.setText("Your network connection is online.");
-                    networkStatus.getElement().getStyle().setColor("green");
-                } else {
-                    networkStatus.setText("Your network connection is down.");
-                    networkStatus.getElement().getStyle().setColor("");
-                }
-            }
-            return true;
-        }
+        // if (isActive()) {
+        // if (networkStatus != null) {
+        // if (isNetworkOnline()) {
+        // networkStatus.setText("Your network connection is online.");
+        // networkStatus.getElement().getStyle().setColor("green");
+        // } else {
+        // networkStatus.setText("Your network connection is down.");
+        // networkStatus.getElement().getStyle().setColor("");
+        // }
+        // }
+        // return true;
+        // }
+        // return false;
+
         return false;
     }
 

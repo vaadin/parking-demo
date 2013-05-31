@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import com.vaadin.addon.touchkit.ui.TabBarView;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.util.Translations;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet.Tab;
 
 /**
@@ -14,33 +15,24 @@ import com.vaadin.ui.TabSheet.Tab;
 public class MainTabsheet extends TabBarView {
 
     private final MapView mapView;
-    private final TicketView ticketView;
     private final ClassificationHierarchy classificationHierarchy;
+    private final ResourceBundle tr = Translations.get(ParkingUI.getApp()
+            .getLocale());
 
     public MainTabsheet() {
-
-        ResourceBundle tr = Translations.get(ParkingUI.getApp().getLocale());
-
         /*
          * Populate main views
          */
-        classificationHierarchy = new ClassificationHierarchy();
-        Tab tab = addTab(classificationHierarchy);
-        tab.setStyleName("birdtab");
-        tab.setCaption(tr.getString("Aves"));
+        addTab(new TicketView(), "observationstab", "Ticket");
 
-        ticketView = new TicketView();
-        tab = addTab(ticketView);
-        tab.setStyleName("observationstab");
-        tab.setCaption(tr.getString("Observations"));
         mapView = new MapView();
-        tab = addTab(mapView);
-        tab.setStyleName("maptab");
-        tab.setCaption(tr.getString("Map"));
-        SettingsView settings = new SettingsView();
-        tab = addTab(settings);
-        tab.setStyleName("settingstab");
-        tab.setCaption(tr.getString("Settings"));
+        addTab(mapView, "maptab", "Map24");
+
+        classificationHierarchy = new ClassificationHierarchy();
+        addTab(classificationHierarchy, "birdtab", "Shifts");
+
+        Component settings = new SettingsView();
+        addTab(settings, "settingstab", "Settings");
 
         /*
          * Make settings view as the default. This would not be best option for
@@ -61,6 +53,12 @@ public class MainTabsheet extends TabBarView {
     // public void detach() {
     // super.detach();
     // }
+
+    private void addTab(Component component, String styleName, String captionKey) {
+        Tab tab = addTab(component);
+        tab.setStyleName(styleName);
+        tab.setCaption(tr.getString(captionKey));
+    }
 
     public MapView getMapView() {
         return mapView;
