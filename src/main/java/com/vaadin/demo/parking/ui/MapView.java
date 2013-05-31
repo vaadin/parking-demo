@@ -1,6 +1,5 @@
 package com.vaadin.demo.parking.ui;
 
-import java.util.List;
 import java.util.ResourceBundle;
 
 import org.vaadin.addon.leaflet.LMarker;
@@ -16,11 +15,9 @@ import com.vaadin.addon.touchkit.extensions.PositionCallback;
 import com.vaadin.addon.touchkit.gwt.client.vcom.Position;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.demo.parking.ParkingUI;
-import com.vaadin.demo.parking.model.Observation;
-import com.vaadin.demo.parking.model.ObservationDB;
 import com.vaadin.demo.parking.util.Translations;
+import com.vaadin.demo.parking.widgetset.client.Observation;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -34,7 +31,7 @@ public class MapView extends NavigationView implements PositionCallback,
     private ParkingMap map;
     private Bounds extent;
     private Button locatebutton;
-    private LMarker you = new LMarker();
+    private final LMarker you = new LMarker();
 
     @Override
     public void attach() {
@@ -65,7 +62,7 @@ public class MapView extends NavigationView implements PositionCallback,
             setContent(map);
 
             // Default to Vaadin HQ
-            you.setPoint(new Point(60.452,22.301));
+            you.setPoint(new Point(60.452, 22.301));
             setCenter();
 
             updateMarkers();
@@ -92,23 +89,24 @@ public class MapView extends NavigationView implements PositionCallback,
         bottomRight.setLatitude(extent.getSouthWestLat());
         bottomRight.setLongitude(extent.getNorthEastLon());
 
-        List<Observation> observations = ObservationDB.getObservations(null,
-                topLeft, bottomRight, 15, 1);
+        // TODO: Get tickets
+        // List<Observation> observations = ObservationDB.getObservations(null,
+        // topLeft, bottomRight, 15, 1);
 
         map.removeAllComponents();
 
-        for (Observation observation : observations) {
-            Location location = observation.getLocation();
-
-            LMarker leafletMarker = new LMarker(location.getLatitude(),
-                    location.getLongitude());
-            leafletMarker.setIcon(new ThemeResource("birdmarker.png"));
-            leafletMarker.setIconSize(new Point(50, 50));
-            leafletMarker.setData(observation);
-            leafletMarker.addClickListener(this);
-
-            map.addComponent(leafletMarker);
-        }
+        // for (Observation observation : observations) {
+        // Location location = observation.getLocation();
+        //
+        // LMarker leafletMarker = new LMarker(location.getLatitude(),
+        // location.getLongitude());
+        // leafletMarker.setIcon(new ThemeResource("birdmarker.png"));
+        // leafletMarker.setIconSize(new Point(50, 50));
+        // leafletMarker.setData(observation);
+        // leafletMarker.addClickListener(this);
+        //
+        // map.addComponent(leafletMarker);
+        // }
 
         map.addComponent(you);
     }
@@ -143,18 +141,19 @@ public class MapView extends NavigationView implements PositionCallback,
         Notification
                 .show("Geolocation request failed. You must grant access for geolocation requests.",
                         Type.ERROR_MESSAGE);
-     }
+    }
 
     private void showPopup(Observation data) {
-        ObservationDetailPopover observationDetailPopover = new ObservationDetailPopover(
-                data);
-        observationDetailPopover.showRelativeTo(getNavigationBar());
+        // ObservationDetailPopover observationDetailPopover = new
+        // ObservationDetailPopover(
+        // data);
+        // observationDetailPopover.showRelativeTo(getNavigationBar());
     }
 
     public void showObservation(Observation o) {
-        map.setCenter(o.getLocation().getLatitude(), o.getLocation()
-                .getLongitude());
-        map.setZoomLevel(12);
+        // map.setCenter(o.getLocation().getLatitude(), o.getLocation()
+        // .getLongitude());
+        // map.setZoomLevel(12);
     }
 
     @Override

@@ -15,7 +15,7 @@ import com.vaadin.ui.TabSheet.Tab;
 public class MainTabsheet extends TabBarView {
 
     private final MapView mapView;
-    private final ClassificationHierarchy classificationHierarchy;
+    private final ShiftsView shiftsView;
     private final ResourceBundle tr = Translations.get(ParkingUI.getApp()
             .getLocale());
 
@@ -28,8 +28,8 @@ public class MainTabsheet extends TabBarView {
         mapView = new MapView();
         addTab(mapView, "maptab", "Map24");
 
-        classificationHierarchy = new ClassificationHierarchy();
-        addTab(classificationHierarchy, "birdtab", "Shifts");
+        shiftsView = new ShiftsView();
+        addTab(shiftsView, "birdtab", "Shifts");
 
         Component settings = new SettingsView();
         addTab(settings, "settingstab", "Settings");
@@ -64,7 +64,7 @@ public class MainTabsheet extends TabBarView {
         return mapView;
     }
 
-    public ClassificationHierarchy getClassificationHierarchy() {
-        return classificationHierarchy;
-    }
+    // public ClassificationHierarchy getClassificationHierarchy() {
+    // return classificationHierarchy;
+    // }
 }
