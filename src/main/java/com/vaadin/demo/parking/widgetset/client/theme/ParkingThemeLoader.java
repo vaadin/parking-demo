@@ -8,8 +8,9 @@ public class ParkingThemeLoader extends ThemeLoader {
     public void load() {
         // Load default TouchKit theme...
         super.load();
-        // ... and Vornitologist specific additions from own client bundle
+        // ... and Parking specific additions from own client bundle
         ParkingBundle.INSTANCE.css().ensureInjected();
+        ParkingBundle.INSTANCE.ticketsCss().ensureInjected();
     }
 
 }

@@ -1,0 +1,26 @@
+@external v-ui, tickets, photolayout, informationlayout, noteslayout;
+
+/*
+ * Tickets view
+ */
+.tickets .photolayout {
+	float: left;
+	width: 100%;
+}
+
+.v-ui[width-range~="801px-"] .tickets .photolayout {
+	width: 50% !important;
+}
+
+.tickets .informationlayout,
+.tickets .noteslayout {
+	float: right;
+	width: 100%;
+}
+
+.v-ui[width-range~="801px-"] .tickets .informationlayout,
+.v-ui[width-range~="801px-"] .tickets .noteslayout {
+	width: 50% !important;
+}
+
+

@@ -11,8 +11,11 @@ public interface ParkingBundle extends ClientBundle {
     public static final ParkingBundle INSTANCE = GWT
             .create(ParkingBundle.class);
 
-    @Source("vornitologiststyles.css")
+    @Source("parkingstyles.css")
     public ParkingCss css();
+
+    @Source("tickets.css")
+    public TicketsCss ticketsCss();
 
     @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
     @Source("aboutBackground.png")

@@ -24,6 +24,7 @@ import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
 import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker;
 import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker.Resolution;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
+import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationButton;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationView;
 import com.vaadin.addon.touchkit.gwt.client.ui.VTabBar;
 import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
@@ -56,6 +57,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     public TicketViewWidget() {
         addStyleName("v-window");
         addStyleName("v-touchkit-offlinemode");
+        addStyleName("tickets");
 
         tabBar = new VTabBar();
         setWidget(tabBar);
@@ -143,19 +145,25 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private Widget buildInformationLayout() {
-        VerticalComponentGroupWidget layout = new VerticalComponentGroupWidget();
+        VCssLayout layout = new VCssLayout();
         layout.addStyleName("informationlayout");
 
+        Label caption = new Label("Information");
+        layout.add(caption);
+
+        VerticalComponentGroupWidget innerLayout = new VerticalComponentGroupWidget();
+        innerLayout.addStyleName("informationlayout");
+
         locationField = new VTextField();
-        layout.add(buildFieldRowBox("Location", locationField));
+        innerLayout.add(buildFieldRowBox("Location", locationField));
 
         timeField = new DatePicker();
         timeField.setDate(new Date());
         timeField.setResolution(Resolution.TIME);
-        layout.add(buildFieldRowBox("Time", timeField));
+        innerLayout.add(buildFieldRowBox("Time", timeField));
 
         vehicleIdField = new VTextField();
-        layout.add(buildFieldRowBox("Vehicle ID", vehicleIdField));
+        innerLayout.add(buildFieldRowBox("Vehicle ID", vehicleIdField));
 
         violationField = new ListBox();
         violationField.setHeight("25px");
@@ -165,9 +173,15 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         for (Violation violation : Violation.values()) {
             violationField.addItem(violation.name(), violation.name());
         }
-        layout.add(buildFieldRowBox("Violation", violationField));
+
+        VNavigationButton violationButton = new VNavigationButton();
+        violationButton.setText("Choose...");
+        innerLayout.add(buildFieldRowBox("Violation", violationButton));
+
+        layout.add(innerLayout);
 
         return layout;
+
     }
 
     private Widget buildFieldRowBox(final String title, final Widget widget) {
@@ -175,18 +189,25 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         Label label = new Label(title);
         fb.add(label);
         fb.add(widget);
+        // Style style = widget.getElement().getStyle();
+        // style.setPosition(Position.ABSOLUTE);
+        // style.setRight(30, Unit.PX);
+        // style.setLeft(100, Unit.PX);
         return fb;
     }
 
     private Widget buildPhotoLayout() {
-        VerticalComponentGroupWidget p = new VerticalComponentGroupWidget();
-
         VCssLayout layout = new VCssLayout();
         layout.addStyleName("photolayout");
 
+        Label caption = new Label("Photo");
+        layout.add(caption);
+
+        VCssLayout innerLayout = new VCssLayout();
+
         image = new Image();
         image.setPixelSize(200, 100);
-        layout.add(image);
+        innerLayout.add(image);
 
         takePhotoButton.setImmediate(true);
         takePhotoButton.fu.getElement().setId("takephotobutton");
@@ -201,7 +222,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             }
         });
 
-        layout.add(takePhotoButton);
+        innerLayout.add(takePhotoButton);
 
         removeButton.setText("Remove photo");
         removeButton.addClickHandler(new ClickHandler() {
@@ -210,10 +231,27 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                 setImageSrc(null);
             }
         });
-        layout.add(removeButton);
+        innerLayout.add(removeButton);
 
-        p.add(layout);
-        return p;
+        VerticalComponentGroupWidget wrapper = new VerticalComponentGroupWidget();
+        wrapper.add(innerLayout);
+        layout.add(wrapper);
+
+        return layout;
+    }
+
+    private Widget buildNotesLayout() {
+        VCssLayout layout = new VCssLayout();
+        layout.addStyleName("noteslayout");
+
+        Label caption = new Label("Notes");
+        layout.add(caption);
+
+        VCssLayout innerLayout = new VCssLayout();
+
+        layout.add(innerLayout);
+
+        return layout;
     }
 
     private void resetFields() {
@@ -239,6 +277,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private void setImageSrc(String src) {
         boolean empty = src == null;
         image.setUrl(empty ? "about:blank" : src);
+        image.setVisible(!empty);
         removeButton.setVisible(!empty);
         takePhotoButton.submitButton.setText(empty ? "Take a photo"
                 : "Replace...");
