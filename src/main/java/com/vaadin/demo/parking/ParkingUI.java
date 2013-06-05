@@ -1,22 +1,22 @@
 package com.vaadin.demo.parking;
 
+import com.vaadin.addon.responsive.Responsive;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.demo.parking.model.TicketDB;
 import com.vaadin.demo.parking.ui.MainTabsheet;
 import com.vaadin.demo.parking.util.Translations;
+import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
 /**
- * The application class for Vornitologist.
- * <p>
- * Application class takes care of application initialization, setting various
- * configurations and storing application instance wide data (commonly static
- * fields in e.g. Swing applications).
+ * The UI class for Parking demo.
  */
-//@Theme("vornitologist")
+@Theme("parking")
 @Widgetset("com.vaadin.demo.parking.widgetset.ParkingWidgetset")
 @PreserveOnRefresh
 @Title("Parking")
@@ -29,9 +29,11 @@ public class ParkingUI extends UI {
     private double currentLongitude = 22.30083;
     private String user;
     private ParkingOfflineModeExtension offlineModeSettings;
+    private final BeanItemContainer<Ticket> ticketContainer;
 
     public ParkingUI() {
-
+        ticketContainer = new BeanItemContainer<Ticket>(Ticket.class,
+                TicketDB.generateRandomTickets());
     }
 
     @Override
@@ -48,6 +50,9 @@ public class ParkingUI extends UI {
         offlineModeSettings.extend(this);
         offlineModeSettings.setPersistentSessionCookie(true);
         offlineModeSettings.setOfflineModeEnabled(true);
+
+        new Responsive(this);
+        setImmediate(true);
     }
 
     public void goOffline() {
@@ -94,6 +99,10 @@ public class ParkingUI extends UI {
      */
     public static ParkingUI getApp() {
         return (ParkingUI) UI.getCurrent();
+    }
+
+    public static BeanItemContainer<Ticket> getTicketContainer() {
+        return getApp().ticketContainer;
     }
 
     public String getUser() {

@@ -21,6 +21,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
+import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker;
+import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker.Resolution;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationView;
 import com.vaadin.addon.touchkit.gwt.client.ui.VTabBar;
@@ -28,7 +30,6 @@ import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
-import com.vaadin.client.ui.VDateField;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.VUpload;
@@ -39,17 +40,18 @@ import com.vaadin.demo.parking.widgetset.client.model.Violation;
 public class TicketViewWidget extends VOverlay implements OfflineMode,
         RepeatingCommand {
     private VTextField locationField;
-    private VDateField timeField;
+    private DatePicker timeField;
     private VTextField vehicleIdField;
     private ListBox violationField;
-    private final VButton addTicketButton;
+    private VButton saveTicketButton;
 
     private TicketViewWidgetListener listener;
 
-    private final FlowPanel panel;
     private Image image;
 
     private final VTabBar tabBar;
+    private final VButton removeButton = new VButton();
+    private final VUpload takePhotoButton = new VUpload();
 
     public TicketViewWidget() {
         addStyleName("v-window");
@@ -60,14 +62,20 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         tabBar.getElement().getStyle().setPosition(Position.STATIC);
         tabBar.setHeight("100%");
 
-        /*
-         * We'll mostly use TouchKit's client side components to build to UI and
-         * some of TouchKit's style names to build the offline UI. This way we
-         * can get similar look and feel with the rest of the application.
-         */
-        VNavigationView navigationView = new VNavigationView();
-        tabBar.setContent(navigationView);
+        tabBar.setContent(buildContentView());
+        tabBar.setToolbar(buildFakeToolbar());
 
+        setShadowEnabled(false);
+        show();
+        getElement().getStyle().setWidth(100, Unit.PCT);
+        getElement().getStyle().setHeight(100, Unit.PCT);
+        getElement().getFirstChildElement().getStyle().setHeight(100, Unit.PCT);
+
+        resetFields();
+    }
+
+    private Widget buildContentView() {
+        VNavigationView navigationView = new VNavigationView();
         navigationView.setHeight("100%");
         VNavigationBar navigationBar = new VNavigationBar();
         navigationBar.setCaption("New Ticket");
@@ -78,33 +86,28 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
          * Vaadin. We can use it with some Vaadin stylenames to get e.g.
          * similarly themed margin widths.
          */
-        panel = new FlowPanel();
+        FlowPanel panel = new FlowPanel();
         panel.setStyleName("v-csslayout-margin-left v-csslayout-margin-right");
 
         panel.add(buildInformationLayout());
         panel.add(buildPhotoLayout());
 
         VerticalComponentGroupWidget p = new VerticalComponentGroupWidget();
-        addTicketButton = new VButton();
-        addTicketButton.setText("Add");
-        addTicketButton.addClickHandler(new ClickHandler() {
+        saveTicketButton = new VButton();
+        saveTicketButton.setText("Save");
+        saveTicketButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 saveTicket();
             }
         });
-        p.add(addTicketButton);
+        p.add(saveTicketButton);
 
         panel.add(p);
 
         navigationView.setContent(panel);
-        tabBar.setToolbar(buildFakeToolbar());
 
-        setShadowEnabled(false);
-        show();
-        getElement().getStyle().setWidth(100, Unit.PCT);
-        getElement().getStyle().setHeight(100, Unit.PCT);
-        getElement().getFirstChildElement().getStyle().setHeight(100, Unit.PCT);
+        return navigationView;
     }
 
     private void saveTicket() {
@@ -116,7 +119,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         location.setName("Origo");
         ticket.setLocation(location);
 
-        // ticket.setTimeStamp(timeField.getCurrentDate());
+        // ticket.setTimeStamp(timeField.);
         ticket.setTimeStamp(new Date());
         ticket.setRegisterPlateNumber(vehicleIdField.getText());
 
@@ -136,6 +139,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             OfflineDataService.localStoreTicket(ticket);
         }
 
+        resetFields();
     }
 
     private Widget buildInformationLayout() {
@@ -145,7 +149,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         locationField = new VTextField();
         layout.add(buildFieldRowBox("Location", locationField));
 
-        timeField = new VDateField();
+        timeField = new DatePicker();
+        timeField.setDate(new Date());
+        timeField.setResolution(Resolution.TIME);
         layout.add(buildFieldRowBox("Time", timeField));
 
         vehicleIdField = new VTextField();
@@ -164,7 +170,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         return layout;
     }
 
-    private Widget buildFieldRowBox(String title, Widget widget) {
+    private Widget buildFieldRowBox(final String title, final Widget widget) {
         CaptionComponentFlexBox fb = new CaptionComponentFlexBox();
         Label label = new Label(title);
         fb.add(label);
@@ -182,9 +188,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         image.setPixelSize(200, 100);
         layout.add(image);
 
-        final VUpload takePhotoButton = new VUpload();
         takePhotoButton.setImmediate(true);
-        takePhotoButton.submitButton.setText("Take a photo");
         takePhotoButton.fu.getElement().setId("takephotobutton");
         takePhotoButton.fu.getElement().setAttribute("capture", "camera");
         takePhotoButton.fu.getElement().setAttribute("accept", "image/*");
@@ -199,12 +203,23 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         layout.add(takePhotoButton);
 
-        VButton removeButton = new VButton();
         removeButton.setText("Remove photo");
+        removeButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                setImageSrc(null);
+            }
+        });
         layout.add(removeButton);
 
         p.add(layout);
         return p;
+    }
+
+    private void resetFields() {
+        setImageSrc(null);
+        vehicleIdField.setText(null);
+
     }
 
     private native void bindFileInput(Element e, TicketViewWidget widget) /*-{
@@ -221,8 +236,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                                                                           }
                                                                           }-*/;
 
-    void setImageSrc(String src) {
-        image.setUrl(src);
+    private void setImageSrc(String src) {
+        boolean empty = src == null;
+        image.setUrl(empty ? "about:blank" : src);
+        removeButton.setVisible(!empty);
+        takePhotoButton.submitButton.setText(empty ? "Take a photo"
+                : "Replace...");
     }
 
     private Widget buildFakeToolbar() {
@@ -238,8 +257,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         return toolBar;
     }
 
-    private Widget buildFakeTab(String styleName, String caption,
-            boolean enabled) {
+    private Widget buildFakeTab(final String styleName, final String caption,
+            final boolean enabled) {
         VButton tab = new VButton();
         tab.addStyleName(styleName);
         tab.setText(caption);

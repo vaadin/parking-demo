@@ -19,6 +19,8 @@
 	<inherits name="org.vaadin.addon.leaflet.Widgetset" />
 	
 	<inherits name="com.vaadin.addon.charts.Widgetset" />
+	
+	<inherits name="com.vaadin.addon.responsive.ResponsiveWidgetSet" />
 
  	<generate-with class="com.vaadin.demo.parking.widgetset.WidgetLoaderFactory">
         <when-type-assignable class="com.vaadin.client.metadata.ConnectorBundleLoader" />

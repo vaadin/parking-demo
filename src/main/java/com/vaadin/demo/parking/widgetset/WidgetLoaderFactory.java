@@ -12,6 +12,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.vaadin.addon.charts.client.ui.ChartConnector;
+import com.vaadin.addon.responsive.client.ResponsiveConnector;
 import com.vaadin.addon.touchkit.gwt.TouchKitBundleLoaderFactory;
 import com.vaadin.addon.touchkit.gwt.client.vcom.DatePickerConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.EmailFieldConnector;
@@ -89,7 +90,7 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
         usedConnectors.add(ParkingOfflineConnector.class.getName());
         usedConnectors.add(TicketViewConnector.class.getName());
         usedConnectors.add(WindowConnector.class.getName());
-
+        usedConnectors.add(ResponsiveConnector.class.getName());
     }
 
     @Override

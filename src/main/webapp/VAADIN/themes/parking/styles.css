@@ -1,0 +1,8 @@
+/*
+ * Parking uses mainly GWT style theme building, that 
+ * packages CSS and images compactly into the GWT bundle. This lessens
+ * Http requests that browser needs to do and thus makes startup faster.
+ * 
+ * Learn more from GWT client bundles from : 
+ * https://developers.google.com/web-toolkit/doc/latest/DevGuideClientBundle
+ */

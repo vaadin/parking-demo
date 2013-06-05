@@ -3,7 +3,6 @@ package com.vaadin.demo.parking.ui;
 import java.util.ResourceBundle;
 
 import com.vaadin.addon.touchkit.ui.TabBarView;
-import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.util.Translations;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet.Tab;
@@ -16,30 +15,24 @@ public class MainTabsheet extends TabBarView {
 
     private final MapView mapView;
     private final ShiftsView shiftsView;
-    private final ResourceBundle tr = Translations.get(ParkingUI.getApp()
-            .getLocale());
+    private final ResourceBundle tr = Translations.get();
 
     public MainTabsheet() {
         /*
          * Populate main views
          */
-        addTab(new TicketView(), "observationstab", "Ticket");
+        TicketView ticketView = new TicketView();
+        addTab(ticketView, "observationstab", "ticket");
 
         mapView = new MapView();
-        addTab(mapView, "maptab", "Map24");
+        addTab(mapView, "maptab", "map24");
 
         shiftsView = new ShiftsView();
-        addTab(shiftsView, "birdtab", "Shifts");
+        addTab(shiftsView, "birdtab", "shifts");
 
-        Component settings = new SettingsView();
-        addTab(settings, "settingstab", "Settings");
+        addTab(new StatsView(), "settingstab", "stats");
 
-        /*
-         * Make settings view as the default. This would not be best option for
-         * a real application, but it also serves as our demos welcome page.
-         */
-        setSelectedTab(settings);
-
+        setSelectedTab(ticketView);
     }
 
     // /**
