@@ -1,4 +1,4 @@
-@external about, details, birdtab, maptab, observationstab, settingstab, add, close, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, tickets, photolayout, infomationlayout;
+@external about, details, shiftstab, maptab, ticketstab, statstab, add, close, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, tickets, photolayout, infomationlayout;
 
 @def darkText #3d3f41;
 
@@ -18,17 +18,17 @@
  * Main Tab sheets icons via css
  */
  
- @sprite .birdtab:before {
-	gwt-image: "birdtab";
+ @sprite .shiftstab:before {
+	gwt-image: "shiftstab";
 }
  @sprite .maptab:before {
 	gwt-image: "maptab";
 }
- @sprite .observationstab:before {
-	gwt-image: "observationstab";
+ @sprite .ticketstab:before {
+	gwt-image: "ticketstab";
 }
- @sprite .settingstab:before {
-	gwt-image: "settingstab";
+ @sprite .statstab:before {
+	gwt-image: "statstab";
 }
 
 /* Sizing etc for tab icons */
@@ -54,9 +54,22 @@
 	border-right: 1px solid #e7e7e7;
 	height: 100% !important;
 	border-radius: 0 !important;
+	position: absolute !important;
+	left: 50%;
+	box-sizing: border-box;
 }
-.v-touchkit-tabbar-toolbar .v-button:FIRST-CHILD {
+.v-touchkit-tabbar-toolbar .v-button.ticketstab {
 	border-left: 1px solid #e7e7e7;
+}
+
+.v-touchkit-tabbar-toolbar .v-button.ticketstab {
+	margin-left: -160px;
+}
+.v-touchkit-tabbar-toolbar .v-button.maptab {
+	margin-left: -80px;
+}
+.v-touchkit-tabbar-toolbar .v-button.statstab {
+	margin-left: 80px;
 }
 
 .v-touchkit-tabbar-toolbar .v-button.selected {

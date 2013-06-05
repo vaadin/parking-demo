@@ -7,10 +7,10 @@ public interface ParkingCss extends CssResource {
     String about();
     String details();
 
-    String birdtab();
+    String shiftstab();
     String maptab();
-    String observationstab();
-    String settingstab();
+    String ticketstab();
+    String statstab();
        
     String add();
     String close();

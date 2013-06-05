@@ -2,7 +2,10 @@ package com.vaadin.demo.parking.widgetset.client;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.Scheduler;
@@ -10,14 +13,17 @@ import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
@@ -25,13 +31,17 @@ import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker;
 import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker.Resolution;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationButton;
+import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationManager;
+import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationManager.AnimationListener;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationView;
+import com.vaadin.addon.touchkit.gwt.client.ui.VPopover;
 import com.vaadin.addon.touchkit.gwt.client.ui.VTabBar;
 import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VOverlay;
+import com.vaadin.client.ui.VTextArea;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.VUpload;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
@@ -43,7 +53,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private VTextField locationField;
     private DatePicker timeField;
     private VTextField vehicleIdField;
-    private ListBox violationField;
+    private VNavigationButton violationButton;
+    private Violation selectedViolation;
+    private VTextArea notesField;
     private VButton saveTicketButton;
 
     private TicketViewWidgetListener listener;
@@ -53,6 +65,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private final VTabBar tabBar;
     private final VButton removeButton = new VButton();
     private final VUpload takePhotoButton = new VUpload();
+    private VNavigationView contentView;
+    private VNavigationManager navigationManager;
 
     public TicketViewWidget() {
         addStyleName("v-window");
@@ -74,14 +88,47 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         getElement().getFirstChildElement().getStyle().setHeight(100, Unit.PCT);
 
         resetFields();
+        Window.addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                checkDeviceSize();
+            }
+        });
+        checkDeviceSize();
+    }
+
+    private void checkDeviceSize() {
+        String tablet = "tablet";
+        if (Window.getClientWidth() > 800) {
+            addStyleName(tablet);
+        } else {
+            removeStyleName(tablet);
+        }
     }
 
     private Widget buildContentView() {
-        VNavigationView navigationView = new VNavigationView();
-        navigationView.setHeight("100%");
+        navigationManager = new VNavigationManager();
+        navigationManager.setHeight("100%");
+        navigationManager.addAnimationListener(new AnimationListener() {
+
+            @Override
+            public void animationWillStart() {
+            }
+
+            @Override
+            public void animationDidEnd() {
+                // Clear the next widget
+                if (navigationManager.getPreviousView() == null) {
+                    navigationManager.setNextWidget(null);
+                }
+            }
+        });
+
+        contentView = new VNavigationView();
+        contentView.setHeight("100%");
         VNavigationBar navigationBar = new VNavigationBar();
         navigationBar.setCaption("New Ticket");
-        navigationView.setNavigationBar(navigationBar);
+        contentView.setNavigationBar(navigationBar);
 
         /*
          * FlowPanel is the simples GWT panel, pretty similar to CssLayout in
@@ -93,6 +140,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         panel.add(buildInformationLayout());
         panel.add(buildPhotoLayout());
+        panel.add(buildNotesLayout());
 
         VerticalComponentGroupWidget p = new VerticalComponentGroupWidget();
         saveTicketButton = new VButton();
@@ -107,9 +155,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         panel.add(p);
 
-        navigationView.setContent(panel);
+        contentView.setContent(panel);
+        navigationManager.setCurrentWidget(contentView);
 
-        return navigationView;
+        return navigationManager;
     }
 
     private void saveTicket() {
@@ -125,15 +174,14 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         ticket.setTimeStamp(new Date());
         ticket.setRegisterPlateNumber(vehicleIdField.getText());
 
-        ticket.setViolation(Violation.valueOf(violationField
-                .getValue(violationField.getSelectedIndex())));
+        ticket.setViolation(selectedViolation);
 
         Canvas canvas = Canvas.createIfSupported();
         canvas.getContext2d().drawImage(ImageElement.as(image.getElement()), 0,
                 0);
         ticket.setImageData(canvas.toDataUrl("image/jpeg"));
 
-        ticket.setNotes("test notes");
+        ticket.setNotes(notesField.getText());
 
         if (isNetworkOnline() && listener != null) {
             listener.persistTickets(Arrays.asList(ticket));
@@ -152,9 +200,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         layout.add(caption);
 
         VerticalComponentGroupWidget innerLayout = new VerticalComponentGroupWidget();
-        innerLayout.addStyleName("informationlayout");
 
         locationField = new VTextField();
+        locationField.getElement().getStyle().setProperty("width", "auto");
         innerLayout.add(buildFieldRowBox("Location", locationField));
 
         timeField = new DatePicker();
@@ -165,17 +213,31 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         vehicleIdField = new VTextField();
         innerLayout.add(buildFieldRowBox("Vehicle ID", vehicleIdField));
 
-        violationField = new ListBox();
-        violationField.setHeight("25px");
-        violationField.getElement().getStyle().setMarginTop(10, Unit.PX);
-        violationField.getElement().getStyle().setMarginBottom(10, Unit.PX);
-        violationField.addItem("Choose...");
-        for (Violation violation : Violation.values()) {
-            violationField.addItem(violation.name(), violation.name());
-        }
+        violationButton = new VNavigationButton();
+        violationButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Map<Object, String> map = new HashMap<Object, String>();
+                for (Violation violation : Violation.values()) {
+                    map.put(violation, violation.getCaption());
+                }
 
-        VNavigationButton violationButton = new VNavigationButton();
-        violationButton.setText("Choose...");
+                MapSelector violationSelector = new MapSelector(map,
+                        selectedViolation, "Violation type",
+                        new MapSelectorListener() {
+                            @Override
+                            public void valueSelected(Object value) {
+                                Violation violation = (Violation) value;
+                                violationButton.setText(violation.getCaption());
+                                selectedViolation = violation;
+                                navigationManager.setCurrentWidget(contentView);
+                            }
+                        });
+
+                navigationManager.setNextWidget(violationSelector);
+                navigationManager.setCurrentWidget(violationSelector);
+            }
+        });
         innerLayout.add(buildFieldRowBox("Violation", violationButton));
 
         layout.add(innerLayout);
@@ -187,9 +249,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private Widget buildFieldRowBox(final String title, final Widget widget) {
         CaptionComponentFlexBox fb = new CaptionComponentFlexBox();
         Label label = new Label(title);
+        label.setWidth("100px");
         fb.add(label);
         fb.add(widget);
-        // Style style = widget.getElement().getStyle();
+
+        Style style = widget.getElement().getStyle();
+        // style.setProperty("width", "auto");
         // style.setPosition(Position.ABSOLUTE);
         // style.setRight(30, Unit.PX);
         // style.setLeft(100, Unit.PX);
@@ -207,6 +272,18 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         image = new Image();
         image.setPixelSize(200, 100);
+        image.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                VPopover popover = new VPopover();
+                Image popImage = new Image();
+                popImage.setSize("100%", "100%");
+                popImage.setUrl(image.getUrl());
+                popover.add(popImage);
+                popover.show();
+                popover.setSize("200px", "200px");
+            }
+        });
         innerLayout.add(image);
 
         takePhotoButton.setImmediate(true);
@@ -247,7 +324,11 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         Label caption = new Label("Notes");
         layout.add(caption);
 
-        VCssLayout innerLayout = new VCssLayout();
+        VerticalComponentGroupWidget innerLayout = new VerticalComponentGroupWidget();
+
+        notesField = new VTextArea();
+        notesField.setSize("100%", "100px");
+        innerLayout.add(notesField);
 
         layout.add(innerLayout);
 
@@ -255,9 +336,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private void resetFields() {
+        locationField.setText(null);
         setImageSrc(null);
         vehicleIdField.setText(null);
-
+        selectedViolation = null;
+        violationButton.setText("Choose...");
+        notesField.setText(null);
     }
 
     private native void bindFileInput(Element e, TicketViewWidget widget) /*-{
@@ -288,10 +372,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         toolBar.setWidth("100%");
         toolBar.addStyleName("v-touchkit-toolbar");
 
-        toolBar.addOrMove(buildFakeTab("observationstab", "Tickets", true), 0);
+        toolBar.addOrMove(buildFakeTab("ticketstab", "Tickets", true), 0);
         toolBar.addOrMove(buildFakeTab("maptab", "24h Map", false), 1);
-        toolBar.addOrMove(buildFakeTab("birdtab", "Shifts", false), 2);
-        toolBar.addOrMove(buildFakeTab("settingstab", "Settings", false), 3);
+        toolBar.addOrMove(buildFakeTab("shiftstab", "Shifts", false), 2);
+        toolBar.addOrMove(buildFakeTab("statstab", "Stats", false), 3);
 
         return toolBar;
     }
@@ -360,6 +444,41 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     public void setTicketViewWidgetListener(TicketViewWidgetListener listener) {
         this.listener = listener;
         tabBar.setToolbar(new SimplePanel());
+    }
+
+    private class MapSelector extends VNavigationView {
+
+        private final VerticalComponentGroupWidget layout;
+        private final MapSelectorListener listener;
+
+        public MapSelector(Map<Object, String> map, Object value,
+                String caption, MapSelectorListener listener) {
+            this.listener = listener;
+            setHeight("100%");
+
+            VNavigationBar navigationBar = new VNavigationBar();
+            navigationBar.setCaption(caption);
+            setNavigationBar(navigationBar);
+
+            layout = new VerticalComponentGroupWidget();
+            for (final Entry<Object, String> entry : map.entrySet()) {
+                Widget widget = buildFieldRowBox("",
+                        new Label(entry.getValue()));
+                widget.addDomHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        MapSelector.this.listener.valueSelected(entry.getKey());
+                    }
+                }, ClickEvent.getType());
+                layout.add(widget);
+            }
+
+            setContent(layout);
+        }
+    }
+
+    interface MapSelectorListener {
+        void valueSelected(Object value);
     }
 
 }

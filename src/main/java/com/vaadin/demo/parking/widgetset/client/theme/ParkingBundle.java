@@ -23,15 +23,15 @@ public interface ParkingBundle extends ClientBundle {
 
     /* Images for main tabsheet icons */
     @Source("bird.png")
-    public ImageResource birdtab();
+    public ImageResource shiftstab();
 
     @Source("world.png")
     public ImageResource maptab();
 
     @Source("tools.png")
-    public ImageResource settingstab();
+    public ImageResource statstab();
 
     @Source("binocular.png")
-    public ImageResource observationstab();
+    public ImageResource ticketstab();
 
 }

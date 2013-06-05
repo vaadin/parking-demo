@@ -22,15 +22,15 @@ public class MainTabsheet extends TabBarView {
          * Populate main views
          */
         TicketView ticketView = new TicketView();
-        addTab(ticketView, "observationstab", "ticket");
+        addTab(ticketView, "ticketstab", "ticket");
 
         mapView = new MapView();
         addTab(mapView, "maptab", "map24");
 
         shiftsView = new ShiftsView();
-        addTab(shiftsView, "birdtab", "shifts");
+        addTab(shiftsView, "shiftstab", "shifts");
 
-        addTab(new StatsView(), "settingstab", "stats");
+        addTab(new StatsView(), "statstab", "stats");
 
         setSelectedTab(ticketView);
     }

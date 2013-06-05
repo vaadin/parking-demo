@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet;
 
 /*
  * Tickets view
@@ -8,19 +8,26 @@
 	width: 100%;
 }
 
-.v-ui[width-range~="801px-"] .tickets .photolayout {
+.tickets.tablet .photolayout {
 	width: 50% !important;
 }
 
 .tickets .informationlayout,
 .tickets .noteslayout {
 	float: right;
+	clear: right;
 	width: 100%;
 }
 
-.v-ui[width-range~="801px-"] .tickets .informationlayout,
-.v-ui[width-range~="801px-"] .tickets .noteslayout {
+.tickets.tablet .informationlayout,
+.tickets.tablet .noteslayout {
 	width: 50% !important;
 }
 
+
+.tickets .noteslayout textarea {
+	border: none;
+	outline: none;
+	font-size: 16px;
+}
 
