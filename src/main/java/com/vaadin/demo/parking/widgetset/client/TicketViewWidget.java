@@ -3,6 +3,7 @@ package com.vaadin.demo.parking.widgetset.client;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -59,6 +60,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private Violation selectedViolation;
     private VTextArea notesField;
     private VButton saveTicketButton;
+    private VNavigationButton areaButton;
 
     private TicketViewWidgetListener listener;
 
@@ -245,6 +247,34 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         });
         innerLayout.add(buildFieldRowBox("Violation", violationButton));
 
+        areaButton = new VNavigationButton();
+        areaButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                LinkedHashMap<Object, String> map = new LinkedHashMap<Object, String>();
+                for (char zone : "ABC".toCharArray()) {
+                    for (int i = 1; i < 5; i++) {
+                        String area = String.valueOf(zone) + i;
+                        map.put(area, area);
+                    }
+                }
+
+                MapSelector areaSelector = new MapSelector(map, areaButton
+                        .getText(), "Select area", new MapSelectorListener() {
+                    @Override
+                    public void valueSelected(Object value) {
+                        areaButton.setText((String) value);
+                        navigationManager.setCurrentWidget(contentView);
+                    }
+                });
+
+                navigationManager.setNextWidget(areaSelector);
+                navigationManager.setCurrentWidget(areaSelector);
+            }
+        });
+
+        innerLayout.add(buildFieldRowBox("Area", areaButton));
+
         return buildSectionWrapper(innerLayout, "Information",
                 "informationlayout");
     }
@@ -344,6 +374,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         vehicleIdField.setText(null);
         selectedViolation = null;
         violationButton.setText("Choose...");
+        areaButton.setText("Choose...");
         notesField.setText(null);
         date = new Date();
         timeField.setDate(date);

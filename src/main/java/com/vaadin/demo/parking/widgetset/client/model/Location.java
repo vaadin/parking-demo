@@ -31,21 +31,21 @@ public class Location implements Serializable {
         return name;
     }
 
-    private final static String delimiter = "<location-delimiter>";
+    private static final String DELIMITER = "<location-delimiter>";
 
     public String serialize() {
         StringBuilder sb = new StringBuilder();
-        sb.append(longitude + delimiter);
-        sb.append(latitude + delimiter);
-        sb.append(name + delimiter);
+        sb.append(longitude + DELIMITER);
+        sb.append(latitude + DELIMITER);
+        sb.append(name + DELIMITER);
         return sb.toString();
     }
 
-    public static Location deserialize(String str) {
+    public static Location deserialize(final String str) {
         Location result = null;
         if (str != null) {
             result = new Location();
-            String[] split = str.split(delimiter);
+            String[] split = str.split(DELIMITER);
             result.setLongitude(Double.parseDouble(split[0]));
             result.setLatitude(Double.parseDouble(split[1]));
             result.setName(split[2]);
