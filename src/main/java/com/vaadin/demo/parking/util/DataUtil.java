@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.vaadin.demo.parking.ParkingUI;
+import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Shift;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
@@ -49,18 +50,21 @@ public class DataUtil {
         return result;
     }
 
-    private static final int RANDOM_TICKETS_COUNT = 300;
+    private static final int RANDOM_TICKETS_COUNT = 20;
 
     // TODO: Dummy images/data needed
     public static Collection<Ticket> generateRandomTickets() {
         Random random = new Random();
+        double lat = ParkingUI.getApp().getCurrentLatitude();
+        double lon = ParkingUI.getApp().getCurrentLongitude();
 
         Collection<Ticket> result = Lists.newArrayList();
         for (int i = 0; i < RANDOM_TICKETS_COUNT; i++) {
             Ticket ticket = new Ticket();
 
             ticket.setNotes("Testing" + i);
-            ticket.setImageData("https://dl.dropboxusercontent.com/u/1966780/Parking_violation_Vaughan_Mills.jpg");
+
+            ticket.setImageData("VAADIN/themes/parking/tickets/" + 1 + ".jpg");
             ticket.setRegisterPlateNumber("ABC-" + i + "" + (i + 1) + ""
                     + (i + 2));
 
@@ -71,12 +75,29 @@ public class DataUtil {
 
             ticket.setViolation(i % 2 == 0 ? Violation.HANDICAPPED_ZONE
                     : Violation.PROHIBITED_SPACE);
+
+            Location location = new Location();
+            location.setName("Test");
+
+            double latitude = lat + (random.nextDouble() - 0.5) * 0.1;
+            double longitude = lon + (random.nextDouble() - 0.5) * 0.1;
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+            ticket.setLocation(location);
+
+            ticket.setMyTicket(random.nextDouble() < 0.1);
+
             result.add(ticket);
         }
         return result;
     }
 
     public static void persistTicket(final Ticket ticket) {
+        ticket.setMyTicket(true);
+        ticket.getLocation().setLatitude(
+                ParkingUI.getApp().getCurrentLatitude());
+        ticket.getLocation().setLongitude(
+                ParkingUI.getApp().getCurrentLongitude());
         ParkingUI.getTicketContainer().addItem(ticket);
     }
 }

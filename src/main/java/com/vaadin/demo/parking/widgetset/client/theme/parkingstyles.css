@@ -14,11 +14,11 @@
 	margin: 10px 0;
 }
 
-.v-app {
+.v-app,
+.v-touchkit-navpanel-container {
 	background: #efefec !important;
 }
-.v-touchkit-offlinemode,
-.v-touchkit-navpanel-container {
+.v-touchkit-offlinemode {
 	background: transparent !important;
 }
 

@@ -3,18 +3,40 @@ package com.vaadin.demo.parking.ui;
 import java.text.DecimalFormat;
 
 import com.vaadin.addon.touchkit.ui.Popover;
+import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeButton;
 
 /**
  * A simple detail popup to display information about an observation. Also
  * displays some links to other parts of the applicaction.
  */
-public class ObservationDetailPopover extends Popover {
+public class TicketDetailPopover extends Popover {
 
     private static final DecimalFormat df = new DecimalFormat("##.#####");
 
-    public ObservationDetailPopover(final Ticket o) {
+    public TicketDetailPopover(final Ticket ticket) {
+        final VerticalComponentGroup detailsGroup = new VerticalComponentGroup();
+        detailsGroup
+                .addComponent(new Label(ticket.getViolation().getCaption()));
 
+        detailsGroup.addComponent(buildTicketLayout(ticket));
+
+        NativeButton closeButton = new NativeButton("Close",
+                new ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        close();
+                    }
+                });
+        detailsGroup.addComponent(closeButton);
+        setContent(detailsGroup);
         // setClosable(true);
         // setModal(true);
         //
@@ -116,55 +138,17 @@ public class ObservationDetailPopover extends Popover {
 
     }
 
-    // private Chart getChart() {
-    // Chart chart = new Chart();
-    // chart.setCaption(tr.getString("Observations"));
-    // chart.setHeight("200px");
-    // chart.setWidth("100%");
-    // Configuration configuration = new Configuration();
-    // configuration.getChart().setType(ChartType.LINE);
-    // configuration.setTitle("");
-    //
-    // XAxis xaxis = new XAxis();
-    // xaxis.setType(AxisType.DATETIME);
-    // configuration.addxAxis(xaxis);
-    //
-    // YAxis yaxis = new YAxis();
-    // yaxis.setMin(0);
-    // yaxis.setTitle("");
-    // configuration.addyAxis(yaxis);
-    //
-    // PlotOptionsLine plotOptions = new PlotOptionsLine();
-    // configuration.setPlotOptions(plotOptions);
-    // configuration.getTooltip().setEnabled(false);
-    //
-    // Legend legend = configuration.getLegend();
-    // legend.setEnabled(false);
-    //
-    // BeanItemContainer<Observation> observationContainer = ObservationDB
-    // .getObservationContainer(getUI());
-    //
-    // DataSeries series = new DataSeries();
-    // Calendar today = Calendar.getInstance();
-    // for (int i = 0; i < 14; i++) {
-    // today.add(Calendar.DAY_OF_YEAR, -i);
-    // series.add(new DataSeriesItem(today.getTime(), 0));
-    // }
-    //
-    // for (Object itemid : observationContainer.getItemIds()) {
-    // Observation o = observationContainer.getItem(itemid).getBean();
-    // int days = (int) ((System.currentTimeMillis() - o
-    // .getObservationTime().getTime()) / (1000.0 * 60 * 60 * 24));
-    // if (days < 14
-    // && o.getSpecies().getName()
-    // .equals(observation.getSpecies().getName())) {
-    // DataSeriesItem item = series.get(days);
-    // item.setY(item.getY().intValue() + o.getCount());
-    //
-    // }
-    // }
-    // configuration.addSeries(series);
-    // chart.drawChart(configuration);
-    // return chart;
-    // }
+    private Component buildTicketLayout(final Ticket ticket) {
+        CssLayout layout = new CssLayout();
+        Label imageLabel = new Label();
+        imageLabel.setWidth(73.0f, Unit.PIXELS);
+        imageLabel.setHeight(73.0f, Unit.PIXELS);
+        imageLabel.setContentMode(ContentMode.HTML);
+        imageLabel
+                .setValue("<div class='imagepanel' style='width:100%;height:100%;background: url("
+                        + ticket.getImageData() + ")'/>");
+
+        layout.addComponent(imageLabel);
+        return layout;
+    }
 }

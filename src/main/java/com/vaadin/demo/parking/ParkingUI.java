@@ -28,15 +28,12 @@ public class ParkingUI extends UI {
     private double currentLongitude = 22.30083;
     private String user;
     private ParkingOfflineModeExtension offlineModeSettings;
-    private final BeanItemContainer<Ticket> ticketContainer;
-
-    public ParkingUI() {
-        ticketContainer = new BeanItemContainer<Ticket>(Ticket.class,
-                DataUtil.generateRandomTickets());
-    }
+    private BeanItemContainer<Ticket> ticketContainer;
 
     @Override
     public void init(VaadinRequest request) {
+        ticketContainer = new BeanItemContainer<Ticket>(Ticket.class,
+                DataUtil.generateRandomTickets());
         // Set a nice default for user for demo purposes.
         setUser("John Doe");
 

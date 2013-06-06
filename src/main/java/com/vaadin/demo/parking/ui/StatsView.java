@@ -43,16 +43,13 @@ public class StatsView extends NavigationView {
     private ListSeries otherTicketsSeries;
     private XAxis dateAxis;
 
-    public StatsView() {
-        addAttachListener(new AttachListener() {
-            @Override
-            public void attach(AttachEvent event) {
-                if (dateAxis == null) {
-                    buildUi();
-                }
-                updateTicketsPerDayChart(ticketContainer);
-            }
-        });
+    @Override
+    public void attach() {
+        super.attach();
+        if (dateAxis == null) {
+            buildUi();
+        }
+        updateTicketsPerDayChart(ticketContainer);
     }
 
     public final void buildUi() {

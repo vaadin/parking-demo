@@ -1,5 +1,7 @@
 package com.vaadin.demo.parking.ui;
 
+import java.util.List;
+
 import org.vaadin.addon.leaflet.LMarker;
 import org.vaadin.addon.leaflet.LeafletClickEvent;
 import org.vaadin.addon.leaflet.LeafletClickListener;
@@ -12,9 +14,11 @@ import com.vaadin.addon.touchkit.extensions.Geolocator;
 import com.vaadin.addon.touchkit.extensions.PositionCallback;
 import com.vaadin.addon.touchkit.gwt.client.vcom.Position;
 import com.vaadin.addon.touchkit.ui.NavigationView;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ParkingUI;
-import com.vaadin.demo.parking.widgetset.client.Observation;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
+import com.vaadin.demo.parking.widgetset.client.model.Ticket;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -30,39 +34,40 @@ public class MapView extends NavigationView implements PositionCallback,
     private Button locatebutton;
     private final LMarker you = new LMarker();
 
+    private final BeanItemContainer<Ticket> ticketContainer = ParkingUI
+            .getTicketContainer();
+
     @Override
     public void attach() {
-        buildView();
+        if (map == null) {
+            buildView();
+        }
+        updateMarkers();
         super.attach();
     };
 
     private void buildView() {
         setCaption("Map");
 
-        if (map == null) {
-            map = new ParkingMap();
+        map = new ParkingMap();
+        map.addMoveEndListener(new LeafletMoveEndListener() {
 
-            map.addMoveEndListener(new LeafletMoveEndListener() {
+            @Override
+            public void onMoveEnd(LeafletMoveEndEvent event) {
+                extent = event.getBounds();
+                updateMarkers();
+            }
+        });
 
-                @Override
-                public void onMoveEnd(LeafletMoveEndEvent event) {
-                    extent = event.getBounds();
-                    updateMarkers();
-                }
-            });
+        map.setImmediate(true);
 
-            map.setImmediate(true);
+        map.setSizeFull();
+        map.setZoomLevel(12);
+        setContent(map);
 
-            map.setSizeFull();
-            map.setZoomLevel(12);
-            setContent(map);
-
-            // Default to Vaadin HQ
-            you.setPoint(new Point(60.452, 22.301));
-            setCenter();
-
-            updateMarkers();
-        }
+        // Default to Vaadin HQ
+        you.setPoint(new Point(60.452, 22.301));
+        setCenter();
 
         locatebutton = new Button("Locate yourself", new ClickListener() {
             @Override
@@ -73,7 +78,6 @@ public class MapView extends NavigationView implements PositionCallback,
         });
         locatebutton.setDisableOnClick(true);
         setLeftComponent(locatebutton);
-
     }
 
     public void updateMarkers() {
@@ -85,24 +89,22 @@ public class MapView extends NavigationView implements PositionCallback,
         bottomRight.setLatitude(extent.getSouthWestLat());
         bottomRight.setLongitude(extent.getNorthEastLon());
 
-        // TODO: Get tickets
-        // List<Observation> observations = ObservationDB.getObservations(null,
-        // topLeft, bottomRight, 15, 1);
+        List<Ticket> tickets = ticketContainer.getItemIds();
 
         map.removeAllComponents();
 
-        // for (Observation observation : observations) {
-        // Location location = observation.getLocation();
-        //
-        // LMarker leafletMarker = new LMarker(location.getLatitude(),
-        // location.getLongitude());
-        // leafletMarker.setIcon(new ThemeResource("birdmarker.png"));
-        // leafletMarker.setIconSize(new Point(50, 50));
-        // leafletMarker.setData(observation);
-        // leafletMarker.addClickListener(this);
-        //
-        // map.addComponent(leafletMarker);
-        // }
+        for (Ticket ticket : tickets) {
+            Location location = ticket.getLocation();
+
+            LMarker leafletMarker = new LMarker(location.getLatitude(),
+                    location.getLongitude());
+            leafletMarker.setIcon(new ThemeResource("birdmarker.png"));
+            leafletMarker.setIconSize(new Point(50, 50));
+            leafletMarker.setData(ticket);
+            leafletMarker.addClickListener(this);
+
+            map.addComponent(leafletMarker);
+        }
 
         map.addComponent(you);
     }
@@ -139,14 +141,13 @@ public class MapView extends NavigationView implements PositionCallback,
                         Type.ERROR_MESSAGE);
     }
 
-    private void showPopup(Observation data) {
-        // ObservationDetailPopover observationDetailPopover = new
-        // ObservationDetailPopover(
-        // data);
-        // observationDetailPopover.showRelativeTo(getNavigationBar());
+    private void showPopup(Ticket ticket) {
+        TicketDetailPopover ticketDetailPopover = new TicketDetailPopover(
+                ticket);
+        ticketDetailPopover.showRelativeTo(getNavigationBar());
     }
 
-    public void showObservation(Observation o) {
+    public void showObservation(Ticket ticket) {
         // map.setCenter(o.getLocation().getLatitude(), o.getLocation()
         // .getLongitude());
         // map.setZoomLevel(12);
@@ -156,8 +157,9 @@ public class MapView extends NavigationView implements PositionCallback,
     public void onClick(LeafletClickEvent event) {
         Object o = event.getSource();
         if (o instanceof AbstractComponent) {
-            Observation data = (Observation) ((AbstractComponent) o).getData();
-            showPopup(data);
+            AbstractComponent component = (AbstractComponent) o;
+            Ticket ticket = (Ticket) component.getData();
+            showPopup(ticket);
         }
     }
 }

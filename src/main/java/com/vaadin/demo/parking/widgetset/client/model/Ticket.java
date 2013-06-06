@@ -12,6 +12,15 @@ public class Ticket implements Serializable {
 
     private String imageData;
     private String notes;
+    private boolean myTicket;
+
+    public boolean isMyTicket() {
+        return myTicket;
+    }
+
+    public void setMyTicket(boolean myTicket) {
+        this.myTicket = myTicket;
+    }
 
     public String getArea() {
         return area;
