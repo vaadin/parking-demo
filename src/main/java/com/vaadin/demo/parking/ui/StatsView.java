@@ -36,21 +36,70 @@ public class StatsView extends NavigationView {
     private final DateFormat dateFormat = DateFormat.getDateInstance(
             DateFormat.SHORT, ParkingUI.getApp().getLocale());
 
+    private final BeanItemContainer<Ticket> ticketContainer = ParkingUI
+            .getTicketContainer();
+
+    private ListSeries myTicketsSeries;
+    private ListSeries otherTicketsSeries;
+    private XAxis dateAxis;
+
     public StatsView() {
+        addAttachListener(new AttachListener() {
+            @Override
+            public void attach(AttachEvent event) {
+                if (dateAxis == null) {
+                    buildUi();
+                }
+                updateTicketsPerDayChart(ticketContainer);
+            }
+        });
+    }
+
+    public final void buildUi() {
         setCaption("Stats");
 
-        BeanItemContainer<Ticket> ticketContainer = ParkingUI
-                .getTicketContainer();
-
         CssLayout layout = new CssLayout();
-        layout.addComponent(buildTicketsPerDayChart(ticketContainer));
+
+        layout.addComponent(buildTicketsPerDayChart());
         layout.addComponent(buildTicketsPerAreaChart(ticketContainer));
         setContent(layout);
     }
 
-    public final Component buildTicketsPerDayChart(
-            final BeanItemContainer<Ticket> ticketContainer) {
+    public final Component buildTicketsPerDayChart() {
 
+        Chart chart = new Chart(ChartType.COLUMN);
+        Configuration conf = chart.getConfiguration();
+        conf.setTitle(new Title("Tickets / day"));
+
+        dateAxis = new XAxis();
+
+        conf.addxAxis(dateAxis);
+
+        YAxis yAxis = new YAxis();
+        yAxis.setMin(0);
+        yAxis.setTitle(new Title("Total tickets"));
+        conf.addyAxis(yAxis);
+
+        Tooltip tooltip = new Tooltip();
+        tooltip.setFormatter("this.series.name +': '+ this.y +' ('+ Math.round(this.percentage) +'%)'");
+        conf.setTooltip(tooltip);
+
+        PlotOptionsColumn plotOptions = new PlotOptionsColumn();
+        plotOptions.setStacking(Stacking.NORMAL);
+        conf.setPlotOptions(plotOptions);
+
+        myTicketsSeries = new ListSeries("My tickets");
+        conf.addSeries(myTicketsSeries);
+        otherTicketsSeries = new ListSeries("Other tickets");
+        conf.addSeries(otherTicketsSeries);
+
+        chart.drawChart(conf);
+
+        return chart;
+    }
+
+    public final void updateTicketsPerDayChart(
+            final BeanItemContainer<Ticket> ticketContainer) {
         Map<Date, int[]> ticketCount = Maps.newHashMap();
         for (Ticket ticket : ticketContainer.getItemIds()) {
             Calendar cal = Calendar.getInstance();
@@ -89,33 +138,9 @@ public class StatsView extends NavigationView {
             index++;
         }
 
-        Chart chart = new Chart(ChartType.COLUMN);
-        Configuration conf = chart.getConfiguration();
-        conf.setTitle(new Title("Tickets / day"));
-
-        XAxis xAxis = new XAxis();
-        xAxis.setCategories(orderedStrings.toArray(new String[] {}));
-        conf.addxAxis(xAxis);
-
-        YAxis yAxis = new YAxis();
-        yAxis.setMin(0);
-        yAxis.setTitle(new Title("Total tickets"));
-        conf.addyAxis(yAxis);
-
-        Tooltip tooltip = new Tooltip();
-        tooltip.setFormatter("this.series.name +': '+ this.y +' ('+ Math.round(this.percentage) +'%)'");
-        conf.setTooltip(tooltip);
-
-        PlotOptionsColumn plotOptions = new PlotOptionsColumn();
-        plotOptions.setStacking(Stacking.NORMAL);
-        conf.setPlotOptions(plotOptions);
-
-        conf.addSeries(new ListSeries("My tickets", myTickets));
-        conf.addSeries(new ListSeries("Other tickets", otherTickets));
-
-        chart.drawChart(conf);
-
-        return chart;
+        dateAxis.setCategories(orderedStrings.toArray(new String[] {}));
+        myTicketsSeries.setData(myTickets);
+        otherTicketsSeries.setData(otherTickets);
     }
 
     public final Component buildTicketsPerAreaChart(

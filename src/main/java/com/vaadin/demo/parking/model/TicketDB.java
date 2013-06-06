@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Random;
 
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
+import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
@@ -273,5 +274,9 @@ public class TicketDB {
             result.add(ticket);
         }
         return result;
+    }
+
+    public static void persistTicket(final Ticket ticket) {
+        ParkingUI.getTicketContainer().addItem(ticket);
     }
 }
