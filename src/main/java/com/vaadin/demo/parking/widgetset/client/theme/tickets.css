@@ -73,6 +73,16 @@
 	float: right;
 }
 
+.tickets.tablet .photolayout > div {
+	width: auto;
+	margin-right: 7px;
+}
+.tickets.tablet .informationlayout > div,
+.tickets.tablet .noteslayout > div {
+	width: auto;
+	margin-left: 7px;
+}
+
 .tickets.tablet form {
 	float: left;
 }

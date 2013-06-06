@@ -7,6 +7,6 @@ import com.vaadin.shared.communication.ServerRpc;
 
 public interface PersistOfflineTicketsServerRpc extends ServerRpc {
 
-    public void persistTickets(List<Ticket> tickets);
+    void persistTickets(List<Ticket> tickets);
 
 }
