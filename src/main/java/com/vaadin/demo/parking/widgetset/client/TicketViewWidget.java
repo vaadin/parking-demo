@@ -20,6 +20,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -34,7 +36,6 @@ import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationButton;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationManager;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationManager.AnimationListener;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationView;
-import com.vaadin.addon.touchkit.gwt.client.ui.VPopover;
 import com.vaadin.addon.touchkit.gwt.client.ui.VTabBar;
 import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ApplicationConnection;
@@ -52,6 +53,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         RepeatingCommand {
     private VTextField locationField;
     private DatePicker timeField;
+    private Date date;
     private VTextField vehicleIdField;
     private VNavigationButton violationButton;
     private Violation selectedViolation;
@@ -60,7 +62,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private TicketViewWidgetListener listener;
 
-    private Image image;
+    private SimplePanel imagePanel;
 
     private final VTabBar tabBar;
     private final VButton removeButton = new VButton();
@@ -128,6 +130,18 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         contentView.setHeight("100%");
         VNavigationBar navigationBar = new VNavigationBar();
         navigationBar.setCaption("New Ticket");
+
+        saveTicketButton = new VButton();
+        saveTicketButton.setText("Save");
+        saveTicketButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                saveTicket();
+            }
+        });
+
+        navigationBar.setRightWidget(saveTicketButton);
+
         contentView.setNavigationBar(navigationBar);
 
         /*
@@ -141,19 +155,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         panel.add(buildInformationLayout());
         panel.add(buildPhotoLayout());
         panel.add(buildNotesLayout());
-
-        VerticalComponentGroupWidget p = new VerticalComponentGroupWidget();
-        saveTicketButton = new VButton();
-        saveTicketButton.setText("Save");
-        saveTicketButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                saveTicket();
-            }
-        });
-        p.add(saveTicketButton);
-
-        panel.add(p);
 
         contentView.setContent(panel);
         navigationManager.setCurrentWidget(contentView);
@@ -170,12 +171,17 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         location.setName("Origo");
         ticket.setLocation(location);
 
-        // ticket.setTimeStamp(timeField.);
-        ticket.setTimeStamp(new Date());
+        ticket.setTimeStamp(date);
+
         ticket.setRegisterPlateNumber(vehicleIdField.getText());
 
         ticket.setViolation(selectedViolation);
 
+        // Get image data url
+        String fullSrc = imagePanel.getElement().getStyle()
+                .getBackgroundImage();
+        String src = fullSrc.substring(4, fullSrc.length() - 1);
+        Image image = new Image(src);
         Canvas canvas = Canvas.createIfSupported();
         canvas.getContext2d().drawImage(ImageElement.as(image.getElement()), 0,
                 0);
@@ -208,6 +214,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         timeField = new DatePicker();
         timeField.setDate(new Date());
         timeField.setResolution(Resolution.TIME);
+        timeField.addValueChangeHandler(new ValueChangeHandler<Date>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Date> event) {
+                date = event.getValue();
+            }
+        });
         innerLayout.add(buildFieldRowBox("Time", timeField));
 
         vehicleIdField = new VTextField();
@@ -270,26 +282,21 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         VCssLayout innerLayout = new VCssLayout();
 
-        image = new Image();
-        image.setPixelSize(200, 100);
-        image.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                VPopover popover = new VPopover();
-                Image popImage = new Image();
-                popImage.setSize("100%", "100%");
-                popImage.setUrl(image.getUrl());
-                popover.add(popImage);
-                popover.show();
-                popover.setSize("200px", "200px");
-            }
-        });
-        innerLayout.add(image);
+        imagePanel = new SimplePanel();
+        imagePanel.addStyleName("imagepanel");
+        innerLayout.add(imagePanel);
 
         takePhotoButton.setImmediate(true);
+        takePhotoButton.submitButton.setStyleName("parkingbutton");
+        takePhotoButton.submitButton.addStyleName("blue");
+        takePhotoButton.submitButton.addStyleName("textcentered");
+
         takePhotoButton.fu.getElement().setId("takephotobutton");
         takePhotoButton.fu.getElement().setAttribute("capture", "camera");
         takePhotoButton.fu.getElement().setAttribute("accept", "image/*");
+
+        VCssLayout buttonsLayout = new VCssLayout();
+        buttonsLayout.addStyleName("buttonslayout");
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
@@ -299,16 +306,21 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             }
         });
 
-        innerLayout.add(takePhotoButton);
+        buttonsLayout.add(takePhotoButton);
 
-        removeButton.setText("Remove photo");
+        removeButton.setText("Remove");
+        removeButton.setStyleName("parkingbutton");
+        removeButton.addStyleName("blue");
+        removeButton.addStyleName("textcentered");
         removeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 setImageSrc(null);
             }
         });
-        innerLayout.add(removeButton);
+        buttonsLayout.add(removeButton);
+
+        innerLayout.add(buttonsLayout);
 
         VerticalComponentGroupWidget wrapper = new VerticalComponentGroupWidget();
         wrapper.add(innerLayout);
@@ -360,11 +372,19 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private void setImageSrc(String src) {
         boolean empty = src == null;
-        image.setUrl(empty ? "about:blank" : src);
-        image.setVisible(!empty);
+        if (!empty) {
+            imagePanel.getElement().getStyle()
+                    .setBackgroundImage("url(" + src + ")");
+        }
+        imagePanel.setVisible(!empty);
         removeButton.setVisible(!empty);
         takePhotoButton.submitButton.setText(empty ? "Take a photo"
                 : "Replace...");
+        if (empty) {
+            takePhotoButton.addStyleName("empty");
+        } else {
+            takePhotoButton.removeStyleName("empty");
+        }
     }
 
     private Widget buildFakeToolbar() {
