@@ -199,12 +199,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private Widget buildInformationLayout() {
-        VCssLayout layout = new VCssLayout();
-        layout.addStyleName("informationlayout");
-
-        Label caption = new Label("Information");
-        layout.add(caption);
-
         VerticalComponentGroupWidget innerLayout = new VerticalComponentGroupWidget();
 
         locationField = new VTextField();
@@ -212,7 +206,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         innerLayout.add(buildFieldRowBox("Location", locationField));
 
         timeField = new DatePicker();
-        timeField.setDate(new Date());
         timeField.setResolution(Resolution.TIME);
         timeField.addValueChangeHandler(new ValueChangeHandler<Date>() {
             @Override
@@ -252,10 +245,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         });
         innerLayout.add(buildFieldRowBox("Violation", violationButton));
 
-        layout.add(innerLayout);
-
-        return layout;
-
+        return buildSectionWrapper(innerLayout, "Information",
+                "informationlayout");
     }
 
     private Widget buildFieldRowBox(final String title, final Widget widget) {
@@ -274,11 +265,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private Widget buildPhotoLayout() {
-        VCssLayout layout = new VCssLayout();
-        layout.addStyleName("photolayout");
-
-        Label caption = new Label("Photo");
-        layout.add(caption);
 
         VCssLayout innerLayout = new VCssLayout();
 
@@ -324,27 +310,32 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         VerticalComponentGroupWidget wrapper = new VerticalComponentGroupWidget();
         wrapper.add(innerLayout);
-        layout.add(wrapper);
+
+        return buildSectionWrapper(wrapper, "Photo", "photolayout");
+    }
+
+    private Widget buildSectionWrapper(final Widget content,
+            final String captionString, final String styleName) {
+        VCssLayout layout = new VCssLayout();
+        layout.addStyleName(styleName);
+
+        Label caption = new Label(captionString);
+        caption.addStyleName("sectioncaption");
+        layout.add(caption);
+
+        layout.add(content);
 
         return layout;
     }
 
     private Widget buildNotesLayout() {
-        VCssLayout layout = new VCssLayout();
-        layout.addStyleName("noteslayout");
-
-        Label caption = new Label("Notes");
-        layout.add(caption);
-
         VerticalComponentGroupWidget innerLayout = new VerticalComponentGroupWidget();
 
         notesField = new VTextArea();
         notesField.setSize("100%", "100px");
         innerLayout.add(notesField);
 
-        layout.add(innerLayout);
-
-        return layout;
+        return buildSectionWrapper(innerLayout, "Notes", "noteslayout");
     }
 
     private void resetFields() {
@@ -354,6 +345,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         selectedViolation = null;
         violationButton.setText("Choose...");
         notesField.setText(null);
+        date = new Date();
+        timeField.setDate(date);
     }
 
     private native void bindFileInput(Element e, TicketViewWidget widget) /*-{
@@ -370,7 +363,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                                                                           }
                                                                           }-*/;
 
-    private void setImageSrc(String src) {
+    private void setImageSrc(final String src) {
         boolean empty = src == null;
         if (!empty) {
             imagePanel.getElement().getStyle()

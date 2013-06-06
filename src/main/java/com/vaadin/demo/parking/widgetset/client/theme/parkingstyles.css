@@ -1,4 +1,4 @@
-@external about, details, shiftstab, maptab, ticketstab, statstab, add, close, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered,
+@external about, details, shiftstab, maptab, ticketstab, statstab, add, close, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app 
 
 @def darkText #3d3f41;
 
@@ -12,6 +12,11 @@
 
 .details .v-caption > div {
 	margin: 10px 0;
+}
+
+.v-app,
+.v-touchkit-navpanel-container {
+	background: #efefec !important;
 }
 
 /*
@@ -58,6 +63,10 @@
 	left: 50%;
 	box-sizing: border-box;
 }
+.v-touchkit-tabbar-toolbar .v-button-wrap:AFTER {
+	background: transparent !important;
+}
+
 .v-touchkit-tabbar-toolbar .v-button.ticketstab {
 	border-left: 1px solid #e7e7e7;
 }

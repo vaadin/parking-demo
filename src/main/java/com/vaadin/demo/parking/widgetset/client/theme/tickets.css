@@ -1,8 +1,14 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-label-grey-title, v-button, v-button-wrap, v-button-caption, sectioncaption;
 
 /*
  * Tickets view
  */
+.tickets .sectioncaption {
+	padding: 20px 0 3px 15px;
+	font-size: 14px;
+	color: #cac9b7;
+}
+
 .tickets .photolayout {
 	float: left;
 	width: 100%;
@@ -74,3 +80,37 @@
 .tickets.tablet form.empty {
 	float: none;
 }
+
+.tickets .v-label-grey-title {
+	color: #64635a !important;
+	font-weight: normal;
+}
+.tickets .v-label-grey-title:FIRST-CHILD {
+	color: #a09f91 !important;
+}
+
+.tickets .informationlayout .v-button,
+.tickets .informationlayout .v-button-wrap,
+.tickets .informationlayout .v-button-wrap:AFTER,
+.tickets .informationlayout .v-button-caption {
+	background: transparent !important;
+	-webkit-box-shadow: none;
+	color: #64635a;
+	text-shadow: none;
+	padding-left: 0;
+	font-weight: normal;
+	font-size: 18px;
+}
+
+.tickets input {
+	padding: 0 !important;
+	height: 100%;
+}
+
+.tickets input,
+.tickets textarea {
+	outline: none;
+	color: #64635a !important;
+	font-size: 18px;
+}
+
