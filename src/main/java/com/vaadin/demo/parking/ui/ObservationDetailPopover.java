@@ -1,11 +1,8 @@
 package com.vaadin.demo.parking.ui;
 
 import java.text.DecimalFormat;
-import java.util.ResourceBundle;
 
 import com.vaadin.addon.touchkit.ui.Popover;
-import com.vaadin.demo.parking.ParkingUI;
-import com.vaadin.demo.parking.util.Translations;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
 /**
@@ -14,11 +11,9 @@ import com.vaadin.demo.parking.widgetset.client.model.Ticket;
  */
 public class ObservationDetailPopover extends Popover {
 
-    private final ResourceBundle tr;
-    private final static DecimalFormat df = new DecimalFormat("##.#####");
+    private static final DecimalFormat df = new DecimalFormat("##.#####");
 
     public ObservationDetailPopover(final Ticket o) {
-        tr = Translations.get(ParkingUI.getApp().getLocale());
 
         // setClosable(true);
         // setModal(true);

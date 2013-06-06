@@ -1,7 +1,5 @@
 package com.vaadin.demo.parking.ui;
 
-import java.util.ResourceBundle;
-
 import org.vaadin.addon.leaflet.LMarker;
 import org.vaadin.addon.leaflet.LeafletClickEvent;
 import org.vaadin.addon.leaflet.LeafletClickListener;
@@ -15,7 +13,6 @@ import com.vaadin.addon.touchkit.extensions.PositionCallback;
 import com.vaadin.addon.touchkit.gwt.client.vcom.Position;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.demo.parking.ParkingUI;
-import com.vaadin.demo.parking.util.Translations;
 import com.vaadin.demo.parking.widgetset.client.Observation;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.ui.AbstractComponent;
@@ -40,8 +37,7 @@ public class MapView extends NavigationView implements PositionCallback,
     };
 
     private void buildView() {
-        ResourceBundle tr = Translations.get(getLocale());
-        setCaption(tr.getString("Map"));
+        setCaption("Map");
 
         if (map == null) {
             map = new ParkingMap();

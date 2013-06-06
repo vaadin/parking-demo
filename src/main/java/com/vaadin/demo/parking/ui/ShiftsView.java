@@ -1,7 +1,8 @@
 package com.vaadin.demo.parking.ui;
 
 import java.text.DateFormat;
-import java.util.ResourceBundle;
+
+import org.apache.commons.lang.WordUtils;
 
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
@@ -10,9 +11,8 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.demo.parking.ParkingUI;
-import com.vaadin.demo.parking.model.Shift;
-import com.vaadin.demo.parking.model.ShiftDB;
-import com.vaadin.demo.parking.util.Translations;
+import com.vaadin.demo.parking.util.DataUtil;
+import com.vaadin.demo.parking.widgetset.client.model.Shift;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.Button;
@@ -32,7 +32,6 @@ public class ShiftsView extends NavigationView {
     private static final String STYLE_NAME_FILTER = "shiftsfilter";
 
     private final BeanItemContainer<Shift> shiftContainer;
-    private final ResourceBundle tr = Translations.get();
 
     private final DateFormat dateFormat = DateFormat.getDateInstance(
             DateFormat.SHORT, ParkingUI.getApp().getLocale());
@@ -41,7 +40,7 @@ public class ShiftsView extends NavigationView {
 
     public ShiftsView() {
         setStyleName(STYLE_NAME);
-        setCaption(tr.getString("shifts"));
+        setCaption("Shifts");
 
         CssLayout mainLayout = new CssLayout();
         mainLayout.setSizeFull();
@@ -58,7 +57,7 @@ public class ShiftsView extends NavigationView {
 
     private BeanItemContainer<Shift> buildShiftContainer() {
         return new BeanItemContainer<Shift>(Shift.class,
-                ShiftDB.generateRandomShifts());
+                DataUtil.generateRandomShifts());
     }
 
     private Component buildShiftTable(
@@ -83,7 +82,7 @@ public class ShiftsView extends NavigationView {
                 "start", "end" });
         for (Object propertyId : shiftTable.getVisibleColumns()) {
             shiftTable.setColumnHeader(propertyId,
-                    tr.getString((String) propertyId));
+                    WordUtils.capitalize((String) propertyId));
         }
         shiftTable.setSortContainerPropertyId("date");
         return shiftTable;
@@ -97,14 +96,13 @@ public class ShiftsView extends NavigationView {
         filteringLayout.addComponent(filtersGroup);
 
         CssLayout titleLayout = new CssLayout();
-        titleLayout.addComponent(new Button(tr.getString("clear"),
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        shiftContainer.removeAllContainerFilters();
-                        filtersGroup.removeAllComponents();
-                    }
-                }));
+        titleLayout.addComponent(new Button("Clear", new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                shiftContainer.removeAllContainerFilters();
+                filtersGroup.removeAllComponents();
+            }
+        }));
         filteringLayout.addComponent(titleLayout, 0);
 
         Button addFilterButton = new Button("Add filter...",
@@ -133,7 +131,7 @@ public class ShiftsView extends NavigationView {
                 final BeanItemContainer<Shift> shiftContainer) {
             super();
             setWidth(100.0f, Unit.PERCENTAGE);
-            setCaption(tr.getString(propertyId));
+            setCaption(WordUtils.capitalize(propertyId));
 
             addTextChangeListener(new TextChangeListener() {
                 @Override

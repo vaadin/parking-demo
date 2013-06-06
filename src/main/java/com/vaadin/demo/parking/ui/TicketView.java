@@ -2,7 +2,7 @@ package com.vaadin.demo.parking.ui;
 
 import java.util.List;
 
-import com.vaadin.demo.parking.model.TicketDB;
+import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.TicketViewServerRpc;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.ui.AbstractComponent;
@@ -27,7 +27,7 @@ public class TicketView extends AbstractComponent implements
         for (Ticket ticket : tickets) {
             System.out.println("persisting " + ticket);
             System.out.println(ticket.getImageData());
-            TicketDB.persistTicket(ticket);
+            DataUtil.persistTicket(ticket);
         }
     }
 

@@ -6,9 +6,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.demo.parking.model.TicketDB;
 import com.vaadin.demo.parking.ui.MainTabsheet;
-import com.vaadin.demo.parking.util.Translations;
+import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
@@ -33,15 +32,13 @@ public class ParkingUI extends UI {
 
     public ParkingUI() {
         ticketContainer = new BeanItemContainer<Ticket>(Ticket.class,
-                TicketDB.generateRandomTickets());
+                DataUtil.generateRandomTickets());
     }
 
     @Override
     public void init(VaadinRequest request) {
-        // Set a nice default for user for demo purposes: Eräjorma,
-        // Skogsbörje...
-        setUser(Translations.get(getLocale()).getObject("Willy Wilderness")
-                .toString());
+        // Set a nice default for user for demo purposes.
+        setUser("John Doe");
 
         setContent(new MainTabsheet());
 

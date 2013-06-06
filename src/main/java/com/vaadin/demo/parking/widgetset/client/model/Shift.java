@@ -1,4 +1,4 @@
-package com.vaadin.demo.parking.model;
+package com.vaadin.demo.parking.widgetset.client.model;
 
 import java.io.Serializable;
 import java.util.Date;

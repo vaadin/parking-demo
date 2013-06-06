@@ -14,9 +14,9 @@ import com.vaadin.ui.VerticalLayout;
 public class ParkingFallbackUI extends UI {
 
     // FIXME review message
-    private static final String MSG = "<h1>Ooops...</h1> <p>You accessed Vornitologist "
+    private static final String MSG = "<h1>Ooops...</h1> <p>You accessed Parking "
             + "with a browser that is not supported. "
-            + "Vornitologist is "
+            + "Parking is "
             + "meant to be used with modern WebKit based mobile browsers, "
             + "e.g. with iPhone or modern Android devices. Currently those "
             + "cover a huge majority of actively used mobile browsers. "
@@ -32,7 +32,7 @@ public class ParkingFallbackUI extends UI {
     protected void init(VaadinRequest request) {
 
         Label label = new Label(MSG, ContentMode.HTML);
-        
+
         VerticalLayout content = new VerticalLayout();
         content.setMargin(true);
         content.addComponent(label);
