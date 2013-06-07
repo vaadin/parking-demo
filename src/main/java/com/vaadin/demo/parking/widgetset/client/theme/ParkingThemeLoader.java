@@ -11,6 +11,8 @@ public class ParkingThemeLoader extends ThemeLoader {
         // ... and Parking specific additions from own client bundle
         ParkingBundle.INSTANCE.css().ensureInjected();
         ParkingBundle.INSTANCE.ticketsCss().ensureInjected();
+        ParkingBundle.INSTANCE.statsCss().ensureInjected();
+        ParkingBundle.INSTANCE.shiftsCss().ensureInjected();
     }
 
 }

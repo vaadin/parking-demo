@@ -1,4 +1,4 @@
-@external about, details, shiftstab, maptab, ticketstab, statstab, add, close, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode; 
+@external about, details, shiftstab, maptab, ticketstab, statstab, add, close, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode; 
 
 @def darkText #3d3f41;
 
@@ -145,30 +145,6 @@
 
 .textcentered {
 	text-align: center;
-}
-.
-
-/*
- * Shifts view
- */
-.shifts .v-csslayout {
-	padding: 0;
-}
-
-.shifts .shiftstable {
-	width: 100%;
-	float: left;
-}
-.v-ui[width-range~="801px-"] .shifts .shiftstable {
-    width: 65% !important;
-}
-
-.shifts .shiftsfilter {
-	width: 100%;
-	float: left;
-}
-.v-ui[width-range~="801px-"] .shifts .shiftsfilter {
-    width: 35% !important;
 }
 
 

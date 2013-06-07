@@ -17,6 +17,12 @@ public interface ParkingBundle extends ClientBundle {
     @Source("tickets.css")
     public TicketsCss ticketsCss();
 
+    @Source("stats.css")
+    public StatsCss statsCss();
+
+    @Source("shifts.css")
+    public ShiftsCss shiftsCss();
+
     @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
     @Source("aboutBackground.png")
     public ImageResource aboutBackground();
