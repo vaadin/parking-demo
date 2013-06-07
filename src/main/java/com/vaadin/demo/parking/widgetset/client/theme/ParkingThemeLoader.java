@@ -13,6 +13,7 @@ public class ParkingThemeLoader extends ThemeLoader {
         ParkingBundle.INSTANCE.ticketsCss().ensureInjected();
         ParkingBundle.INSTANCE.statsCss().ensureInjected();
         ParkingBundle.INSTANCE.shiftsCss().ensureInjected();
+        ParkingBundle.INSTANCE.mapCss().ensureInjected();
     }
 
 }

@@ -1,17 +1,17 @@
 package com.vaadin.demo.parking.ui;
 
-import java.text.DecimalFormat;
+import java.text.DateFormat;
 
 import com.vaadin.addon.touchkit.ui.Popover;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
+import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeButton;
 
 /**
  * A simple detail popup to display information about an observation. Also
@@ -19,128 +19,44 @@ import com.vaadin.ui.NativeButton;
  */
 public class TicketDetailPopover extends Popover {
 
-    private static final DecimalFormat df = new DecimalFormat("##.#####");
+    private final DateFormat dateFormat = DateFormat.getDateInstance(
+            DateFormat.SHORT, ParkingUI.getApp().getLocale());
+    private final DateFormat timeFormat = DateFormat.getTimeInstance(
+            DateFormat.SHORT, ParkingUI.getApp().getLocale());
 
     public TicketDetailPopover(final Ticket ticket) {
         final VerticalComponentGroup detailsGroup = new VerticalComponentGroup();
-        detailsGroup
-                .addComponent(new Label(ticket.getViolation().getCaption()));
+        Label ticketTitle = new Label(ticket.getViolation().getCaption());
+        ticketTitle.addStyleName("textcentered");
+        ticketTitle.addStyleName("tickettitle");
+        detailsGroup.addComponent(ticketTitle);
 
         detailsGroup.addComponent(buildTicketLayout(ticket));
 
-        NativeButton closeButton = new NativeButton("Close",
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        close();
-                    }
-                });
-        detailsGroup.addComponent(closeButton);
-        setContent(detailsGroup);
-        // setClosable(true);
-        // setModal(true);
-        //
-        // setWidth("350px");
-        // setHeight("65%");
-        //
-        // CssLayout detailsLayout = new CssLayout();
-        // detailsLayout.setSizeFull();
-        // detailsLayout.addStyleName("details");
-        // NavigationView navigationView = new NavigationView(detailsLayout);
-        // navigationView.setSizeFull();
-        // Label label = new Label();
-        // label.setWidth(null);
-        //
-        // CssLayout cssLayout2 = new CssLayout();
-        // Button detailsLink = new Button("...", new ClickListener() {
-        // @Override
-        // public void buttonClick(ClickEvent event) {
-        // /*
-        // * Show the observed species in the classification hierarchy
-        // */
-        // MainTabsheet parent = (MainTabsheet) UI.getCurrent()
-        // .getContent();
-        // parent.getClassificationHierarchy().showSpecies(o.getSpecies());
-        // parent.setSelectedTab(parent.getClassificationHierarchy());
-        // removeFromParent();
-        // }
-        // });
-        // cssLayout2.setCaption(tr.getString("species") + ": ");
-        // detailsLink.setCaption(tr.getString(o.getSpecies().getName()));
-        // detailsLink.setStyleName(BaseTheme.BUTTON_LINK);
-        // navigationView.setCaption(tr.getString(o.getSpecies().getName()));
-        // cssLayout2.addComponent(label);
-        // cssLayout2.addComponent(detailsLink);
-        //
-        // detailsLayout.addComponent(cssLayout2);
-        //
-        // cssLayout2 = new CssLayout();
-        // Button placeLink = new Button("...", new ClickListener() {
-        // @Override
-        // public void buttonClick(ClickEvent event) {
-        // /*
-        // * Show the observed location on the map
-        // */
-        // MainTabsheet parent = (MainTabsheet) UI.getCurrent()
-        // .getContent();
-        // parent.setSelectedTab(parent.getMapView());
-        // parent.getMapView().showObservation(o);
-        // removeFromParent();
-        // }
-        // });
-        // cssLayout2.setCaption(tr.getString("Observation location") + ": ");
-        // placeLink.setCaption(o.getLocation().getName() + " ("
-        // + df.format(o.getLocation().getLongitude()) + ", "
-        // + df.format(o.getLocation().getLatitude()) + ")");
-        // placeLink.setStyleName(BaseTheme.BUTTON_LINK);
-        // navigationView.setCaption(tr.getString(o.getSpecies().getName()));
-        // cssLayout2.addComponent(placeLink);
-        // detailsLayout.addComponent(cssLayout2);
-        //
-        // label = new Label();
-        // label.setCaption(tr.getString("time") + ": ");
-        // DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance(
-        // SimpleDateFormat.SHORT, SimpleDateFormat.SHORT, ParkingUI
-        // .getApp().getLocale());
-        // label.setValue(dateTimeInstance.format(o.getObservationTime()));
-        // detailsLayout.addComponent(label);
-        //
-        // label = new Label();
-        // label.setCaption(tr.getString("observer") + ": ");
-        // label.setValue(o.getObserver());
-        // // label.setDebugId("observerlabel");
-        //
-        // detailsLayout.addComponent(label);
-        //
-        // if (o.getImage() != null) {
-        // final File file = new File(o.getImage());
-        // if (file.exists()) {
-        // Embedded image = new Embedded();
-        // image.setSource(new FileResource(file));
-        // detailsLayout.addComponent(image);
-        // }
-        // }
-        //
-        // detailsLayout.addComponent(getChart());
-        //
-        // setContent(navigationView);
-        //
-        // Button close = new Button(null, new ClickListener() {
-        //
-        // @Override
-        // public void buttonClick(ClickEvent event) {
-        // UI.getCurrent().removeWindow(ObservationDetailPopover.this);
-        // }
-        // });
-        // close.setStyleName("close");
-        //
-        // navigationView.setRightComponent(close);
+        Label closeLabel = new Label("Close");
+        closeLabel.addStyleName("blue");
+        closeLabel.addStyleName("textcentered");
+        closeLabel.addStyleName("closelabel");
 
+        closeLabel.setHeight(30.0f, Unit.PIXELS);
+
+        CssLayout wrapper = new CssLayout(closeLabel);
+        wrapper.addLayoutClickListener(new LayoutClickListener() {
+            @Override
+            public void layoutClick(final LayoutClickEvent event) {
+                close();
+            }
+        });
+        detailsGroup.addComponent(wrapper);
+        detailsGroup.setWidth(300, Unit.PIXELS);
+        setContent(detailsGroup);
     }
 
     private Component buildTicketLayout(final Ticket ticket) {
         CssLayout layout = new CssLayout();
+        layout.addStyleName("ticketlayout");
         Label imageLabel = new Label();
+        imageLabel.addStyleName("ticketimage");
         imageLabel.setWidth(73.0f, Unit.PIXELS);
         imageLabel.setHeight(73.0f, Unit.PIXELS);
         imageLabel.setContentMode(ContentMode.HTML);
@@ -149,6 +65,38 @@ public class TicketDetailPopover extends Popover {
                         + ticket.getImageData() + ")'/>");
 
         layout.addComponent(imageLabel);
+
+        layout.addComponent(buildTicketInfoLayout(ticket));
+        return layout;
+    }
+
+    private Component buildTicketInfoLayout(final Ticket ticket) {
+        CssLayout layout = new CssLayout();
+        layout.addStyleName("ticketinfolayout");
+        layout.addComponent(buildInfoRow("Location", ticket.getLocation()
+                .getName()));
+        layout.addComponent(buildInfoRow(
+                "Time",
+                dateFormat.format(ticket.getTimeStamp()) + " "
+                        + timeFormat.format(ticket.getTimeStamp())));
+        layout.addComponent(buildInfoRow("Vehicle ID",
+                ticket.getRegisterPlateNumber()));
+
+        return layout;
+    }
+
+    private Component buildInfoRow(final String title, final String value) {
+        CssLayout layout = new CssLayout();
+        layout.addStyleName("inforowlayout");
+
+        Label titleLabel = new Label(title);
+        titleLabel.addStyleName("inforowtitle");
+        layout.addComponent(titleLabel);
+
+        Label valueLabel = new Label(value);
+        valueLabel.addStyleName("inforowvalue");
+        layout.addComponent(valueLabel);
+
         return layout;
     }
 }

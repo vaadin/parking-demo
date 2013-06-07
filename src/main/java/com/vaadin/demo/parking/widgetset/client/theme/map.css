@@ -1,0 +1,48 @@
+@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel;
+
+.v-touchkit-popover.v-touchkit-relative .v-window-wrap {
+	background: none;
+	border: none;
+	-webkit-box-shadow: none;
+}
+
+.v-touchkit-popover-pointer-bottom {
+	background: none;
+}
+
+.v-touchkit-popover .tickettitle {
+	color: #78776d;
+}
+
+.v-touchkit-popover .ticketlayout {
+	padding: 10px 0;
+	float: left;
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+.v-touchkit-popover .ticketimage {
+	float: left;
+}
+
+.v-touchkit-popover .ticketinfolayout{
+	float: left;
+}
+
+.v-touchkit-popover .inforowlayout{
+	padding-left: 12px;
+	padding-bottom: 5px;
+}
+
+.v-touchkit-popover .inforowtitle {
+	color: #a09f91;
+	font-size: 15px;
+}
+.v-touchkit-popover .inforowvalue {
+	color: #64635a;
+	font-size: 15px;
+}
+
+.v-touchkit-popover .closelabel {
+	margin-top: 10px;
+}

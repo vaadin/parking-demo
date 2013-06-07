@@ -11,6 +11,9 @@ public interface ParkingBundle extends ClientBundle {
     public static final ParkingBundle INSTANCE = GWT
             .create(ParkingBundle.class);
 
+    @Source("map.css")
+    public MapCss mapCss();
+
     @Source("parkingstyles.css")
     public ParkingCss css();
 
