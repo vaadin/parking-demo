@@ -16,13 +16,20 @@ import com.google.gwt.thirdparty.guava.common.collect.Maps;
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.ChartType;
 import com.vaadin.addon.charts.model.Configuration;
+import com.vaadin.addon.charts.model.DataSeries;
+import com.vaadin.addon.charts.model.DataSeriesItem;
+import com.vaadin.addon.charts.model.Labels;
 import com.vaadin.addon.charts.model.ListSeries;
 import com.vaadin.addon.charts.model.PlotOptionsColumn;
+import com.vaadin.addon.charts.model.PlotOptionsPie;
 import com.vaadin.addon.charts.model.Stacking;
 import com.vaadin.addon.charts.model.Title;
 import com.vaadin.addon.charts.model.Tooltip;
 import com.vaadin.addon.charts.model.XAxis;
 import com.vaadin.addon.charts.model.YAxis;
+import com.vaadin.addon.charts.model.style.Color;
+import com.vaadin.addon.charts.model.style.SolidColor;
+import com.vaadin.addon.charts.themes.VaadinTheme;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ParkingUI;
@@ -42,9 +49,11 @@ public class StatsView extends NavigationView {
     private ListSeries otherTicketsSeries;
     private XAxis dateAxis;
 
-    private ListSeries regionSeries;
-
     private XAxis areaCategories;
+
+    private DataSeries zoneSeries;
+
+    private DataSeries regionSeries;
 
     @Override
     public void attach() {
@@ -154,27 +163,40 @@ public class StatsView extends NavigationView {
         otherTicketsSeries.setData(otherTickets);
     }
 
+    private static Color[] colors = new VaadinTheme().getColors();
+
     public final Component buildTicketsPerAreaChart() {
         Chart chart = new Chart(ChartType.PIE);
+
         Configuration conf = chart.getConfiguration();
-        conf.setTitle(new Title("Tickets / region"));
 
-        areaCategories = new XAxis();
-        areaCategories.setCategories("A", "B", "C");
-        conf.addxAxis(areaCategories);
+        conf.setTitle("Tickets / area");
 
-        YAxis yAxis = new YAxis();
-        yAxis.setMin(0);
-        yAxis.setTitle(new Title("Total tickets"));
-        conf.addyAxis(yAxis);
+        PlotOptionsPie pie = new PlotOptionsPie();
+        pie.setShadow(false);
+        conf.setPlotOptions(pie);
 
-        PlotOptionsColumn plotOptions = new PlotOptionsColumn();
-        plotOptions.setStacking(Stacking.NORMAL);
-        conf.setPlotOptions(plotOptions);
+        zoneSeries = new DataSeries();
+        zoneSeries.setName("Zone");
+        PlotOptionsPie innerPieOptions = new PlotOptionsPie();
+        zoneSeries.setPlotOptions(innerPieOptions);
+        innerPieOptions.setSize("60%");
+        innerPieOptions.setDataLabels(new Labels());
+        innerPieOptions.getDataLabels().setFormatter(
+                "this.y > 5 ? this.point.name : null");
+        innerPieOptions.getDataLabels().setColor(new SolidColor(255, 255, 255));
+        innerPieOptions.getDataLabels().setDistance(-30);
 
-        regionSeries = new ListSeries("Tickets");
-        conf.addSeries(regionSeries);
+        regionSeries = new DataSeries();
+        regionSeries.setName("Area");
+        PlotOptionsPie outerSeriesOptions = new PlotOptionsPie();
+        regionSeries.setPlotOptions(outerSeriesOptions);
+        outerSeriesOptions.setInnerSize("60%");
+        outerSeriesOptions.setDataLabels(new Labels());
+        outerSeriesOptions.getDataLabels().setFormatter(
+                "this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y : null");
 
+        conf.setSeries(zoneSeries, regionSeries);
         chart.drawChart(conf);
 
         return chart;
@@ -182,19 +204,53 @@ public class StatsView extends NavigationView {
 
     public final void updateTicketsPerAreaChart(
             final BeanItemContainer<Ticket> ticketContainer) {
-        Integer[] tickets = new Integer[ticketContainer.getItemIds().size()];
+
+        Map<String, Integer> areaTickets = Maps.newHashMap();
 
         for (Ticket ticket : ticketContainer.getItemIds()) {
-            int i = 0;
-            for (String region : areaCategories.getCategories()) {
-                if (ticket.getArea() != null
-                        && ticket.getArea().startsWith(region.substring(0, 1))) {
-                    tickets[i]++;
+            if (ticket.getArea() != null) {
+                Integer count = areaTickets.get(ticket.getArea());
+                if (count == null) {
+                    areaTickets.put(ticket.getArea(), 1);
+                } else {
+                    areaTickets.put(ticket.getArea(), count + 1);
                 }
-                i++;
             }
         }
 
-        regionSeries.setData(tickets);
+        List<String> order = Lists.newArrayList(areaTickets.keySet());
+        Collections.sort(order);
+
+        List<DataSeriesItem> outerItemList = Lists.newArrayList();
+        List<DataSeriesItem> innerItemList = Lists.newArrayList();
+
+        Character zone = null;
+        int zoneTickets = 0;
+        int color = 0;
+        for (String area : order) {
+            if (zone == null) {
+                zone = area.charAt(0);
+            }
+
+            if (area.charAt(0) != zone) {
+                innerItemList.add(new DataSeriesItem(String.valueOf(zone),
+                        (double) zoneTickets, colors[color]));
+                color++;
+                zone = area.charAt(0);
+                zoneTickets = 0;
+            }
+            int thisAreaTickets = areaTickets.get(area);
+            zoneTickets += thisAreaTickets;
+
+            outerItemList.add(new DataSeriesItem(area,
+                    (double) thisAreaTickets, colors[color]));
+
+        }
+        innerItemList.add(new DataSeriesItem(String.valueOf(zone),
+                (double) zoneTickets, colors[color]));
+
+        regionSeries.setData(outerItemList);
+
+        zoneSeries.setData(innerItemList);
     }
 }

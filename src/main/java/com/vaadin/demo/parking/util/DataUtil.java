@@ -39,8 +39,8 @@ public class DataUtil {
         for (int i = 0; i < RANDOM_SHIFT_COUNT; i++) {
             Shift shift = new Shift();
 
-            shift.setArea("ABCDEFG".charAt(random.nextInt(5))
-                    + String.valueOf(random.nextInt(30)));
+            shift.setArea("ABC".charAt(random.nextInt(3))
+                    + String.valueOf(random.nextInt(4) + 1));
 
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.HOUR, random.nextInt(1000));
@@ -93,6 +93,9 @@ public class DataUtil {
             ticket.setLocation(location);
 
             ticket.setMyTicket(random.nextDouble() < 0.1);
+
+            ticket.setArea("ABC".charAt(random.nextInt(3))
+                    + String.valueOf(random.nextInt(4) + 1));
 
             result.add(ticket);
         }

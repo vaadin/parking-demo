@@ -1,5 +1,6 @@
 package com.vaadin.demo.parking.widgetset.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +15,6 @@ import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -58,6 +58,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private VTextField vehicleIdField;
     private VNavigationButton violationButton;
     private Violation selectedViolation;
+    private String selectedArea;
     private VTextArea notesField;
     private VButton saveTicketButton;
     private VNavigationButton areaButton;
@@ -165,39 +166,80 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private void saveTicket() {
-        Ticket ticket = new Ticket();
+        if (validateFields()) {
+            Ticket ticket = new Ticket();
 
-        Location location = new Location();
-        location.setLatitude(0.0);
-        location.setLongitude(0.0);
-        location.setName(locationField.getText());
-        ticket.setLocation(location);
+            Location location = new Location();
+            location.setLatitude(0.0);
+            location.setLongitude(0.0);
+            location.setName(locationField.getText());
+            ticket.setLocation(location);
 
-        ticket.setTimeStamp(date);
+            ticket.setTimeStamp(date);
 
-        ticket.setRegisterPlateNumber(vehicleIdField.getText());
+            ticket.setRegisterPlateNumber(vehicleIdField.getText());
 
-        ticket.setViolation(selectedViolation);
+            ticket.setViolation(selectedViolation);
 
-        // Get image data url
-        String fullSrc = imagePanel.getElement().getStyle()
-                .getBackgroundImage();
-        String src = fullSrc.substring(4, fullSrc.length() - 1);
-        Image image = new Image(src);
-        Canvas canvas = Canvas.createIfSupported();
-        canvas.getContext2d().drawImage(ImageElement.as(image.getElement()), 0,
-                0);
-        ticket.setImageData(canvas.toDataUrl("image/jpeg"));
+            ticket.setArea(selectedArea);
 
-        ticket.setNotes(notesField.getText());
+            // Get image data url
+            if (imagePanel.isVisible()) {
+                String fullSrc = imagePanel.getElement().getStyle()
+                        .getBackgroundImage();
+                String src = fullSrc.substring(4, fullSrc.length() - 1);
+                Image image = new Image(src);
+                Canvas canvas = Canvas.createIfSupported();
+                canvas.getContext2d().drawImage(
+                        ImageElement.as(image.getElement()), 0, 0);
+                ticket.setImageData(canvas.toDataUrl("image/jpeg"));
+            }
+            ticket.setNotes(notesField.getText());
 
-        if (isNetworkOnline() && listener != null) {
-            listener.persistTickets(Arrays.asList(ticket));
-        } else {
-            OfflineDataService.localStoreTicket(ticket);
+            if (isNetworkOnline() && listener != null) {
+                listener.persistTickets(Arrays.asList(ticket));
+            } else {
+                OfflineDataService.localStoreTicket(ticket);
+            }
+
+            resetFields();
         }
+    }
 
-        resetFields();
+    private boolean validateFields() {
+        resetValidations();
+
+        ArrayList<Widget> invalidFields = new ArrayList<Widget>();
+
+        boolean valid = true;
+        if (locationField.getText() == null
+                || locationField.getText().trim().isEmpty()) {
+            valid = false;
+            invalidFields.add(locationField);
+        }
+        if (date == null) {
+            valid = false;
+            timeField.add(vehicleIdField);
+        }
+        if (vehicleIdField.getText() == null
+                || vehicleIdField.getText().trim().isEmpty()) {
+            valid = false;
+            invalidFields.add(vehicleIdField);
+        }
+        if (selectedViolation == null) {
+            valid = false;
+            invalidFields.add(violationButton);
+        }
+        if (selectedArea == null) {
+            valid = false;
+            invalidFields.add(areaButton);
+        }
+        for (Widget invalidField : invalidFields) {
+            invalidField.getParent().getElement().getParentElement()
+                    .getParentElement().getStyle()
+                    .setBackgroundColor("#f6d179");
+        }
+        return valid;
     }
 
     private Widget buildInformationLayout() {
@@ -233,10 +275,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                         selectedViolation, "Violation type",
                         new MapSelectorListener() {
                             @Override
-                            public void valueSelected(Object value) {
-                                Violation violation = (Violation) value;
-                                violationButton.setText(violation.getCaption());
-                                selectedViolation = violation;
+                            public void valueSelected(final Object value) {
+                                selectedViolation = (Violation) value;
+                                violationButton.setText(selectedViolation
+                                        .getCaption());
                                 navigationManager.setCurrentWidget(contentView);
                             }
                         });
@@ -250,7 +292,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         areaButton = new VNavigationButton();
         areaButton.addClickHandler(new ClickHandler() {
             @Override
-            public void onClick(ClickEvent event) {
+            public void onClick(final ClickEvent event) {
                 LinkedHashMap<Object, String> map = new LinkedHashMap<Object, String>();
                 for (char zone : "ABC".toCharArray()) {
                     for (int i = 1; i < 5; i++) {
@@ -262,8 +304,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                 MapSelector areaSelector = new MapSelector(map, areaButton
                         .getText(), "Select area", new MapSelectorListener() {
                     @Override
-                    public void valueSelected(Object value) {
-                        areaButton.setText((String) value);
+                    public void valueSelected(final Object value) {
+                        selectedArea = (String) value;
+                        areaButton.setText(selectedArea);
+
                         navigationManager.setCurrentWidget(contentView);
                     }
                 });
@@ -285,12 +329,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         label.setWidth("100px");
         fb.add(label);
         fb.add(widget);
-
-        Style style = widget.getElement().getStyle();
-        // style.setProperty("width", "auto");
-        // style.setPosition(Position.ABSOLUTE);
-        // style.setRight(30, Unit.PX);
-        // style.setLeft(100, Unit.PX);
         return fb;
     }
 
@@ -374,10 +412,21 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         vehicleIdField.setText(null);
         selectedViolation = null;
         violationButton.setText("Choose...");
+        selectedArea = null;
         areaButton.setText("Choose...");
         notesField.setText(null);
         date = new Date();
         timeField.setDate(date);
+        resetValidations();
+    }
+
+    private void resetValidations() {
+        for (Widget field : Arrays.asList(locationField, timeField,
+                vehicleIdField, violationButton, areaButton)) {
+            field.getParent().getElement().getParentElement()
+                    .getParentElement().getStyle()
+                    .setBackgroundColor("transparent");
+        }
     }
 
     private native void bindFileInput(Element e, TicketViewWidget widget) /*-{

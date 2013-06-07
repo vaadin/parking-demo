@@ -94,6 +94,7 @@
 .tickets .v-label-grey-title {
 	color: #64635a !important;
 	font-weight: normal;
+	text-shadow: none;
 }
 .tickets .v-label-grey-title:FIRST-CHILD {
 	color: #a09f91 !important;

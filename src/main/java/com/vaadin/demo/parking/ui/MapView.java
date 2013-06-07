@@ -71,7 +71,7 @@ public class MapView extends NavigationView implements PositionCallback,
 
         locatebutton = new Button("Locate yourself", new ClickListener() {
             @Override
-            public void buttonClick(ClickEvent event) {
+            public void buttonClick(final ClickEvent event) {
                 Geolocator.detect(MapView.this);
                 locatebutton.setCaption("Locating...");
             }
@@ -80,7 +80,7 @@ public class MapView extends NavigationView implements PositionCallback,
         setLeftComponent(locatebutton);
     }
 
-    public void updateMarkers() {
+    public final void updateMarkers() {
         Location topLeft = new Location();
         topLeft.setLatitude(extent.getNorthEastLat());
         topLeft.setLongitude(extent.getSouthWestLon());
@@ -110,7 +110,7 @@ public class MapView extends NavigationView implements PositionCallback,
     }
 
     @Override
-    public void onSuccess(Position position) {
+    public void onSuccess(final Position position) {
         you.setPoint(new Point(position.getLatitude(), position.getLongitude()));
         if (you.getParent() == null) {
             map.addComponent(you);
@@ -135,22 +135,16 @@ public class MapView extends NavigationView implements PositionCallback,
     }
 
     @Override
-    public void onFailure(int errorCode) {
+    public void onFailure(final int errorCode) {
         Notification
                 .show("Geolocation request failed. You must grant access for geolocation requests.",
                         Type.ERROR_MESSAGE);
     }
 
-    private void showPopup(Ticket ticket) {
+    private void showPopup(final Ticket ticket) {
         TicketDetailPopover ticketDetailPopover = new TicketDetailPopover(
                 ticket);
         ticketDetailPopover.showRelativeTo(getNavigationBar());
-    }
-
-    public void showObservation(Ticket ticket) {
-        // map.setCenter(o.getLocation().getLatitude(), o.getLocation()
-        // .getLongitude());
-        // map.setZoomLevel(12);
     }
 
     @Override

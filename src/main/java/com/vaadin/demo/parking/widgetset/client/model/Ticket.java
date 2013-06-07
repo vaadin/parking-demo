@@ -101,7 +101,7 @@ public class Ticket implements Serializable {
             result.setTimeStamp(new Date(Long.parseLong(split[1])));
             result.setRegisterPlateNumber(split[2]);
             result.setViolation(Violation.valueOf(split[3]));
-            result.setImageData(split[4]);
+            result.setImageData("null".equals(split[4]) ? null : split[4]);
             result.setNotes(split[5]);
             result.setArea(split[6]);
         }

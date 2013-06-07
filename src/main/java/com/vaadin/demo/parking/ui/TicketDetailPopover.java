@@ -60,10 +60,11 @@ public class TicketDetailPopover extends Popover {
         imageLabel.setWidth(73.0f, Unit.PIXELS);
         imageLabel.setHeight(73.0f, Unit.PIXELS);
         imageLabel.setContentMode(ContentMode.HTML);
-        imageLabel
-                .setValue("<div class='imagepanel' style='width:100%;height:100%;background: url("
-                        + ticket.getImageData() + ")'/>");
-
+        if (ticket.getImageData() != null) {
+            imageLabel
+                    .setValue("<div class='imagepanel' style='width:100%;height:100%;background: url("
+                            + ticket.getImageData() + ")'/>");
+        }
         layout.addComponent(imageLabel);
 
         layout.addComponent(buildTicketInfoLayout(ticket));
@@ -72,6 +73,7 @@ public class TicketDetailPopover extends Popover {
 
     private Component buildTicketInfoLayout(final Ticket ticket) {
         CssLayout layout = new CssLayout();
+        layout.setWidth(200.0f, Unit.PIXELS);
         layout.addStyleName("ticketinfolayout");
         layout.addComponent(buildInfoRow("Location", ticket.getLocation()
                 .getName()));
