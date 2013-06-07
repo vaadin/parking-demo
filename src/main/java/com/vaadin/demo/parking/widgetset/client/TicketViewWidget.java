@@ -170,7 +170,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         Location location = new Location();
         location.setLatitude(0.0);
         location.setLongitude(0.0);
-        location.setName("Origo");
+        location.setName(locationField.getText());
         ticket.setLocation(location);
 
         ticket.setTimeStamp(date);

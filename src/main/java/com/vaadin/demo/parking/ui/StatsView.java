@@ -29,7 +29,6 @@ import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 
 public class StatsView extends NavigationView {
 
@@ -43,6 +42,10 @@ public class StatsView extends NavigationView {
     private ListSeries otherTicketsSeries;
     private XAxis dateAxis;
 
+    private ListSeries regionSeries;
+
+    private XAxis areaCategories;
+
     @Override
     public void attach() {
         super.attach();
@@ -50,6 +53,7 @@ public class StatsView extends NavigationView {
             buildUi();
         }
         updateTicketsPerDayChart(ticketContainer);
+        updateTicketsPerAreaChart(ticketContainer);
     }
 
     public final void buildUi() {
@@ -58,7 +62,8 @@ public class StatsView extends NavigationView {
         CssLayout layout = new CssLayout();
 
         layout.addComponent(buildTicketsPerDayChart());
-        layout.addComponent(buildTicketsPerAreaChart(ticketContainer));
+
+        layout.addComponent(buildTicketsPerAreaChart());
         setContent(layout);
     }
 
@@ -107,11 +112,20 @@ public class StatsView extends NavigationView {
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MILLISECOND, 0);
 
-            if (!ticketCount.containsKey(cal.getTime())) {
-                ticketCount.put(cal.getTime(), new int[] { 0, 1 });
+            int[] count = ticketCount.get(cal.getTime());
+            if (count == null) {
+                if (ticket.isMyTicket()) {
+                    ticketCount.put(cal.getTime(), new int[] { 1, 0 });
+                } else {
+                    ticketCount.put(cal.getTime(), new int[] { 0, 1 });
+                }
             } else {
-                int[] count = ticketCount.get(cal.getTime());
-                count[1] = count[1] + 1;
+                if (ticket.isMyTicket()) {
+                    count[0] = count[0] + 1;
+                } else {
+                    count[1] = count[1] + 1;
+                }
+
             }
         }
 
@@ -140,20 +154,47 @@ public class StatsView extends NavigationView {
         otherTicketsSeries.setData(otherTickets);
     }
 
-    public final Component buildTicketsPerAreaChart(
-            final BeanItemContainer<Ticket> ticketContainer) {
-        Map<String, int[]> ticketCount = Maps.newHashMap();
-        for (Ticket ticket : ticketContainer.getItemIds()) {
-            // String areaCode = ticket.get
-            // if (!ticketCount.containsKey(cal.getTime())) {
-            // ticketCount.put(cal.getTime(), new int[] { 0, 1 });
-            // } else {
-            // int[] count = ticketCount.get(cal.getTime());
-            // count[1] = count[1] + 1;
-            // }
-        }
+    public final Component buildTicketsPerAreaChart() {
+        Chart chart = new Chart(ChartType.PIE);
+        Configuration conf = chart.getConfiguration();
+        conf.setTitle(new Title("Tickets / region"));
 
-        return new Label();
+        areaCategories = new XAxis();
+        areaCategories.setCategories("A", "B", "C");
+        conf.addxAxis(areaCategories);
+
+        YAxis yAxis = new YAxis();
+        yAxis.setMin(0);
+        yAxis.setTitle(new Title("Total tickets"));
+        conf.addyAxis(yAxis);
+
+        PlotOptionsColumn plotOptions = new PlotOptionsColumn();
+        plotOptions.setStacking(Stacking.NORMAL);
+        conf.setPlotOptions(plotOptions);
+
+        regionSeries = new ListSeries("Tickets");
+        conf.addSeries(regionSeries);
+
+        chart.drawChart(conf);
+
+        return chart;
     }
 
+    public final void updateTicketsPerAreaChart(
+            final BeanItemContainer<Ticket> ticketContainer) {
+        Integer[] tickets = new Integer[ticketContainer.getItemIds().size()];
+
+        for (Ticket ticket : ticketContainer.getItemIds()) {
+            int i = 0;
+            for (String region : areaCategories.getCategories()) {
+                if (ticket.getArea() != null
+                        && ticket.getArea().startsWith(region.substring(0, 1))) {
+                    tickets[i]++;
+                }
+                i++;
+            }
+        }
+
+        regionSeries.setData(tickets);
+    }
 }

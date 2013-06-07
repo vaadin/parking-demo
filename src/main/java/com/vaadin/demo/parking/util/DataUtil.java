@@ -1,10 +1,17 @@
 package com.vaadin.demo.parking.util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.vaadin.demo.parking.ParkingUI;
@@ -69,7 +76,7 @@ public class DataUtil {
                     + (i + 2));
 
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.HOUR, -random.nextInt(1000));
+            cal.add(Calendar.HOUR, -random.nextInt(100));
             cal.set(Calendar.MINUTE, 0);
             ticket.setTimeStamp(cal.getTime());
 
@@ -94,10 +101,53 @@ public class DataUtil {
 
     public static void persistTicket(final Ticket ticket) {
         ticket.setMyTicket(true);
-        ticket.getLocation().setLatitude(
-                ParkingUI.getApp().getCurrentLatitude());
-        ticket.getLocation().setLongitude(
-                ParkingUI.getApp().getCurrentLongitude());
+        Location location = ticket.getLocation();
+        if (location.getLatitude() == 0.0 || location.getLongitude() == 0.0) {
+            determineTicketLocation(ticket);
+        }
         ParkingUI.getTicketContainer().addItem(ticket);
+    }
+
+    private static void determineTicketLocation(final Ticket ticket) {
+        double latitude = ParkingUI.getApp().getCurrentLatitude();
+        double longitude = ParkingUI.getApp().getCurrentLongitude();
+
+        try {
+            // Try to determine the coordinates using google maps api
+            String address = ticket.getLocation().getName();
+            if (address != null) {
+                StringBuilder str = new StringBuilder(
+                        "http://maps.google.com/maps/api/geocode/json?address=");
+                str.append(address.replaceAll(" ", "+"));
+                str.append("&sensor=false");
+
+                URL url = new URL(str.toString());
+                URLConnection urlc = url.openConnection();
+                BufferedReader bfr = new BufferedReader(new InputStreamReader(
+                        urlc.getInputStream()));
+
+                String line;
+                final StringBuilder builder = new StringBuilder(2048);
+                builder.append("[");
+                while ((line = bfr.readLine()) != null) {
+                    builder.append(line);
+                }
+                builder.append("]");
+                final JSONArray jsa = new JSONArray(builder.toString());
+                final JSONObject jo = (JSONObject) jsa.get(0);
+                JSONArray results = jo.getJSONArray("results");
+                JSONObject geometry = results.getJSONObject(0).getJSONObject(
+                        "geometry");
+                JSONObject loc = geometry.getJSONObject("location");
+                latitude = loc.getDouble("lat");
+                longitude = loc.getDouble("lng");
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+
+        ticket.getLocation().setLatitude(latitude);
+        ticket.getLocation().setLongitude(longitude);
+
     }
 }
