@@ -1,4 +1,4 @@
-@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel;
+@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel;
 
 .v-touchkit-popover.v-touchkit-relative .v-window-wrap {
 	background: none;
@@ -23,6 +23,12 @@
 
 .v-touchkit-popover .ticketimage {
 	float: left;
+}
+
+.v-touchkit-popover .imagepanel {
+	background-size: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 .v-touchkit-popover .ticketinfolayout{

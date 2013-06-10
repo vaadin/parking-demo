@@ -24,9 +24,7 @@ public class TicketView extends AbstractComponent implements
 
     @Override
     public void persistTickets(List<Ticket> tickets) {
-        for (Ticket ticket : tickets) {
-            DataUtil.persistTicket(ticket);
-        }
+        DataUtil.persistTickets(tickets);
     }
 
 }

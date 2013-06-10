@@ -19,6 +19,8 @@ import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Shift;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 
 public class DataUtil {
 
@@ -102,6 +104,20 @@ public class DataUtil {
         return result;
     }
 
+    public static void persistTickets(final List<Ticket> tickets) {
+        for (Ticket ticket : tickets) {
+            DataUtil.persistTicket(ticket);
+        }
+        StringBuilder sb = new StringBuilder(tickets.size() + " ");
+        sb.append("ticket");
+        if (tickets.size() > 1) {
+            sb.append("s");
+        }
+        sb.append(" saved");
+
+        Notification.show(sb.toString(), Type.TRAY_NOTIFICATION);
+    }
+
     public static void persistTicket(final Ticket ticket) {
         ticket.setMyTicket(true);
         Location location = ticket.getLocation();
@@ -153,4 +169,5 @@ public class DataUtil {
         ticket.getLocation().setLongitude(longitude);
 
     }
+
 }

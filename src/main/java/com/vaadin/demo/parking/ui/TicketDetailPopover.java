@@ -62,7 +62,7 @@ public class TicketDetailPopover extends Popover {
         imageLabel.setContentMode(ContentMode.HTML);
         if (ticket.getImageData() != null) {
             imageLabel
-                    .setValue("<div class='imagepanel' style='width:100%;height:100%;background: url("
+                    .setValue("<div class='imagepanel' style='width:100%;height:100%;background-image: url("
                             + ticket.getImageData() + ")'/>");
         }
         layout.addComponent(imageLabel);

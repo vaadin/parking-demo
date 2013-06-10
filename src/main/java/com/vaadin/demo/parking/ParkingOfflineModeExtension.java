@@ -18,9 +18,7 @@ public class ParkingOfflineModeExtension extends OfflineMode {
     private final PersistOfflineTicketsServerRpc serverRpc = new PersistOfflineTicketsServerRpc() {
         @Override
         public void persistTickets(List<Ticket> tickets) {
-            for (Ticket ticket : tickets) {
-                DataUtil.persistTicket(ticket);
-            }
+            DataUtil.persistTickets(tickets);
         }
     };
 

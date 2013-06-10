@@ -1,4 +1,4 @@
-@external v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-table-sort-indicator, v-table-caption-container, v-table-header-wrap, v-table-cell-content, v-table-row, v-table-row-odd, v-table-cell-wrapper, v-table-header, v-table-resizer, v-table-body-wrapper;
+@external v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-table-sort-indicator, v-table-caption-container, v-table-header-wrap, v-table-cell-content, v-table-row, v-table-row-odd, v-table-cell-wrapper, v-table-header, v-table-resizer, v-table-body-wrapper, editfiltersbutton, filtersview;
 
 /*
  * Shifts view
@@ -11,6 +11,7 @@
 	width: 100%;
 	float: left;
 }
+
 .v-ui[width-range~="801px-"] .shifts .shiftstable {
     width: 65% !important;
 }
@@ -18,10 +19,22 @@
 .shifts .shiftsfilter {
 	width: 100%;
 	float: left;
+	display: none;
 }
+
+.shifts .filtersview .shiftsfilter {
+	display: block;
+}
+
 .v-ui[width-range~="801px-"] .shifts .shiftsfilter {
     width: 35% !important;
+    display: block;
 }
+
+.v-ui[width-range~="801px-"] .shifts .editfiltersbutton {
+	display: none;
+}
+
 
 /*
  * Table style
