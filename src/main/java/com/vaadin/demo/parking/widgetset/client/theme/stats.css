@@ -1,0 +1,12 @@
+@external stats, statschart, v-ui;
+
+.stats .statschart {
+	margin-bottom: 30px;
+	float: left;
+	width: 100%;
+}
+
+.v-ui[width-range~="801px-"] .stats .statschart {
+	width: 48% !important;
+	margin: 0 1%;
+}

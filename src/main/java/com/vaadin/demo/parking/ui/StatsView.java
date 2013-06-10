@@ -39,6 +39,9 @@ import com.vaadin.ui.CssLayout;
 
 public class StatsView extends NavigationView {
 
+    private static final String STYLE_NAME = "stats";
+    private static final String STYLE_NAME_CHART = "statschart";
+
     private final DateFormat dateFormat = DateFormat.getDateInstance(
             DateFormat.SHORT, ParkingUI.getApp().getLocale());
 
@@ -49,10 +52,7 @@ public class StatsView extends NavigationView {
     private ListSeries otherTicketsSeries;
     private XAxis dateAxis;
 
-    private XAxis areaCategories;
-
     private DataSeries zoneSeries;
-
     private DataSeries regionSeries;
 
     @Override
@@ -66,19 +66,20 @@ public class StatsView extends NavigationView {
     }
 
     public final void buildUi() {
+        setStyleName(STYLE_NAME);
         setCaption("Stats");
+        setSizeFull();
 
         CssLayout layout = new CssLayout();
-
         layout.addComponent(buildTicketsPerDayChart());
-
         layout.addComponent(buildTicketsPerAreaChart());
         setContent(layout);
     }
 
     public final Component buildTicketsPerDayChart() {
-
         Chart chart = new Chart(ChartType.COLUMN);
+        chart.addStyleName(STYLE_NAME_CHART);
+
         Configuration conf = chart.getConfiguration();
         conf.setTitle(new Title("Tickets / day"));
 
@@ -167,6 +168,7 @@ public class StatsView extends NavigationView {
 
     public final Component buildTicketsPerAreaChart() {
         Chart chart = new Chart(ChartType.PIE);
+        chart.addStyleName(STYLE_NAME_CHART);
 
         Configuration conf = chart.getConfiguration();
 

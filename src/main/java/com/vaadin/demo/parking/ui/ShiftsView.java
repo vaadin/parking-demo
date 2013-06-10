@@ -87,6 +87,7 @@ public class ShiftsView extends NavigationManager {
         final NavigationView navigationView = new NavigationView("Filters");
         navigationView.addStyleName("filtersview");
         navigationView.setSizeFull();
+        navigationView.setRightComponent(buildClearButton());
         NavigationButton editButton = new NavigationButton("Edit filters...",
                 navigationView);
 
@@ -110,6 +111,17 @@ public class ShiftsView extends NavigationManager {
         });
         editFiltersGroup.addComponent(editButton);
         return editFiltersGroup;
+    }
+
+    private Component buildClearButton() {
+        return new Button("Clear", new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                for (Field<?> field : filterFields) {
+                    field.setValue(null);
+                }
+            }
+        });
     }
 
     private String toFirstUpper(final String string) {
@@ -154,16 +166,7 @@ public class ShiftsView extends NavigationManager {
         filteringLayout.setCaption("Filters");
 
         filteringLayout.setContent(buildFiltersLayout());
-
-        filteringLayout.setRightComponent(new Button("Clear",
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        for (Field<?> field : filterFields) {
-                            field.setValue(null);
-                        }
-                    }
-                }));
+        filteringLayout.setRightComponent(buildClearButton());
 
         return filteringLayout;
     }
@@ -184,23 +187,36 @@ public class ShiftsView extends NavigationManager {
 
     private class FilteringTextField extends TextField {
         private Filter filter;
+        private final String propertyId;
 
         public FilteringTextField(final String propertyId) {
             setWidth(100.0f, Unit.PERCENTAGE);
             setCaption(toFirstUpper(propertyId));
             setNullRepresentation("");
+            this.propertyId = propertyId;
 
             addTextChangeListener(new TextChangeListener() {
                 @Override
                 public void textChange(final TextChangeEvent event) {
-                    shiftContainer.removeContainerFilter(filter);
-                    if (event.getText() != null && !event.getText().isEmpty()) {
-                        filter = new SimpleStringFilter(propertyId,
-                                event.getText(), true, false);
-                        shiftContainer.addContainerFilter(filter);
-                    }
+                    textChanged(event.getText());
                 }
             });
+
+            addValueChangeListener(new ValueChangeListener() {
+                @Override
+                public void valueChange(
+                        final com.vaadin.data.Property.ValueChangeEvent event) {
+                    textChanged((String) event.getProperty().getValue());
+                }
+            });
+        }
+
+        private void textChanged(String text) {
+            shiftContainer.removeContainerFilter(filter);
+            if (text != null && !text.isEmpty()) {
+                filter = new SimpleStringFilter(propertyId, text, true, false);
+                shiftContainer.addContainerFilter(filter);
+            }
         }
     }
 
