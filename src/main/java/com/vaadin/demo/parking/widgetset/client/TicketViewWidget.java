@@ -23,6 +23,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -58,14 +59,13 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private VTextField vehicleIdField;
     private VNavigationButton violationButton;
     private Violation selectedViolation;
-    private String selectedArea;
+    private SimplePanel imagePanel;
+    private String imageLocalUrl;
     private VTextArea notesField;
-    private VButton saveTicketButton;
     private VNavigationButton areaButton;
+    private String selectedArea;
 
     private TicketViewWidgetListener listener;
-
-    private SimplePanel imagePanel;
 
     private final VTabBar tabBar;
     private final VButton removeButton = new VButton();
@@ -134,7 +134,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         VNavigationBar navigationBar = new VNavigationBar();
         navigationBar.setCaption("New Ticket");
 
-        saveTicketButton = new VButton();
+        VButton saveTicketButton = new VButton();
         saveTicketButton.setText("Save");
         saveTicketButton.addClickHandler(new ClickHandler() {
             @Override
@@ -184,15 +184,22 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             ticket.setArea(selectedArea);
 
             // Get image data url
-            if (imagePanel.isVisible()) {
-                String fullSrc = imagePanel.getElement().getStyle()
-                        .getBackgroundImage();
-                String src = fullSrc.substring(4, fullSrc.length() - 1);
-                Image image = new Image(src);
+            if (imageLocalUrl != null) {
+                // TODO: This could be done once the image actually gets sent.
+                Image image = new Image(imageLocalUrl);
                 Canvas canvas = Canvas.createIfSupported();
-                canvas.getContext2d().drawImage(
-                        ImageElement.as(image.getElement()), 0, 0);
+                ImageElement imageElement = ImageElement.as(image.getElement());
+                canvas.setCoordinateSpaceWidth(imageElement.getWidth());
+                canvas.setCoordinateSpaceHeight(imageElement.getHeight());
+                canvas.getContext2d().drawImage(imageElement, 0, 0);
+
                 ticket.setImageData(canvas.toDataUrl("image/jpeg"));
+
+                String imageLocalKey = imageLocalUrl.substring(imageLocalUrl
+                        .lastIndexOf("/") + 1);
+                Storage.getLocalStorageIfSupported().removeItem(imageLocalKey);
+                revokeObjectURL(imageLocalUrl);
+
             }
             ticket.setNotes(notesField.getText());
 
@@ -429,6 +436,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         }
     }
 
+    private native void revokeObjectURL(String url) /*-{
+                                                    URL.revokeObjectURL(url);
+                                                    }-*/;
+
     private native void bindFileInput(Element e, TicketViewWidget widget) /*-{
                                                                           e.onchange = function(event){
                                                                           if(event.target.files.length == 1 && 
@@ -445,6 +456,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private void setImageSrc(final String src) {
         boolean empty = src == null;
+        imageLocalUrl = src;
         if (!empty) {
             imagePanel.getElement().getStyle()
                     .setBackgroundImage("url(" + src + ")");
