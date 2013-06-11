@@ -2,6 +2,7 @@ package com.vaadin.demo.parking.ui;
 
 import java.util.List;
 
+import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.TicketViewServerRpc;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
@@ -23,8 +24,14 @@ public class TicketView extends AbstractComponent implements
     }
 
     @Override
-    public void persistTickets(List<Ticket> tickets) {
+    public void persistTickets(final List<Ticket> tickets) {
         DataUtil.persistTickets(tickets);
+    }
+
+    @Override
+    public void positionReceived(final double latitude, final double longitude) {
+        ParkingUI.getApp().setCurrentLatitude(latitude);
+        ParkingUI.getApp().setCurrentLongitude(longitude);
     }
 
 }

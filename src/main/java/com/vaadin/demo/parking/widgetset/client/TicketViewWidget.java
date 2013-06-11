@@ -108,13 +108,18 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                     .getCurrentPosition(new Callback<com.google.gwt.geolocation.client.Position, PositionError>() {
                         @Override
                         public void onSuccess(
-                                com.google.gwt.geolocation.client.Position result) {
+                                final com.google.gwt.geolocation.client.Position result) {
                             currentPosition = result;
+                            if (listener != null) {
+                                listener.positionReceived(result
+                                        .getCoordinates().getLatitude(), result
+                                        .getCoordinates().getLongitude());
+                            }
                             setUseCurrentPositionEnabled(true);
                         }
 
                         @Override
-                        public void onFailure(PositionError reason) {
+                        public void onFailure(final PositionError reason) {
 
                         }
                     });
@@ -539,6 +544,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     public interface TicketViewWidgetListener {
         void persistTickets(List<Ticket> tickets);
+
+        void positionReceived(double latitude, double longitude);
     }
 
     public final void setTicketViewWidgetListener(

@@ -85,4 +85,9 @@ public class TicketViewConnector extends AbstractComponentConnector implements
 
         return new int[] { width, height };
     }
+
+    @Override
+    public void positionReceived(final double latitude, final double longitude) {
+        rpc.positionReceived(latitude, longitude);
+    }
 }
