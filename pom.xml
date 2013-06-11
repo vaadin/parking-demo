@@ -7,7 +7,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<vaadin.version>7.0.6</vaadin.version>
+		<vaadin.version>7.1.0.beta1</vaadin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -19,6 +19,11 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-server</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.vaadin.addon</groupId>
 			<artifactId>vaadin-touchkit-agpl</artifactId>
