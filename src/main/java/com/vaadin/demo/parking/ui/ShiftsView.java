@@ -124,7 +124,7 @@ public class ShiftsView extends NavigationManager {
         });
     }
 
-    private String toFirstUpper(final String string) {
+    private static String toFirstUpper(final String string) {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 

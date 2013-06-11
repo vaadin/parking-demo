@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-label-grey-title, v-button, v-button-wrap, v-button-caption, sectioncaption;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-label-grey-title, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar;
 
 /*
  * Tickets view
@@ -127,3 +127,22 @@
 	font-size: 18px;
 }
 
+.tickets .storagedtickets {
+	background: #f00;
+	font-size: 13px;
+	text-align: center;
+	border: 2px solid #fff;
+	border-radius: 13px;
+	line-height: 20px;
+	top: 0;
+	right: 0;
+	position: absolute;
+}
+
+.tickets .v-touchkit-tabbar {
+	padding-bottom: 0 !important;
+}
+
+.tickets .noteslayout {
+	margin-bottom: 46px;
+}

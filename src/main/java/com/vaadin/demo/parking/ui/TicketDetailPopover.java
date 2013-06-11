@@ -8,9 +8,13 @@ import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 
 /**
@@ -55,20 +59,43 @@ public class TicketDetailPopover extends Popover {
     private Component buildTicketLayout(final Ticket ticket) {
         CssLayout layout = new CssLayout();
         layout.addStyleName("ticketlayout");
-        Label imageLabel = new Label();
+        final Label imageLabel = new Label();
         imageLabel.addStyleName("ticketimage");
         imageLabel.setWidth(73.0f, Unit.PIXELS);
         imageLabel.setHeight(73.0f, Unit.PIXELS);
         imageLabel.setContentMode(ContentMode.HTML);
-        if (ticket.getImageData() != null) {
+        if (ticket.getImageUrl() != null) {
             imageLabel
                     .setValue("<div class='imagepanel' style='width:100%;height:100%;background-image: url("
-                            + ticket.getImageData() + ")'/>");
+                            + ticket.getImageUrl() + ")'/>");
         }
+        layout.addLayoutClickListener(new LayoutClickListener() {
+            @Override
+            public void layoutClick(LayoutClickEvent event) {
+                if (event.getClickedComponent() == imageLabel) {
+                    openImagePopup(ticket.getImageUrl());
+                }
+            }
+        });
         layout.addComponent(imageLabel);
 
         layout.addComponent(buildTicketInfoLayout(ticket));
         return layout;
+    }
+
+    private void openImagePopup(final String imageUrl) {
+        final Popover imagePopover = new Popover();
+        imagePopover.setSizeFull();
+        Image image = new Image(null, new ExternalResource(imageUrl));
+        image.setWidth(100.0f, Unit.PERCENTAGE);
+        image.addClickListener(new ClickListener() {
+            @Override
+            public void click(final ClickEvent event) {
+                imagePopover.close();
+            }
+        });
+        imagePopover.setContent(image);
+        imagePopover.showRelativeTo(ParkingUI.getApp());
     }
 
     private Component buildTicketInfoLayout(final Ticket ticket) {

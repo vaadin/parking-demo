@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.user.client.Window;
 import com.vaadin.addon.touchkit.gwt.client.vcom.OfflineModeConnector;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.demo.parking.ParkingOfflineModeExtension;
@@ -26,17 +25,16 @@ public class ParkingOfflineConnector extends OfflineModeConnector {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                final int storedTickets = OfflineDataService.getStoredTicketCount();
+                final int storedTickets = OfflineDataService
+                        .getStoredTicketCount();
                 if (storedTickets > 0) {
-                    boolean confirm = Window
-                            .confirm("You have "
-                                    + storedTickets
-                                    + " observations that have not been synchronized with the server. Would you like to synchronize now?");
-                    if (confirm) {
-                        List<Ticket> tickets = OfflineDataService
-                                .getAndResetLocallyStoredTickets();
-                        rpc.persistTickets(tickets);
+                    List<Ticket> tickets = OfflineDataService
+                            .getAndResetLocallyStoredTickets();
+                    for (Ticket ticket : tickets) {
+                        ticket.setImageUrl(TicketViewConnector
+                                .getDataUrl(ticket.getImageUrl()));
                     }
+                    rpc.persistTickets(tickets);
                 }
             }
         });

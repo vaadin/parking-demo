@@ -73,7 +73,7 @@ public class DataUtil {
 
             ticket.setNotes("Testing" + i);
 
-            ticket.setImageData("VAADIN/themes/parking/tickets/" + 1 + ".jpg");
+            ticket.setImageUrl("VAADIN/themes/parking/tickets/" + 1 + ".jpg");
             ticket.setRegisterPlateNumber("ABC-" + i + "" + (i + 1) + ""
                     + (i + 2));
 
@@ -106,7 +106,9 @@ public class DataUtil {
 
     public static void persistTickets(final List<Ticket> tickets) {
         for (Ticket ticket : tickets) {
-            DataUtil.persistTicket(ticket);
+            if (ticket != null) {
+                DataUtil.persistTicket(ticket);
+            }
         }
         StringBuilder sb = new StringBuilder(tickets.size() + " ");
         sb.append("ticket");

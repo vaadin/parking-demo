@@ -10,25 +10,9 @@ public class Ticket implements Serializable {
     private Violation violation;
     private String area;
 
-    private String imageData;
+    private String imageUrl;
     private String notes;
     private boolean myTicket;
-
-    public boolean isMyTicket() {
-        return myTicket;
-    }
-
-    public void setMyTicket(boolean myTicket) {
-        this.myTicket = myTicket;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
 
     public Location getLocation() {
         return location;
@@ -62,12 +46,20 @@ public class Ticket implements Serializable {
         this.violation = violation;
     }
 
-    public String getImageData() {
-        return imageData;
+    public String getArea() {
+        return area;
     }
 
-    public void setImageData(String imageData) {
-        this.imageData = imageData;
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getNotes() {
@@ -78,6 +70,14 @@ public class Ticket implements Serializable {
         this.notes = notes;
     }
 
+    public boolean isMyTicket() {
+        return myTicket;
+    }
+
+    public void setMyTicket(boolean myTicket) {
+        this.myTicket = myTicket;
+    }
+
     private static final String DELIMITER = "<ticket-delimiter>";
 
     public String serialize() {
@@ -86,7 +86,7 @@ public class Ticket implements Serializable {
         sb.append(timeStamp.getTime() + DELIMITER);
         sb.append(registerPlateNumber + DELIMITER);
         sb.append(violation.name() + DELIMITER);
-        sb.append(imageData + DELIMITER);
+        sb.append(imageUrl + DELIMITER);
         sb.append(notes + DELIMITER);
         sb.append(area + DELIMITER);
         return sb.toString();
@@ -101,7 +101,7 @@ public class Ticket implements Serializable {
             result.setTimeStamp(new Date(Long.parseLong(split[1])));
             result.setRegisterPlateNumber(split[2]);
             result.setViolation(Violation.valueOf(split[3]));
-            result.setImageData("null".equals(split[4]) ? null : split[4]);
+            result.setImageUrl("null".equals(split[4]) ? null : split[4]);
             result.setNotes(split[5]);
             result.setArea(split[6]);
         }

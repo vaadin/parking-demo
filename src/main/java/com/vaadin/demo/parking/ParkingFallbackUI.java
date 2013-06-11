@@ -24,9 +24,8 @@ public class ParkingFallbackUI extends UI {
             + "and gain popularity. Testing ought to work with desktop "
             + "Safari or Chrome as well.<p>"
             + "<p>The source code for this app (a maven project) is publicly "
-            + "available via <a href=\"http://dev.vaadin.com/svn/demo/vornitologist/\">"
-            + "SVN</a> or it can be browsed "
-            + "<a href=\"http://dev.vaadin.com/browser/demo/vornitologist/\">online</a>. ";
+            + "available via <a href=\"https://github.com/vaadin/parking-demo\">"
+            + "GitHub</a>";
 
     @Override
     protected void init(VaadinRequest request) {

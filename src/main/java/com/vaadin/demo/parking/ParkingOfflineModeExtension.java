@@ -9,15 +9,15 @@ import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
 /**
  * 
- * This is server side counter part for Vornitologists offline application. Here
- * we handle persisting observations stored during offline usage.
+ * This is server side counter part for Parking offline application. Here we
+ * handle persisting the tickets stored during offline usage.
  * 
  */
 public class ParkingOfflineModeExtension extends OfflineMode {
 
     private final PersistOfflineTicketsServerRpc serverRpc = new PersistOfflineTicketsServerRpc() {
         @Override
-        public void persistTickets(List<Ticket> tickets) {
+        public void persistTickets(final List<Ticket> tickets) {
             DataUtil.persistTickets(tickets);
         }
     };

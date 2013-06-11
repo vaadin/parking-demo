@@ -9,12 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,10 +21,8 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -64,6 +60,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private VTextArea notesField;
     private VNavigationButton areaButton;
     private String selectedArea;
+
+    private Label storagedTickets;
 
     private TicketViewWidgetListener listener;
 
@@ -134,11 +132,22 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         VNavigationBar navigationBar = new VNavigationBar();
         navigationBar.setCaption("New Ticket");
 
+        VButton clearTicketButton = new VButton();
+        clearTicketButton.setText("Clear");
+        clearTicketButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(final ClickEvent event) {
+                resetFields();
+            }
+        });
+
+        navigationBar.setLeftWidget(clearTicketButton);
+
         VButton saveTicketButton = new VButton();
         saveTicketButton.setText("Save");
         saveTicketButton.addClickHandler(new ClickHandler() {
             @Override
-            public void onClick(ClickEvent event) {
+            public void onClick(final ClickEvent event) {
                 saveTicket();
             }
         });
@@ -183,24 +192,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
             ticket.setArea(selectedArea);
 
-            // Get image data url
-            if (imageLocalUrl != null) {
-                // TODO: This could be done once the image actually gets sent.
-                Image image = new Image(imageLocalUrl);
-                Canvas canvas = Canvas.createIfSupported();
-                ImageElement imageElement = ImageElement.as(image.getElement());
-                canvas.setCoordinateSpaceWidth(imageElement.getWidth());
-                canvas.setCoordinateSpaceHeight(imageElement.getHeight());
-                canvas.getContext2d().drawImage(imageElement, 0, 0);
+            ticket.setImageUrl(imageLocalUrl);
 
-                ticket.setImageData(canvas.toDataUrl("image/jpeg"));
-
-                String imageLocalKey = imageLocalUrl.substring(imageLocalUrl
-                        .lastIndexOf("/") + 1);
-                Storage.getLocalStorageIfSupported().removeItem(imageLocalKey);
-                revokeObjectURL(imageLocalUrl);
-
-            }
             ticket.setNotes(notesField.getText());
 
             if (isNetworkOnline() && listener != null) {
@@ -415,16 +408,28 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private void resetFields() {
         locationField.setText(null);
+
         setImageSrc(null);
+
         vehicleIdField.setText(null);
+
         selectedViolation = null;
         violationButton.setText("Choose...");
+
         selectedArea = null;
         areaButton.setText("Choose...");
+
         notesField.setText(null);
+
         date = new Date();
         timeField.setDate(date);
+
         resetValidations();
+
+        int count = OfflineDataService.getStoredTicketCount();
+        storagedTickets.setText(String.valueOf(count));
+        storagedTickets.setVisible(count > 0);
+
     }
 
     private void resetValidations() {
@@ -435,10 +440,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                     .setBackgroundColor("transparent");
         }
     }
-
-    private native void revokeObjectURL(String url) /*-{
-                                                    URL.revokeObjectURL(url);
-                                                    }-*/;
 
     private native void bindFileInput(Element e, TicketViewWidget widget) /*-{
                                                                           e.onchange = function(event){
@@ -477,7 +478,14 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         toolBar.setWidth("100%");
         toolBar.addStyleName("v-touchkit-toolbar");
 
-        toolBar.addOrMove(buildFakeTab("ticketstab", "Tickets", true), 0);
+        Widget ticketsTab = buildFakeTab("ticketstab", "Ticket", true);
+        storagedTickets = new Label();
+        storagedTickets.addStyleName("storagedtickets");
+        storagedTickets.setWidth("20px");
+        storagedTickets.setHeight("20px");
+        ticketsTab.getElement().appendChild(storagedTickets.getElement());
+
+        toolBar.addOrMove(ticketsTab, 0);
         toolBar.addOrMove(buildFakeTab("maptab", "24h Map", false), 1);
         toolBar.addOrMove(buildFakeTab("shiftstab", "Shifts", false), 2);
         toolBar.addOrMove(buildFakeTab("statstab", "Stats", false), 3);
@@ -497,6 +505,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             tab.addStyleName(ApplicationConnection.DISABLED_CLASSNAME);
         } else {
             tab.addStyleName("v-button-selected");
+            tab.addStyleName("selected");
         }
         return tab;
     }
@@ -546,7 +555,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         void persistTickets(List<Ticket> tickets);
     }
 
-    public void setTicketViewWidgetListener(TicketViewWidgetListener listener) {
+    public final void setTicketViewWidgetListener(
+            final TicketViewWidgetListener listener) {
         this.listener = listener;
         tabBar.setToolbar(new SimplePanel());
     }
@@ -556,8 +566,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         private final VerticalComponentGroupWidget layout;
         private final MapSelectorListener listener;
 
-        public MapSelector(Map<Object, String> map, Object value,
-                String caption, MapSelectorListener listener) {
+        public MapSelector(final Map<Object, String> map, final Object value,
+                final String caption, final MapSelectorListener listener) {
             this.listener = listener;
             setHeight("100%");
 
@@ -571,7 +581,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                         new Label(entry.getValue()));
                 widget.addDomHandler(new ClickHandler() {
                     @Override
-                    public void onClick(ClickEvent event) {
+                    public void onClick(final ClickEvent event) {
                         MapSelector.this.listener.valueSelected(entry.getKey());
                     }
                 }, ClickEvent.getType());
