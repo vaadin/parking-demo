@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Location implements Serializable {
     private double longitude;
     private double latitude;
-    private String name;
+    private String address;
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
@@ -23,12 +23,12 @@ public class Location implements Serializable {
         return longitude;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getAddress() {
+        return address;
     }
 
-    public String getName() {
-        return name;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     private static final String DELIMITER = "<location-delimiter>";
@@ -37,7 +37,7 @@ public class Location implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append(longitude + DELIMITER);
         sb.append(latitude + DELIMITER);
-        sb.append(name + DELIMITER);
+        sb.append(address + DELIMITER);
         return sb.toString();
     }
 
@@ -48,7 +48,7 @@ public class Location implements Serializable {
             String[] split = str.split(DELIMITER);
             result.setLongitude(Double.parseDouble(split[0]));
             result.setLatitude(Double.parseDouble(split[1]));
-            result.setName(split[2]);
+            result.setAddress(split[2]);
         }
         return result;
     }

@@ -86,7 +86,7 @@ public class DataUtil {
                     : Violation.PROHIBITED_SPACE);
 
             Location location = new Location();
-            location.setName("Test");
+            location.setAddress("Test");
 
             double latitude = lat + (random.nextDouble() - 0.5) * 0.1;
             double longitude = lon + (random.nextDouble() - 0.5) * 0.1;
@@ -135,7 +135,7 @@ public class DataUtil {
 
         try {
             // Try to determine the coordinates using google maps api
-            String address = ticket.getLocation().getName();
+            String address = ticket.getLocation().getAddress();
             if (address != null) {
                 StringBuilder str = new StringBuilder(
                         "http://maps.google.com/maps/api/geocode/json?address=");
