@@ -97,7 +97,7 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
     protected Collection<JClassType> getConnectorsForWidgetset(
             TreeLogger logger, TypeOracle typeOracle)
             throws UnableToCompleteException {
-        // usedWigets list should contain all we need in Vornitologist, so we
+        // usedWigets list should contain all we need in Parking, so we
         // can leave other stuff away
         Collection<JClassType> connectorsForWidgetset = super
                 .getConnectorsForWidgetset(logger, typeOracle);

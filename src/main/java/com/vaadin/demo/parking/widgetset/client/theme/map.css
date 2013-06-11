@@ -29,6 +29,7 @@
 	background-size: 100%;
 	background-position: center;
 	background-repeat: no-repeat;
+	cursor: pointer;
 }
 
 .v-touchkit-popover .ticketinfolayout{

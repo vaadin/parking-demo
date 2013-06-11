@@ -39,7 +39,7 @@ public class ParkingUI extends UI {
 
         setContent(new MainTabsheet());
 
-        // Use Vornitologists custom offline mode
+        // Use Parking custom offline mode
         offlineModeSettings = new ParkingOfflineModeExtension();
         offlineModeSettings.extend(this);
         offlineModeSettings.setPersistentSessionCookie(true);
@@ -89,7 +89,7 @@ public class ParkingUI extends UI {
     /**
      * A typed version of {@link UI#getCurrent()}
      * 
-     * @return the currently active Vornitologist UI.
+     * @return the currently active Parking UI.
      */
     public static ParkingUI getApp() {
         return (ParkingUI) UI.getCurrent();

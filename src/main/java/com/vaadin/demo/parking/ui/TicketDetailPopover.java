@@ -18,8 +18,7 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 
 /**
- * A simple detail popup to display information about an observation. Also
- * displays some links to other parts of the applicaction.
+ * A simple detail popup to display information about an ticket.
  */
 public class TicketDetailPopover extends Popover {
 
@@ -102,8 +101,9 @@ public class TicketDetailPopover extends Popover {
         CssLayout layout = new CssLayout();
         layout.setWidth(200.0f, Unit.PIXELS);
         layout.addStyleName("ticketinfolayout");
-        layout.addComponent(buildInfoRow("Location", ticket.getLocation()
-                .getName()));
+        layout.addComponent(buildInfoRow("Location", "latitude: "
+                + ticket.getLocation().getLatitude() + " longitude: "
+                + ticket.getLocation().getLongitude()));
         layout.addComponent(buildInfoRow(
                 "Time",
                 dateFormat.format(ticket.getTimeStamp()) + " "

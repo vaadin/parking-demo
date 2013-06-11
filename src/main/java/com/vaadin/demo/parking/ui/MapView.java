@@ -142,13 +142,11 @@ public class MapView extends NavigationView implements PositionCallback,
     }
 
     private void showPopup(final Ticket ticket) {
-        TicketDetailPopover ticketDetailPopover = new TicketDetailPopover(
-                ticket);
-        ticketDetailPopover.showRelativeTo(getNavigationBar());
+        new TicketDetailPopover(ticket).showRelativeTo(getNavigationBar());
     }
 
     @Override
-    public void onClick(LeafletClickEvent event) {
+    public void onClick(final LeafletClickEvent event) {
         Object o = event.getSource();
         if (o instanceof AbstractComponent) {
             AbstractComponent component = (AbstractComponent) o;
