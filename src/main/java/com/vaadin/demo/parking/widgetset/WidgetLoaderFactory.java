@@ -43,7 +43,7 @@ import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.demo.parking.widgetset.client.ParkingOfflineConnector;
-import com.vaadin.demo.parking.widgetset.client.TicketViewConnector;
+import com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewConnector;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 
 /**

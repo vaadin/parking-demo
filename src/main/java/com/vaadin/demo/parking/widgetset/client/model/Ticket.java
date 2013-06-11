@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Ticket implements Serializable {
-    private Location location;
-    private Date timeStamp;
+    private Location location = new Location();
+    private Date timeStamp = new Date();
     private String registerPlateNumber;
     private Violation violation;
     private String area;

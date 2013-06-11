@@ -106,16 +106,15 @@ public class MapView extends NavigationView implements PositionCallback,
             map.addComponent(leafletMarker);
         }
 
-        map.addComponent(you);
+        you.setPoint(new Point(ParkingUI.getApp().getCurrentLatitude(),
+                ParkingUI.getApp().getCurrentLongitude()));
+        if (you.getParent() == null) {
+            map.addComponent(you);
+        }
     }
 
     @Override
     public void onSuccess(final Position position) {
-        you.setPoint(new Point(position.getLatitude(), position.getLongitude()));
-        if (you.getParent() == null) {
-            map.addComponent(you);
-        }
-
         ParkingUI app = ParkingUI.getApp();
         app.setCurrentLatitude(position.getLatitude());
         app.setCurrentLongitude(position.getLongitude());
@@ -124,6 +123,8 @@ public class MapView extends NavigationView implements PositionCallback,
 
         locatebutton.setCaption("Locate yourself");
         locatebutton.setEnabled(true);
+
+        updateMarkers();
 
     }
 

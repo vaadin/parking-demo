@@ -37,7 +37,7 @@
 		value='src/main/webapp/VAADIN/themes/vornitologist:../../../VAADIN/themes/vornitologist' />
  
 	<replace-with
-		class="com.vaadin.demo.parking.widgetset.client.TicketViewWidget">
+		class="com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewWidget">
 		<when-type-is
 			class="com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode" />
 	</replace-with>

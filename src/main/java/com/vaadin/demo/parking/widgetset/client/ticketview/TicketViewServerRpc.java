@@ -1,4 +1,4 @@
-package com.vaadin.demo.parking.widgetset.client;
+package com.vaadin.demo.parking.widgetset.client.ticketview;
 
 import java.util.List;
 
@@ -9,4 +9,6 @@ public interface TicketViewServerRpc extends ServerRpc {
     void persistTickets(List<Ticket> tickets);
 
     void positionReceived(double latitude, double longitude);
+
+    void updateState(Ticket ticket);
 }

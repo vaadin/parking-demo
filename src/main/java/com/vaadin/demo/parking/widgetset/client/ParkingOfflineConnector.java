@@ -31,8 +31,8 @@ public class ParkingOfflineConnector extends OfflineModeConnector {
                     List<Ticket> tickets = OfflineDataService
                             .getAndResetLocallyStoredTickets();
                     for (Ticket ticket : tickets) {
-                        ticket.setImageUrl(TicketViewConnector
-                                .getDataUrl(ticket.getImageUrl()));
+                        ticket.setImageUrl(OfflineDataService.getDataUrl(ticket
+                                .getImageUrl()));
                     }
                     rpc.persistTickets(tickets);
                 }

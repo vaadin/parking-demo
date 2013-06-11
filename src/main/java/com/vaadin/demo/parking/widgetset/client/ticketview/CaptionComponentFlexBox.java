@@ -1,4 +1,4 @@
-package com.vaadin.demo.parking.widgetset.client;
+package com.vaadin.demo.parking.widgetset.client.ticketview;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -25,7 +25,6 @@ public class CaptionComponentFlexBox extends FlowPanel {
             Style style = child.getElement().getStyle();
             style.setMarginLeft(0, Unit.PX);
             style.setProperty("textIdent", "0");
-            style.setColor("black");
         } else {
             child.getElement().getStyle().setProperty("webkitBoxFlex", "1");
             child.getElement().getStyle().setProperty("display", "block");
