@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-touchkit-datepicker;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-touchkit-datepicker, v-label-grey-title, invalid;
 
 /*
  * Tickets view
@@ -141,4 +141,8 @@
 
 .tickets .v-touchkit-switch-wrapper {
 	margin: 9px 0;
+}
+
+.tickets .invalid .v-label-grey-title:FIRST-CHILD {
+	color: #e61e6e !important;
 }

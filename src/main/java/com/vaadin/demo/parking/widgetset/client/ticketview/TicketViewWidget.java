@@ -60,6 +60,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private String imageLocalUrl;
     private VTextArea notesField;
     private ListBox areaBox;
+    private boolean saving;
 
     private VerticalComponentGroupWidget offlineIndicator;
 
@@ -78,13 +79,13 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private final ValueChangeHandler vch = new ValueChangeHandler<String>() {
         @Override
         public void onValueChange(final ValueChangeEvent<String> event) {
-            updateState();
+            fieldsChanged();
         }
     };
     private final ChangeHandler ch = new ChangeHandler() {
         @Override
         public void onChange(final ChangeEvent event) {
-            updateState();
+            fieldsChanged();
         }
     };
     private VButton saveTicketButton;
@@ -171,6 +172,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             @Override
             public void onClick(final ClickEvent event) {
                 dataUpdated(new Ticket(), false);
+                resetValidations();
+                saving = false;
             }
         });
 
@@ -215,6 +218,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private void saveTicket() {
+        saving = true;
         if (validateFields()) {
             saveTicketButton.setEnabled(false);
             Ticket ticket = getTicket();
@@ -230,13 +234,25 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                 OfflineDataService.localStoreTicket(ticket);
                 dataUpdated(new Ticket(), false);
             }
+            saving = false;
         }
     }
 
-    private void updateState() {
+    private void fieldsChanged() {
+        if (saving) {
+            validateFields();
+        }
         if (isNetworkOnline() && listener != null) {
             listener.updateState(getTicket());
         }
+    }
+
+    private Element getRowElement(final Widget field) {
+        Element elem = field.getElement();
+        while (!elem.getClassName().contains("v-touchkit-componentgroup-row")) {
+            elem = elem.getParentElement();
+        }
+        return elem;
     }
 
     private boolean validateFields() {
@@ -270,7 +286,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             invalidFields.add(areaBox);
         }
         for (Widget invalidField : invalidFields) {
-            invalidField.getParent().getElement().getStyle().setColor("red");
+            getRowElement(invalidField).addClassName("invalid");
         }
         return valid;
     }
@@ -305,7 +321,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             @Override
             public void onValueChange(ValueChangeEvent<Date> event) {
                 date = event.getValue();
-                updateState();
+                fieldsChanged();
             }
         });
         innerLayout.add(buildFieldRowBox("Time", timeField));
@@ -424,7 +440,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private void resetValidations() {
         for (Widget field : Arrays.asList(addressField, timeField,
                 vehicleIdField, violationBox, areaBox)) {
-            field.getParent().getElement().getStyle().setColor("#64635a");
+            getRowElement(field).removeClassName("invalid");
         }
     }
 
@@ -458,7 +474,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         } else {
             takePhotoButton.removeStyleName("empty");
         }
-        updateState();
+        fieldsChanged();
     }
 
     private Widget buildFakeToolbar() {
@@ -618,8 +634,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         date = ticket.getTimeStamp();
         timeField.setDate(date);
-
-        resetValidations();
 
         int count = OfflineDataService.getStoredTicketCount();
         storagedTickets.setText(String.valueOf(count));
