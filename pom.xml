@@ -75,6 +75,11 @@
 			<artifactId>responsive</artifactId>
 			<version>1.0.0.alpha1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>qrcode</artifactId>
+			<version>2.0.0</version>
+		</dependency>
 		<!-- <dependency> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-servlets</artifactId> 
 			<version>8.1.7.v20120910</version> </dependency> -->
 		<dependency>

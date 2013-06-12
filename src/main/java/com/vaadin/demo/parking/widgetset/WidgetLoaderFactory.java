@@ -26,6 +26,7 @@ import com.vaadin.addon.touchkit.gwt.client.vcom.navigation.NavigationButtonConn
 import com.vaadin.addon.touchkit.gwt.client.vcom.navigation.NavigationManagerConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.navigation.NavigationViewConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.popover.PopoverConnector;
+import com.vaadin.client.extensions.javascriptmanager.JavaScriptManagerConnector;
 import com.vaadin.client.ui.button.ButtonConnector;
 import com.vaadin.client.ui.combobox.ComboBoxConnector;
 import com.vaadin.client.ui.csslayout.CssLayoutConnector;
@@ -45,6 +46,8 @@ import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.demo.parking.widgetset.client.ParkingOfflineConnector;
 import com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewConnector;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+
+import fi.jasoft.qrcode.client.ui.QRCodeConnector;
 
 /**
  * This customized widget map generator is used to get full control to optimize
@@ -91,6 +94,9 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
         usedConnectors.add(TicketViewConnector.class.getName());
         usedConnectors.add(WindowConnector.class.getName());
         usedConnectors.add(ResponsiveConnector.class.getName());
+        usedConnectors.add(QRCodeConnector.class.getName());
+        usedConnectors.add(JavaScriptManagerConnector.class.getName());
+
     }
 
     @Override

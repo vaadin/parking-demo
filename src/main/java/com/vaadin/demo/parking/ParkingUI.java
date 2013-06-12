@@ -1,5 +1,10 @@
 package com.vaadin.demo.parking;
 
+import java.net.Inet4Address;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
+
 import com.vaadin.addon.responsive.Responsive;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
@@ -10,7 +15,13 @@ import com.vaadin.demo.parking.ui.MainTabsheet;
 import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServletRequest;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
+
+import fi.jasoft.qrcode.QRCode;
 
 /**
  * The UI class for Parking demo.
@@ -47,6 +58,15 @@ public class ParkingUI extends UI {
 
         new Responsive(this);
         setImmediate(true);
+
+        if (isLargeScreenDevice()) {
+            showNonMobileNotification(request);
+        }
+    }
+
+    public final boolean isLargeScreenDevice() {
+        float viewPortWidth = getSession().getBrowser().getScreenWidth();
+        return viewPortWidth > 1024;
     }
 
     public void goOffline() {
@@ -105,6 +125,45 @@ public class ParkingUI extends UI {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    private void showNonMobileNotification(VaadinRequest request) {
+        VaadinServletRequest vsr = (VaadinServletRequest) request;
+
+        try {
+            URL appUrl = ((ParkingServlet) vsr.getService().getServlet())
+                    .getApplicationUrl(vsr);
+            String myIp = Inet4Address.getLocalHost().getHostAddress();
+            String qrCodeUrl = appUrl.toString().replaceAll("localhost", myIp);
+
+            QRCode qrCode = new QRCode();
+            qrCode.setHeight(150.0f, Unit.PIXELS);
+            qrCode.setWidth(150.0f, Unit.PIXELS);
+            qrCode.setValue(qrCodeUrl);
+
+            Label info = new Label(
+                    "You appear to be running this demo on a non-portable device. "
+                            + "Parking is intended for touch devices primarily. "
+                            + "Please read the QR code on your touch device to access the demo.");
+            info.setWidth("310px");
+
+            CssLayout qrCodeLayout = new CssLayout(qrCode, info);
+            qrCodeLayout.setSizeFull();
+
+            Window window = new Window(null, qrCodeLayout);
+            window.setWidth(500.0f, Unit.PIXELS);
+            window.setHeight(200.0f, Unit.PIXELS);
+            window.addStyleName("qr-code");
+            window.setModal(true);
+            window.setResizable(false);
+            window.setDraggable(false);
+            addWindow(window);
+            window.center();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
 }

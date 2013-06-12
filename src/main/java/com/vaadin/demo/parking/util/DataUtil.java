@@ -19,8 +19,7 @@ import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Shift;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.JavaScript;
 
 public class DataUtil {
 
@@ -117,7 +116,7 @@ public class DataUtil {
         }
         sb.append(" saved");
 
-        Notification.show(sb.toString(), Type.TRAY_NOTIFICATION);
+        JavaScript.eval("window.alert('" + sb + "')");
     }
 
     public static void persistTicket(final Ticket ticket) {

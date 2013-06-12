@@ -16,6 +16,7 @@ import com.google.gwt.thirdparty.guava.common.collect.Maps;
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.ChartType;
 import com.vaadin.addon.charts.model.Configuration;
+import com.vaadin.addon.charts.model.Credits;
 import com.vaadin.addon.charts.model.DataSeries;
 import com.vaadin.addon.charts.model.DataSeriesItem;
 import com.vaadin.addon.charts.model.Labels;
@@ -106,6 +107,10 @@ public class StatsView extends NavigationView {
         conf.addSeries(otherTicketsSeries);
 
         chart.drawChart(conf);
+
+        final Credits credits = conf.getCredits();
+        credits.setText("");
+        credits.setHref("");
 
         return chart;
     }
@@ -200,6 +205,10 @@ public class StatsView extends NavigationView {
 
         conf.setSeries(zoneSeries, regionSeries);
         chart.drawChart(conf);
+
+        final Credits credits = conf.getCredits();
+        credits.setText("");
+        credits.setHref("");
 
         return chart;
     }
