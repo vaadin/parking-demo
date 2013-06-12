@@ -49,7 +49,7 @@
 	text-shadow: none;
 	font-size: 14px;
 	height: auto;
-	padding-top: 12px;
+	padding-top: 15px;
 }
 
 .shifts .v-table-sort-indicator {
@@ -82,7 +82,7 @@
 }
 
 .shifts .v-table-resizer {
-	height: 38px;
+	height: 45px;
 }
 
 .shifts .v-table-body-wrapper {

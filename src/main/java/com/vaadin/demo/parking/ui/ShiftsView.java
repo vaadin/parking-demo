@@ -26,10 +26,10 @@ import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
@@ -99,15 +99,7 @@ public class ShiftsView extends NavigationManager {
                 } else {
                     filteringLayout.setContent(filtersContent);
                 }
-                filteringLayout.markAsDirtyRecursive();
-                // TODO: Repainting doesn't work properly. What needs to be
-                // marked as dirty?
-
-                // navigationView.markAsDirtyRecursive();
-                // filtersContent.markAsDirtyRecursive();
-                // ShiftsView.this.markAsDirtyRecursive();
             }
-
         });
         editFiltersGroup.addComponent(editButton);
         return editFiltersGroup;
@@ -259,15 +251,19 @@ public class ShiftsView extends NavigationManager {
         }
     }
 
-    private class HourSelect extends ComboBox {
+    private class HourSelect extends NativeSelect {
         private Filter filter;
 
         public HourSelect(final String propertyId) {
             setCaption(toFirstUpper(propertyId));
             setImmediate(true);
+            setWidth(100.0f, Unit.PERCENTAGE);
 
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.MINUTE, 0);
+            addItem(-1);
+            setItemCaption(-1, "Choose...");
+            setNullSelectionItemId(-1);
             for (int i = 0; i < 24; i++) {
                 cal.set(Calendar.HOUR_OF_DAY, i);
                 addItem(i);

@@ -1,4 +1,4 @@
-@external about, details, shiftstab, maptab, ticketstab, statstab, add, close, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode; 
+@external about, details, shiftstab, maptab, ticketstab, statstab, add, close, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker; 
 
 @def darkText #3d3f41;
 
@@ -15,11 +15,9 @@
 }
 
 .v-app,
-.v-touchkit-navpanel-container {
-	background: #efefec !important;
-}
+.v-touchkit-navpanel-container,
 .v-touchkit-offlinemode {
-	background: transparent !important;
+	background: #efefec !important;
 }
 
 /*
@@ -45,6 +43,7 @@
 	padding: 0;
 	box-shadow: 0px 0px 5px #888888;
 	border-top: none;
+	height: 60px;
 }
 
 .v-touchkit-tabbar-toolbar .v-button:before {
@@ -93,6 +92,7 @@
 .v-touchkit-tabbar-toolbar .v-button span {
 	color: #a09f91;
 	text-shadow: none;
+	margin-bottom: 9px !important;
 }
 .v-touchkit-tabbar-toolbar .v-button.selected span {
 	color: #00b4f0;
@@ -151,4 +151,55 @@
 	text-align: center;
 }
 
+/*
+ * Components
+ */
+select {
+	font-size: 16px;
+	background: #fff;
+	-webkit-appearance: button;
+	border: none;
+	outline: none;
+	color: #64635a;
+}
 
+input,
+textarea {
+	outline: none;
+	color: #64635a !important;
+	font-size: 18px;
+	border: none;
+	margin: 10px 0 !important;
+}
+
+.v-touchkit-componentgroup-row .v-touchkit-componentgroup-cell,
+.v-label-grey-title {
+	color: #64635a !important;
+	font-weight: normal;
+	text-shadow: none;
+}
+
+.v-touchkit-componentgroup-row > .v-caption,
+.v-label-grey-title:FIRST-CHILD {
+	color: #a09f91 !important;
+	font-weight: normal;
+	text-shadow: none;
+	margin: 14px 0;
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+}
+
+.v-touchkit-datepicker {
+	margin: 10px 0;
+}
+
+.v-touchkit-datepicker > input{
+	-webkit-appearance: button;
+	padding-left: 0;
+	margin: 0 !important;
+}
+
+.v-touchkit-datepicker > div{
+	margin: 0;
+}

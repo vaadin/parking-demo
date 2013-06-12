@@ -1,8 +1,15 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-label-grey-title, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-touchkit-datepicker;
 
 /*
  * Tickets view
  */
+.tickets .offlineindicator {
+	padding: 10px;
+	margin-top: 30px;
+	font-size: 18px;
+	color: #64635a;
+}
+
 .tickets .sectioncaption {
 	padding: 20px 0 3px 15px;
 	font-size: 14px;
@@ -93,15 +100,6 @@
 	float: none;
 }
 
-.tickets .v-label-grey-title {
-	color: #64635a !important;
-	font-weight: normal;
-	text-shadow: none;
-}
-.tickets .v-label-grey-title:FIRST-CHILD {
-	color: #a09f91 !important;
-}
-
 .tickets .informationlayout .v-button,
 .tickets .informationlayout .v-button-wrap,
 .tickets .informationlayout .v-button-wrap:AFTER,
@@ -115,16 +113,10 @@
 	font-size: 18px;
 }
 
-.tickets input {
-	padding: 0 !important;
-	height: 100%;
-}
-
-.tickets input,
-.tickets textarea {
-	outline: none;
-	color: #64635a !important;
-	font-size: 18px;
+.tickets .informationlayout .v-button-caption,
+.tickets .informationlayout .v-button-wrap {
+	line-height: 20px;
+	height: 20px;
 }
 
 .tickets .storagedtickets {
@@ -145,4 +137,8 @@
 
 .tickets .noteslayout {
 	margin-bottom: 46px;
+}
+
+.tickets .v-touchkit-switch-wrapper {
+	margin: 9px 0;
 }

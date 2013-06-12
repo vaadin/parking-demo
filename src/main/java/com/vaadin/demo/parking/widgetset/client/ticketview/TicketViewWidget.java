@@ -61,6 +61,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private VTextArea notesField;
     private ListBox areaBox;
 
+    private VerticalComponentGroupWidget offlineIndicator;
+
     private final Geolocation geolocation = Geolocation.getIfSupported();
     private com.google.gwt.geolocation.client.Position currentPosition;
 
@@ -143,7 +145,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private void setUseCurrentPositionEnabled(final boolean enabled) {
         useCurrentLocationSwitch.setValue(enabled);
-        addressRow.setVisible(!enabled);
+        addressRow.getElement().getParentElement().getParentElement()
+                .getStyle()
+                .setProperty("display", enabled ? "none" : "-webkit-box");
     }
 
     private void checkDeviceSize() {
@@ -193,6 +197,14 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         FlowPanel panel = new FlowPanel();
         panel.setStyleName("v-csslayout-margin-left v-csslayout-margin-right");
 
+        offlineIndicator = new VerticalComponentGroupWidget();
+        offlineIndicator.addStyleName("offlineindicator");
+        offlineIndicator
+                .add(new Label(
+                        "You're currently in Parking offline mode. All new tickets will be cached to your "
+                                + "browser's local storage and sent to the server once you regain connection."));
+        panel.add(offlineIndicator);
+
         panel.add(buildInformationLayout());
         panel.add(buildPhotoLayout());
         panel.add(buildNotesLayout());
@@ -228,7 +240,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         ArrayList<Widget> invalidFields = new ArrayList<Widget>();
 
         boolean valid = true;
-        if (addressRow.isVisible()
+        if (!useCurrentLocationSwitch.getValue()
                 && (addressField.getText() == null || addressField.getText()
                         .trim().isEmpty())) {
             valid = false;
@@ -243,11 +255,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             valid = false;
             invalidFields.add(vehicleIdField);
         }
-        if (violationBox.getValue(violationBox.getSelectedIndex()) == null) {
+        if ("null"
+                .equals(violationBox.getValue(violationBox.getSelectedIndex()))) {
             valid = false;
             invalidFields.add(violationBox);
         }
-        if (areaBox.getValue(areaBox.getSelectedIndex()) == null) {
+        if ("null".equals(areaBox.getValue(areaBox.getSelectedIndex()))) {
             valid = false;
             invalidFields.add(areaBox);
         }
@@ -272,7 +285,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                         }
                     }
                 });
-        innerLayout.add(buildFieldRowBox("Detect location",
+        innerLayout.add(buildFieldRowBox("Current location",
                 useCurrentLocationSwitch));
 
         addressField = new VTextField();
@@ -322,8 +335,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private Widget buildFieldRowBox(final String title, final Widget widget) {
         CaptionComponentFlexBox fb = new CaptionComponentFlexBox();
         Label label = new Label(title);
-        label.setWidth("100px");
+        label.setWidth("40%");
         fb.add(label);
+        widget.setWidth("60%");
         fb.add(widget);
         return fb;
     }
@@ -531,6 +545,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             final TicketViewWidgetListener listener) {
         this.listener = listener;
         tabBar.setToolbar(new SimplePanel());
+        offlineIndicator.setVisible(false);
     }
 
     private Ticket getTicket() {
