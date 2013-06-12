@@ -602,9 +602,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     public final void dataUpdated(final Ticket ticket,
             final boolean skipStateChange) {
         final TicketViewWidgetListener listener = this.listener;
-        if (skipStateChange) {
-            this.listener = null;
-        }
+        this.listener = null;
 
         addressField.setText(ticket.getLocation().getAddress());
 
@@ -639,10 +637,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         storagedTickets.setText(String.valueOf(count));
         storagedTickets.setVisible(count > 0);
 
-        if (skipStateChange) {
-            this.listener = listener;
+        if (!skipStateChange) {
+            fieldsChanged();
         }
-
-        saveTicketButton.setEnabled(true);
+        this.listener = listener;
     }
 }
