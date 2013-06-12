@@ -8,7 +8,6 @@ import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.demo.parking.ui.TicketView;
-import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewWidget.TicketViewWidgetListener;
 import com.vaadin.shared.ui.Connect;
@@ -45,8 +44,6 @@ public class TicketViewConnector extends AbstractComponentConnector implements
 
     @Override
     public void persistTicket(final Ticket ticket) {
-        // Convert the local storage url to data url
-        ticket.setImageUrl(OfflineDataService.getDataUrl(ticket.getImageUrl()));
         // Send the Ticket to server to be persisted
         rpc.persistTickets(Arrays.asList(ticket));
     }

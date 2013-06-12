@@ -219,6 +219,11 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             saveTicketButton.setEnabled(false);
             Ticket ticket = getTicket();
 
+            String imageUrl = ticket.getImageUrl();
+            if (imageUrl != null && imageUrl.startsWith("blob")) {
+                ticket.setImageUrl(OfflineDataService.getDataUrl(imageUrl));
+            }
+
             if (isNetworkOnline() && listener != null) {
                 listener.persistTicket(ticket);
             } else {
