@@ -221,6 +221,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         saving = true;
         if (validateFields()) {
             saveTicketButton.setEnabled(false);
+            saving = false;
             Ticket ticket = getTicket();
 
             String imageUrl = ticket.getImageUrl();
@@ -234,7 +235,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                 OfflineDataService.localStoreTicket(ticket);
                 dataUpdated(new Ticket(), false);
             }
-            saving = false;
         }
     }
 
@@ -637,9 +637,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         storagedTickets.setText(String.valueOf(count));
         storagedTickets.setVisible(count > 0);
 
+        this.listener = listener;
+
         if (!skipStateChange) {
             fieldsChanged();
         }
-        this.listener = listener;
+
+        saveTicketButton.setEnabled(true);
     }
 }
