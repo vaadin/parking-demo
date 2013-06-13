@@ -22,10 +22,7 @@ public class ParkingFallbackUI extends UI {
             + "cover a huge majority of actively used mobile browsers. "
             + "Support will be extended as other mobile browsers develop "
             + "and gain popularity. Testing ought to work with desktop "
-            + "Safari or Chrome as well.<p>"
-            + "<p>The source code for this app (a maven project) is publicly "
-            + "available via <a href=\"https://github.com/vaadin/parking-demo\">"
-            + "GitHub</a>";
+            + "Safari or Chrome as well.<p>";
 
     @Override
     protected void init(VaadinRequest request) {

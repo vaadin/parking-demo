@@ -31,7 +31,7 @@ public class Location implements Serializable {
         this.address = address;
     }
 
-    private static final String DELIMITER = "<location-delimiter>";
+    private static final String DELIMITER = "<l-d>";
 
     public String serialize() {
         StringBuilder sb = new StringBuilder();

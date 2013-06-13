@@ -73,6 +73,7 @@ public class DataUtil {
             ticket.setNotes("Testing" + i);
 
             ticket.setImageUrl("VAADIN/themes/parking/tickets/" + 1 + ".jpg");
+            ticket.setImageOrientation(1);
             ticket.setRegisterPlateNumber("ABC-" + i + "" + (i + 1) + ""
                     + (i + 2));
 

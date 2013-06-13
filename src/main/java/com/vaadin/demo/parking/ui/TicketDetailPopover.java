@@ -64,15 +64,16 @@ public class TicketDetailPopover extends Popover {
         imageLabel.setHeight(73.0f, Unit.PIXELS);
         imageLabel.setContentMode(ContentMode.HTML);
         if (ticket.getImageUrl() != null) {
-            imageLabel
-                    .setValue("<div class='imagepanel' style='width:100%;height:100%;background-image: url("
-                            + ticket.getImageUrl() + ")'/>");
+            imageLabel.setValue("<div class='imagepanel orientation"
+                    + ticket.getImageOrientation()
+                    + "' style='width:100%;height:100%;background-image: url("
+                    + ticket.getImageUrl() + ")'/>");
         }
         layout.addLayoutClickListener(new LayoutClickListener() {
             @Override
             public void layoutClick(LayoutClickEvent event) {
                 if (event.getClickedComponent() == imageLabel) {
-                    openImagePopup(ticket.getImageUrl());
+                    openImagePopup(ticket);
                 }
             }
         });
@@ -82,10 +83,13 @@ public class TicketDetailPopover extends Popover {
         return layout;
     }
 
-    private void openImagePopup(final String imageUrl) {
+    private void openImagePopup(final Ticket ticket) {
         final Popover imagePopover = new Popover();
         imagePopover.setSizeFull();
-        Image image = new Image(null, new ExternalResource(imageUrl));
+        Image image = new Image(null,
+                new ExternalResource(ticket.getImageUrl()));
+        image.addStyleName("imagepanel");
+        image.addStyleName("orientation" + ticket.getImageOrientation());
         image.setWidth(100.0f, Unit.PERCENTAGE);
         image.addClickListener(new ClickListener() {
             @Override

@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.geolocation.client.Geolocation;
 import com.google.gwt.geolocation.client.PositionError;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -43,6 +44,7 @@ import com.vaadin.client.ui.VTextArea;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.VUpload;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
+import com.vaadin.demo.parking.widgetset.client.js.ParkingScriptLoader;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
@@ -73,7 +75,14 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private final VTabBar tabBar;
     private final VButton removeButton = new VButton();
-    private final VUpload takePhotoButton = new VUpload();
+    private final VUpload takePhotoButton = new VUpload() {
+        @Override
+        public void submit() {
+            // VUpload submit uses application connection so it needs to
+            // be overridden to avoid npe.
+        };
+    };
+
     private VNavigationView contentView;
 
     private final ValueChangeHandler vch = new ValueChangeHandler<String>() {
@@ -89,8 +98,11 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         }
     };
     private VButton saveTicketButton;
+    private int imageLocalOrientation;
 
     public TicketViewWidget() {
+        ParkingScriptLoader.ensureInjected();
+
         addStyleName("v-window");
         addStyleName("v-touchkit-offlinemode");
         addStyleName("tickets");
@@ -139,7 +151,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
                     @Override
                     public void onFailure(final PositionError reason) {
-
+                        setUseCurrentPositionEnabled(false);
                     }
                 });
     }
@@ -204,7 +216,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         offlineIndicator.addStyleName("offlineindicator");
         offlineIndicator
                 .add(new Label(
-                        "You're currently in Parking offline mode. All new tickets will be cached to your "
+                        "You're currently in offline mode. All new tickets will be cached to your "
                                 + "browser's local storage and sent to the server once you regain connection."));
         panel.add(offlineIndicator);
 
@@ -226,7 +238,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
             String imageUrl = ticket.getImageUrl();
             if (imageUrl != null && imageUrl.startsWith("blob")) {
-                ticket.setImageUrl(OfflineDataService.getDataUrl(imageUrl));
+                ticket.setImageUrl(OfflineDataService.getDataUrl(imageUrl,
+                        ticket.getImageOrientation()));
             }
 
             if (isNetworkOnline() && listener != null) {
@@ -385,8 +398,15 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                bindFileInput(takePhotoButton.getElement(),
-                        TicketViewWidget.this);
+                Timer timer = new Timer() {
+
+                    @Override
+                    public void run() {
+                        bindFileInput(takePhotoButton.getElement(),
+                                TicketViewWidget.this);
+                    }
+                };
+                timer.schedule(1000);
             }
         });
 
@@ -399,7 +419,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         removeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                setImageSrc(null);
+                setImageSrc(null, 1);
             }
         });
         buttonsLayout.add(removeButton);
@@ -448,8 +468,18 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                                                                           e.onchange = function(event){
                                                                           if(event.target.files.length == 1 && 
                                                                           event.target.files[0].type.indexOf("image/") == 0) {
-                                                                          var src = URL.createObjectURL(event.target.files[0]);
-                                                                          widget.@com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewWidget::setImageSrc(Ljava/lang/String;)(src);
+                                                                          var file = event.target.files[0];
+                                                                          var src = URL.createObjectURL(file);
+                                                                          var reader = new FileReader();
+                                                                          reader.onload = function(event) {
+                                                                              var binary = event.target.result;
+                                                                              var binaryFile = new $wnd.BinaryFile(binary);
+                                                                              var exif = $wnd.EXIF.readFromBinaryFile(binaryFile);
+                                                                              var orientation = exif.Orientation;
+                                                                              widget.@com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewWidget::setImageSrc(Ljava/lang/String;I)(src,orientation);
+                                                                            }
+                                                                          reader.readAsBinaryString(file);
+                                                                          
                                                                           }
                                                                           }
                                                                           
@@ -458,12 +488,17 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                                                                           }
                                                                           }-*/;
 
-    private void setImageSrc(final String src) {
+    private void setImageSrc(final String src, final int oritentation) {
         boolean empty = src == null;
         imageLocalUrl = src;
+        imageLocalOrientation = oritentation;
         if (!empty) {
             imagePanel.getElement().getStyle()
                     .setBackgroundImage("url(" + src + ")");
+            for (int i = 1; i < 9; i++) {
+                imagePanel.removeStyleName("orientation" + i);
+            }
+            imagePanel.addStyleName("orientation" + oritentation);
         }
         imagePanel.setVisible(!empty);
         removeButton.setVisible(!empty);
@@ -594,6 +629,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         ticket.setImageUrl(imageLocalUrl);
 
+        ticket.setImageOrientation(imageLocalOrientation);
+
         ticket.setNotes(notesField.getText());
 
         return ticket;
@@ -606,7 +643,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         addressField.setText(ticket.getLocation().getAddress());
 
-        setImageSrc(ticket.getImageUrl());
+        setImageSrc(ticket.getImageUrl(), ticket.getImageOrientation());
 
         vehicleIdField.setText(ticket.getRegisterPlateNumber());
 

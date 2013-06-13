@@ -61,7 +61,8 @@ public class OfflineDataService {
         return al;
     }
 
-    public static String getDataUrl(final String imageUrl) {
+    public static String getDataUrl(final String imageUrl,
+            final int imageOrientation) {
         String dataUrl = null;
         // Get image data url
         if (imageUrl != null) {

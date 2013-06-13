@@ -11,8 +11,17 @@ public class Ticket implements Serializable {
     private String area;
 
     private String imageUrl;
+    private int imageOrientation;
     private String notes;
     private boolean myTicket;
+
+    public int getImageOrientation() {
+        return imageOrientation;
+    }
+
+    public void setImageOrientation(int imageOrientation) {
+        this.imageOrientation = imageOrientation;
+    }
 
     public Location getLocation() {
         return location;
@@ -78,7 +87,7 @@ public class Ticket implements Serializable {
         this.myTicket = myTicket;
     }
 
-    private static final String DELIMITER = "<ticket-delimiter>";
+    private static final String DELIMITER = "<t-d>";
 
     public String serialize() {
         StringBuilder sb = new StringBuilder();
@@ -89,6 +98,7 @@ public class Ticket implements Serializable {
         sb.append(imageUrl + DELIMITER);
         sb.append(notes + DELIMITER);
         sb.append(area + DELIMITER);
+        sb.append(imageOrientation + DELIMITER);
         return sb.toString();
     }
 
@@ -104,6 +114,7 @@ public class Ticket implements Serializable {
             result.setImageUrl("null".equals(split[4]) ? null : split[4]);
             result.setNotes(split[5]);
             result.setArea(split[6]);
+            result.setImageOrientation(Integer.parseInt(split[7]));
         }
         return result;
     }
