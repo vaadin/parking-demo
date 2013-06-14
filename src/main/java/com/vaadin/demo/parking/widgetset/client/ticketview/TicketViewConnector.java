@@ -38,7 +38,7 @@ public class TicketViewConnector extends AbstractComponentConnector implements
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        getWidget().dataUpdated(getState().getTicket(), true);
+        getWidget().ticketUpdated(getState().getTicket(), true);
         super.onStateChanged(stateChangeEvent);
     }
 

@@ -1,6 +1,5 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,14 +21,13 @@ import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
-import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextArea;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.js.ParkingScriptLoader;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
-public class TicketViewWidget extends VOverlay implements OfflineMode,
-        RepeatingCommand, TicketViewModuleListener {
+public class TicketViewWidget extends SimplePanel implements OfflineMode,
+        TicketViewModuleListener {
     private InformationLayout informationLayout;
     private PhotoLayout photoLayout;
     private VTextArea notesField;
@@ -58,13 +56,13 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         tabBar.setContent(buildContentView());
         tabBar.setToolbar(buildFakeToolbar());
 
-        setShadowEnabled(false);
-        show();
+        // setShadowEnabled(false);
+        // show();
         getElement().getStyle().setWidth(100, Unit.PCT);
         getElement().getStyle().setHeight(100, Unit.PCT);
         getElement().getFirstChildElement().getStyle().setHeight(100, Unit.PCT);
 
-        dataUpdated(new Ticket(), false);
+        ticketUpdated(new Ticket(), false);
         Window.addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(final ResizeEvent event) {
@@ -95,7 +93,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         clearTicketButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                dataUpdated(new Ticket(), false);
+                ticketUpdated(new Ticket(), false);
                 resetValidations();
                 validateFields = false;
             }
@@ -162,7 +160,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                 listener.persistTicket(ticket);
             } else {
                 OfflineDataService.localStoreTicket(ticket);
-                dataUpdated(new Ticket(), false);
+                ticketUpdated(new Ticket(), false);
             }
         }
     }
@@ -266,25 +264,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         return false;
     }
 
-    @Override
-    public boolean execute() {
-        // if (isActive()) {
-        // if (networkStatus != null) {
-        // if (isNetworkOnline()) {
-        // networkStatus.setText("Your network connection is online.");
-        // networkStatus.getElement().getStyle().setColor("green");
-        // } else {
-        // networkStatus.setText("Your network connection is down.");
-        // networkStatus.getElement().getStyle().setColor("");
-        // }
-        // }
-        // return true;
-        // }
-        // return false;
-
-        return false;
-    }
-
     private static native boolean isNetworkOnline()
     /*-{
         return $wnd.navigator.onLine;
@@ -322,14 +301,14 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         return ticket;
     }
 
-    public final void dataUpdated(final Ticket ticket,
+    public final void ticketUpdated(final Ticket ticket,
             final boolean skipStateChange) {
         final TicketViewWidgetListener listener = this.listener;
         this.listener = null;
 
-        informationLayout.populateModule(ticket);
+        informationLayout.ticketUpdated(ticket);
 
-        photoLayout.populateModule(ticket);
+        photoLayout.ticketUpdated(ticket);
 
         notesField.setText(ticket.getNotes());
 

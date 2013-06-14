@@ -97,12 +97,12 @@ public class InformationLayout extends VerticalComponentGroupWidget {
             valid = false;
             invalidFields.add(vehicleIdField);
         }
-        if ("null"
-                .equals(violationBox.getValue(violationBox.getSelectedIndex()))) {
+
+        if (violationBox.getSelectedIndex() == 0) {
             valid = false;
             invalidFields.add(violationBox);
         }
-        if ("null".equals(areaBox.getValue(areaBox.getSelectedIndex()))) {
+        if (areaBox.getSelectedIndex() == 0) {
             valid = false;
             invalidFields.add(areaBox);
         }
@@ -114,16 +114,19 @@ public class InformationLayout extends VerticalComponentGroupWidget {
 
     public InformationLayout(final TicketViewModuleListener listener) {
         this.listener = listener;
-
+        final String styleOn = "v-touchkit-switch-on";
         useCurrentLocationSwitch = new VSwitch();
+        useCurrentLocationSwitch.addStyleName(styleOn);
         useCurrentLocationSwitch
                 .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
                     @Override
                     public void onValueChange(
                             final ValueChangeEvent<Boolean> event) {
                         if (event.getValue()) {
+                            useCurrentLocationSwitch.addStyleName(styleOn);
                             requestUserPosition();
                         } else {
+                            useCurrentLocationSwitch.removeStyleName(styleOn);
                             setUseCurrentPositionEnabled(false);
                         }
                     }
@@ -227,7 +230,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         ticket.setArea(areaBox.getValue(areaBox.getSelectedIndex()));
     }
 
-    public final void populateModule(final Ticket ticket) {
+    public final void ticketUpdated(final Ticket ticket) {
         addressField.setText(ticket.getLocation().getAddress());
 
         vehicleIdField.setText(ticket.getRegisterPlateNumber());

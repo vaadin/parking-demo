@@ -160,7 +160,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         ticket.setImageOrientation(imageLocalOrientation);
     }
 
-    public final void populateModule(final Ticket ticket) {
+    public final void ticketUpdated(final Ticket ticket) {
         setImageSrc(ticket.getImageUrl(), ticket.getImageOrientation());
 
     }

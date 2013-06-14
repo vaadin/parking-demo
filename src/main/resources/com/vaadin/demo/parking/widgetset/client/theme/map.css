@@ -1,4 +1,4 @@
-@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel, orientation6, orientation8, orientation3;
+@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel, orientation6, orientation8, orientation3, v-touchkit-verticalcomponentgroup;
 
 .v-touchkit-popover.v-touchkit-relative .v-window-wrap {
 	background: none;
@@ -63,4 +63,8 @@
 
 .v-touchkit-popover .closelabel {
 	margin-top: 10px;
+}
+
+.v-touchkit-popover .v-touchkit-verticalcomponentgroup {
+	margin-bottom: 0;
 }

@@ -134,7 +134,7 @@
 	background: transparent;
 	-webkit-box-shadow: none;
 	padding-top: 1px;
-} 
+}
 .v-touchkit-navbar .v-button-caption {
 	color: #fff;
 	text-shadow: none;
@@ -224,7 +224,29 @@ textarea {
 
 .v-touchkit-datepicker > div{
 	margin: 0;
+	min-width: 100px;
 }
+
+
+.v-touchkit-datepicker .v-button,
+.v-touchkit-datepicker .v-button-wrap,
+.v-touchkit-datepicker .v-button-wrap:AFTER,
+.v-touchkit-datepicker .v-button-caption {
+	background: transparent !important;
+	-webkit-box-shadow: none;
+	color: #64635a;
+	text-shadow: none;
+	padding-left: 0;
+	font-weight: normal;
+	font-size: 18px;
+}
+
+.v-touchkit-datepicker .v-button-caption,
+.v-touchkit-datepicker .v-button-wrap {
+	line-height: 20px;
+	height: 20px;
+}
+
 
 
 /* QR code popup */

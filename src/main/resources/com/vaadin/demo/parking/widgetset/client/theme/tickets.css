@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-touchkit-datepicker, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout;
 
 /*
  * Tickets view
@@ -134,25 +134,6 @@
 
 .tickets.tablet form.empty {
 	float: none;
-}
-
-.tickets .informationlayout .v-button,
-.tickets .informationlayout .v-button-wrap,
-.tickets .informationlayout .v-button-wrap:AFTER,
-.tickets .informationlayout .v-button-caption {
-	background: transparent !important;
-	-webkit-box-shadow: none;
-	color: #64635a;
-	text-shadow: none;
-	padding-left: 0;
-	font-weight: normal;
-	font-size: 18px;
-}
-
-.tickets .informationlayout .v-button-caption,
-.tickets .informationlayout .v-button-wrap {
-	line-height: 20px;
-	height: 20px;
 }
 
 .tickets .storagedtickets {
