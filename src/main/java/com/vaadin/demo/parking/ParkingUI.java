@@ -1,10 +1,27 @@
 package com.vaadin.demo.parking;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.imageio.ImageIO;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.vaadin.addon.responsive.Responsive;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
@@ -14,14 +31,15 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ui.MainTabsheet;
 import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-
-import fi.jasoft.qrcode.QRCode;
 
 /**
  * The UI class for Parking demo.
@@ -134,18 +152,60 @@ public class ParkingUI extends UI {
             URL appUrl = ((ParkingServlet) vsr.getService().getServlet())
                     .getApplicationUrl(vsr);
             String myIp = Inet4Address.getLocalHost().getHostAddress();
-            String qrCodeUrl = appUrl.toString().replaceAll("localhost", myIp);
-
-            QRCode qrCode = new QRCode();
-            qrCode.setHeight(150.0f, Unit.PIXELS);
-            qrCode.setWidth(150.0f, Unit.PIXELS);
-            qrCode.setValue(qrCodeUrl);
+            final String qrCodeUrl = appUrl.toString().replaceAll("localhost",
+                    myIp);
 
             Label info = new Label(
                     "You appear to be running this demo on a non-portable device. "
                             + "Parking is intended for touch devices primarily. "
                             + "Please read the QR code on your touch device to access the demo.");
             info.setWidth("310px");
+
+            Image qrCode = new Image();
+            qrCode.addStyleName("qrcode-image");
+            qrCode.setSource(new StreamResource(new StreamSource() {
+
+                @Override
+                public InputStream getStream() {
+                    InputStream result = null;
+                    try {
+                        Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+                        hintMap.put(EncodeHintType.ERROR_CORRECTION,
+                                ErrorCorrectionLevel.L);
+                        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+                        BitMatrix byteMatrix = qrCodeWriter.encode(qrCodeUrl,
+                                BarcodeFormat.QR_CODE, 150, 150, hintMap);
+                        int CrunchifyWidth = byteMatrix.getWidth();
+                        BufferedImage image = new BufferedImage(CrunchifyWidth,
+                                CrunchifyWidth, BufferedImage.TYPE_INT_RGB);
+                        image.createGraphics();
+
+                        Graphics2D graphics = (Graphics2D) image.getGraphics();
+                        graphics.setColor(Color.WHITE);
+                        graphics.fillRect(0, 0, CrunchifyWidth, CrunchifyWidth);
+                        graphics.setColor(Color.BLACK);
+
+                        for (int i = 0; i < CrunchifyWidth; i++) {
+                            for (int j = 0; j < CrunchifyWidth; j++) {
+                                if (byteMatrix.get(i, j)) {
+                                    graphics.fillRect(i, j, 1, 1);
+                                }
+                            }
+                        }
+                        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        try {
+                            ImageIO.write(image, "png", baos);
+                        } catch (final IOException e) {
+                            e.printStackTrace();
+                        }
+                        result = new ByteArrayInputStream(baos.toByteArray());
+
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
+                    return result;
+                }
+            }, "qrcode2.png"));
 
             CssLayout qrCodeLayout = new CssLayout(qrCode, info);
             qrCodeLayout.setSizeFull();

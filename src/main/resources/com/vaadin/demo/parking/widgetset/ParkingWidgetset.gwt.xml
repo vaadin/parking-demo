@@ -21,7 +21,6 @@
 	<inherits name="com.vaadin.addon.charts.Widgetset" />
 	
 	<inherits name="com.vaadin.addon.responsive.ResponsiveWidgetSet" />
-	<inherits name="fi.jasoft.qrcode.QrcodeWidgetset" />
 
  	<generate-with class="com.vaadin.demo.parking.widgetset.WidgetLoaderFactory">
         <when-type-assignable class="com.vaadin.client.metadata.ConnectorBundleLoader" />
