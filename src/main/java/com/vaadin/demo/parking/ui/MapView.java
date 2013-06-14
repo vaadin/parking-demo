@@ -98,8 +98,9 @@ public class MapView extends NavigationView implements PositionCallback,
 
             LMarker leafletMarker = new LMarker(location.getLatitude(),
                     location.getLongitude());
-            leafletMarker.setIcon(new ThemeResource("birdmarker.png"));
-            leafletMarker.setIconSize(new Point(50, 50));
+            leafletMarker.setIcon(new ThemeResource("pin.png"));
+            leafletMarker.setIconSize(new Point(24, 38));
+            leafletMarker.setIconAnchor(new Point(11, 38));
             leafletMarker.setData(ticket);
             leafletMarker.addClickListener(this);
 

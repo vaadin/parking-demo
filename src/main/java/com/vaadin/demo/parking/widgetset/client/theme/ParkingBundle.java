@@ -1,5 +1,7 @@
 package com.vaadin.demo.parking.widgetset.client.theme;
 
+import org.helios.gwt.fonts.client.FontResource;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -29,17 +31,7 @@ public interface ParkingBundle extends ClientBundle {
     @Source("aboutBackground.png")
     ImageResource aboutBackground();
 
-    /* Images for main tabsheet icons */
-    @Source("bird.png")
-    ImageResource shiftstab();
-
-    @Source("world.png")
-    ImageResource maptab();
-
-    @Source("tools.png")
-    ImageResource statstab();
-
-    @Source("binocular.png")
-    ImageResource ticketstab();
+    @Source("parking.ttf")
+    FontResource parkingFont();
 
 }

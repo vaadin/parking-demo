@@ -14,6 +14,7 @@ public class ParkingThemeLoader extends ThemeLoader {
         ParkingBundle.INSTANCE.statsCss().ensureInjected();
         ParkingBundle.INSTANCE.shiftsCss().ensureInjected();
         ParkingBundle.INSTANCE.mapCss().ensureInjected();
+        ParkingBundle.INSTANCE.parkingFont().ensureInjected();
     }
 
 }
