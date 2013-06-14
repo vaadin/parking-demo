@@ -60,16 +60,16 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private ListBox violationBox;
     private SimplePanel imagePanel;
     private String imageLocalUrl;
+    private int imageLocalOrientation;
     private VTextArea notesField;
     private ListBox areaBox;
-    private boolean saving;
+    private boolean validateFields;
 
     private VerticalComponentGroupWidget offlineIndicator;
 
-    private final Geolocation geolocation = Geolocation.getIfSupported();
     private com.google.gwt.geolocation.client.Position currentPosition;
 
-    private Label storagedTickets;
+    private Label storagedTicketsIndicator;
 
     private TicketViewWidgetListener listener;
 
@@ -83,9 +83,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         };
     };
 
-    private VNavigationView contentView;
-
-    private final ValueChangeHandler vch = new ValueChangeHandler<String>() {
+    private final ValueChangeHandler<String> vch = new ValueChangeHandler<String>() {
         @Override
         public void onValueChange(final ValueChangeEvent<String> event) {
             fieldsChanged();
@@ -98,7 +96,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         }
     };
     private VButton saveTicketButton;
-    private int imageLocalOrientation;
 
     public TicketViewWidget() {
         ParkingScriptLoader.ensureInjected();
@@ -124,8 +121,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         dataUpdated(new Ticket(), false);
         Window.addResizeHandler(new ResizeHandler() {
             @Override
-            public void onResize(ResizeEvent event) {
+            public void onResize(final ResizeEvent event) {
                 checkDeviceSize();
+                setImagePanelScale();
             }
         });
         checkDeviceSize();
@@ -134,26 +132,35 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         requestUserPosition();
     }
 
-    private void requestUserPosition() {
-        geolocation
-                .getCurrentPosition(new Callback<com.google.gwt.geolocation.client.Position, PositionError>() {
-                    @Override
-                    public void onSuccess(
-                            final com.google.gwt.geolocation.client.Position result) {
-                        currentPosition = result;
-                        if (listener != null) {
-                            listener.positionReceived(result.getCoordinates()
-                                    .getLatitude(), result.getCoordinates()
-                                    .getLongitude());
-                        }
-                        setUseCurrentPositionEnabled(true);
-                    }
+    private void setImagePanelScale() {
+        Widget parent = imagePanel.getParent();
+        int width = parent.getOffsetWidth();
+        imagePanel.getElement().getStyle().setFontSize(width, Unit.PX);
+    }
 
-                    @Override
-                    public void onFailure(final PositionError reason) {
-                        setUseCurrentPositionEnabled(false);
-                    }
-                });
+    private void requestUserPosition() {
+        Geolocation
+                .getIfSupported()
+                .getCurrentPosition(
+                        new Callback<com.google.gwt.geolocation.client.Position, PositionError>() {
+                            @Override
+                            public void onSuccess(
+                                    final com.google.gwt.geolocation.client.Position result) {
+                                currentPosition = result;
+                                if (listener != null) {
+                                    listener.positionReceived(result
+                                            .getCoordinates().getLatitude(),
+                                            result.getCoordinates()
+                                                    .getLongitude());
+                                }
+                                setUseCurrentPositionEnabled(true);
+                            }
+
+                            @Override
+                            public void onFailure(final PositionError reason) {
+                                setUseCurrentPositionEnabled(false);
+                            }
+                        });
     }
 
     private void setUseCurrentPositionEnabled(final boolean enabled) {
@@ -173,7 +180,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private Widget buildContentView() {
-        contentView = new VNavigationView();
+        VNavigationView contentView = new VNavigationView();
         contentView.setHeight("100%");
         VNavigationBar navigationBar = new VNavigationBar();
         navigationBar.setCaption("New Ticket");
@@ -185,7 +192,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             public void onClick(final ClickEvent event) {
                 dataUpdated(new Ticket(), false);
                 resetValidations();
-                saving = false;
+                validateFields = false;
             }
         });
 
@@ -230,16 +237,15 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private void saveTicket() {
-        saving = true;
+        validateFields = true;
         if (validateFields()) {
             saveTicketButton.setEnabled(false);
-            saving = false;
+            validateFields = false;
             Ticket ticket = getTicket();
 
             String imageUrl = ticket.getImageUrl();
             if (imageUrl != null && imageUrl.startsWith("blob")) {
-                ticket.setImageUrl(OfflineDataService.getDataUrl(imageUrl,
-                        ticket.getImageOrientation()));
+                ticket.setImageUrl(OfflineDataService.getDataUrl(imageUrl));
             }
 
             if (isNetworkOnline() && listener != null) {
@@ -252,7 +258,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }
 
     private void fieldsChanged() {
-        if (saving) {
+        if (validateFields) {
             validateFields();
         }
         if (isNetworkOnline() && listener != null) {
@@ -311,7 +317,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         useCurrentLocationSwitch
                 .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
                     @Override
-                    public void onValueChange(ValueChangeEvent<Boolean> event) {
+                    public void onValueChange(
+                            final ValueChangeEvent<Boolean> event) {
                         if (event.getValue()) {
                             requestUserPosition();
                         } else {
@@ -332,7 +339,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         timeField.setResolution(Resolution.TIME);
         timeField.addValueChangeHandler(new ValueChangeHandler<Date>() {
             @Override
-            public void onValueChange(ValueChangeEvent<Date> event) {
+            public void onValueChange(final ValueChangeEvent<Date> event) {
                 date = event.getValue();
                 fieldsChanged();
             }
@@ -378,6 +385,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private Widget buildPhotoLayout() {
         VCssLayout innerLayout = new VCssLayout();
+        innerLayout.addStyleName("photoinnerlayout");
 
         imagePanel = new SimplePanel();
         imagePanel.addStyleName("imagepanel");
@@ -418,7 +426,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         removeButton.addStyleName("textcentered");
         removeButton.addClickHandler(new ClickHandler() {
             @Override
-            public void onClick(ClickEvent event) {
+            public void onClick(final ClickEvent event) {
                 setImageSrc(null, 1);
             }
         });
@@ -464,29 +472,33 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         }
     }
 
-    private native void bindFileInput(Element e, TicketViewWidget widget) /*-{
-                                                                          e.onchange = function(event){
-                                                                          if(event.target.files.length == 1 && 
-                                                                          event.target.files[0].type.indexOf("image/") == 0) {
-                                                                          var file = event.target.files[0];
-                                                                          var src = URL.createObjectURL(file);
-                                                                          var reader = new FileReader();
-                                                                          reader.onload = function(event) {
-                                                                              var binary = event.target.result;
-                                                                              var binaryFile = new $wnd.BinaryFile(binary);
-                                                                              var exif = $wnd.EXIF.readFromBinaryFile(binaryFile);
-                                                                              var orientation = exif.Orientation;
-                                                                              widget.@com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewWidget::setImageSrc(Ljava/lang/String;I)(src,orientation);
-                                                                            }
-                                                                          reader.readAsBinaryString(file);
-                                                                          
-                                                                          }
-                                                                          }
-                                                                          
-                                                                          if(!("url" in window) && ("webkitURL" in window)) {
-                                                                          window.URL = window.webkitURL;   
-                                                                          }
-                                                                          }-*/;
+    private native void bindFileInput(final Element e,
+            final TicketViewWidget widget) /*-{
+                                           e.onchange = function(event){
+                                           if(event.target.files.length == 1 && 
+                                           event.target.files[0].type.indexOf("image/") == 0) {
+                                           var file = event.target.files[0];
+                                           var src = URL.createObjectURL(file);
+                                           var reader = new FileReader();
+                                           reader.onload = function(event) {
+                                           var binary = event.target.result;
+                                           var binaryFile = new $wnd.BinaryFile(binary);
+                                           var exif = $wnd.EXIF.readFromBinaryFile(binaryFile);
+                                           var orientation = exif.Orientation;
+                                           if (!orientation){
+                                               orientation = 1;
+                                           }
+                                           widget.@com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewWidget::setImageSrc(Ljava/lang/String;I)(src,orientation);
+                                           }
+                                           reader.readAsBinaryString(file);
+                                           
+                                           }
+                                           }
+                                           
+                                           if(!("url" in window) && ("webkitURL" in window)) {
+                                           window.URL = window.webkitURL;   
+                                           }
+                                           }-*/;
 
     private void setImageSrc(final String src, final int oritentation) {
         boolean empty = src == null;
@@ -510,6 +522,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             takePhotoButton.removeStyleName("empty");
         }
         fieldsChanged();
+        setImagePanelScale();
     }
 
     private Widget buildFakeToolbar() {
@@ -518,11 +531,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         toolBar.addStyleName("v-touchkit-toolbar");
 
         Widget ticketsTab = buildFakeTab("ticketstab", "Ticket", true);
-        storagedTickets = new Label();
-        storagedTickets.addStyleName("storagedtickets");
-        storagedTickets.setWidth("20px");
-        storagedTickets.setHeight("20px");
-        ticketsTab.getElement().appendChild(storagedTickets.getElement());
+        storagedTicketsIndicator = new Label();
+        storagedTicketsIndicator.addStyleName("storagedtickets");
+        storagedTicketsIndicator.setWidth("20px");
+        storagedTicketsIndicator.setHeight("20px");
+        ticketsTab.getElement().appendChild(
+                storagedTicketsIndicator.getElement());
 
         toolBar.addOrMove(ticketsTab, 0);
         toolBar.addOrMove(buildFakeTab("maptab", "24h Map", false), 1);
@@ -581,7 +595,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     }-*/;
 
     @Override
-    public void activate(ActivationEvent event) {
+    public void activate(final ActivationEvent event) {
     }
 
     @Override
@@ -671,8 +685,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         timeField.setDate(date);
 
         int count = OfflineDataService.getStoredTicketCount();
-        storagedTickets.setText(String.valueOf(count));
-        storagedTickets.setVisible(count > 0);
+        storagedTicketsIndicator.setText(String.valueOf(count));
+        storagedTicketsIndicator.setVisible(count > 0);
 
         this.listener = listener;
 

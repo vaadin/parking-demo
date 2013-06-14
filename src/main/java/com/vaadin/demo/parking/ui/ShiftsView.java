@@ -264,6 +264,7 @@ public class ShiftsView extends NavigationManager {
             addItem(-1);
             setItemCaption(-1, "Choose...");
             setNullSelectionItemId(-1);
+            setNullSelectionAllowed(false);
             for (int i = 0; i < 24; i++) {
                 cal.set(Calendar.HOUR_OF_DAY, i);
                 addItem(i);

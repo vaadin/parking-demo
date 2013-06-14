@@ -5,7 +5,7 @@ import com.vaadin.addon.touchkit.gwt.client.ThemeLoader;
 public class ParkingThemeLoader extends ThemeLoader {
 
     @Override
-    public void load() {
+    public final void load() {
         // Load default TouchKit theme...
         super.load();
         // ... and Parking specific additions from own client bundle

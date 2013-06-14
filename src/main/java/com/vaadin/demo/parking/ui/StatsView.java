@@ -45,6 +45,7 @@ public class StatsView extends NavigationView {
 
     private final DateFormat dateFormat = DateFormat.getDateInstance(
             DateFormat.SHORT, ParkingUI.getApp().getLocale());
+    private static Color[] colors = new VaadinTheme().getColors();
 
     private final BeanItemContainer<Ticket> ticketContainer = ParkingUI
             .getTicketContainer();
@@ -115,6 +116,48 @@ public class StatsView extends NavigationView {
         return chart;
     }
 
+    public final Component buildTicketsPerAreaChart() {
+        Chart chart = new Chart(ChartType.PIE);
+        chart.addStyleName(STYLE_NAME_CHART);
+
+        Configuration conf = chart.getConfiguration();
+
+        conf.setTitle("Tickets / area");
+
+        PlotOptionsPie pie = new PlotOptionsPie();
+        pie.setShadow(false);
+        conf.setPlotOptions(pie);
+
+        zoneSeries = new DataSeries();
+        zoneSeries.setName("Zone");
+        PlotOptionsPie innerPieOptions = new PlotOptionsPie();
+        zoneSeries.setPlotOptions(innerPieOptions);
+        innerPieOptions.setSize("60%");
+        innerPieOptions.setDataLabels(new Labels());
+        innerPieOptions.getDataLabels().setFormatter(
+                "this.y > 5 ? this.point.name : null");
+        innerPieOptions.getDataLabels().setColor(new SolidColor(255, 255, 255));
+        innerPieOptions.getDataLabels().setDistance(-30);
+
+        regionSeries = new DataSeries();
+        regionSeries.setName("Area");
+        PlotOptionsPie outerSeriesOptions = new PlotOptionsPie();
+        regionSeries.setPlotOptions(outerSeriesOptions);
+        outerSeriesOptions.setInnerSize("60%");
+        outerSeriesOptions.setDataLabels(new Labels());
+        outerSeriesOptions.getDataLabels().setFormatter(
+                "this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y : null");
+
+        conf.setSeries(zoneSeries, regionSeries);
+        chart.drawChart(conf);
+
+        final Credits credits = conf.getCredits();
+        credits.setText("");
+        credits.setHref("");
+
+        return chart;
+    }
+
     public final void updateTicketsPerDayChart(
             final BeanItemContainer<Ticket> ticketContainer) {
         Map<Date, int[]> ticketCount = Maps.newHashMap();
@@ -169,50 +212,6 @@ public class StatsView extends NavigationView {
         otherTicketsSeries.setData(otherTickets);
     }
 
-    private static Color[] colors = new VaadinTheme().getColors();
-
-    public final Component buildTicketsPerAreaChart() {
-        Chart chart = new Chart(ChartType.PIE);
-        chart.addStyleName(STYLE_NAME_CHART);
-
-        Configuration conf = chart.getConfiguration();
-
-        conf.setTitle("Tickets / area");
-
-        PlotOptionsPie pie = new PlotOptionsPie();
-        pie.setShadow(false);
-        conf.setPlotOptions(pie);
-
-        zoneSeries = new DataSeries();
-        zoneSeries.setName("Zone");
-        PlotOptionsPie innerPieOptions = new PlotOptionsPie();
-        zoneSeries.setPlotOptions(innerPieOptions);
-        innerPieOptions.setSize("60%");
-        innerPieOptions.setDataLabels(new Labels());
-        innerPieOptions.getDataLabels().setFormatter(
-                "this.y > 5 ? this.point.name : null");
-        innerPieOptions.getDataLabels().setColor(new SolidColor(255, 255, 255));
-        innerPieOptions.getDataLabels().setDistance(-30);
-
-        regionSeries = new DataSeries();
-        regionSeries.setName("Area");
-        PlotOptionsPie outerSeriesOptions = new PlotOptionsPie();
-        regionSeries.setPlotOptions(outerSeriesOptions);
-        outerSeriesOptions.setInnerSize("60%");
-        outerSeriesOptions.setDataLabels(new Labels());
-        outerSeriesOptions.getDataLabels().setFormatter(
-                "this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y : null");
-
-        conf.setSeries(zoneSeries, regionSeries);
-        chart.drawChart(conf);
-
-        final Credits credits = conf.getCredits();
-        credits.setText("");
-        credits.setHref("");
-
-        return chart;
-    }
-
     public final void updateTicketsPerAreaChart(
             final BeanItemContainer<Ticket> ticketContainer) {
 
@@ -261,7 +260,6 @@ public class StatsView extends NavigationView {
                 (double) zoneTickets, colors[color]));
 
         regionSeries.setData(outerItemList);
-
         zoneSeries.setData(innerItemList);
     }
 }

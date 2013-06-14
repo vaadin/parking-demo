@@ -8,39 +8,38 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
 public interface ParkingBundle extends ClientBundle {
 
-    public static final ParkingBundle INSTANCE = GWT
-            .create(ParkingBundle.class);
+    ParkingBundle INSTANCE = GWT.create(ParkingBundle.class);
 
     @Source("map.css")
-    public MapCss mapCss();
+    MapCss mapCss();
 
     @Source("parkingstyles.css")
-    public ParkingCss css();
+    ParkingCss css();
 
     @Source("tickets.css")
-    public TicketsCss ticketsCss();
+    TicketsCss ticketsCss();
 
     @Source("stats.css")
-    public StatsCss statsCss();
+    StatsCss statsCss();
 
     @Source("shifts.css")
-    public ShiftsCss shiftsCss();
+    ShiftsCss shiftsCss();
 
     @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
     @Source("aboutBackground.png")
-    public ImageResource aboutBackground();
+    ImageResource aboutBackground();
 
     /* Images for main tabsheet icons */
     @Source("bird.png")
-    public ImageResource shiftstab();
+    ImageResource shiftstab();
 
     @Source("world.png")
-    public ImageResource maptab();
+    ImageResource maptab();
 
     @Source("tools.png")
-    public ImageResource statstab();
+    ImageResource statstab();
 
     @Source("binocular.png")
-    public ImageResource ticketstab();
+    ImageResource ticketstab();
 
 }

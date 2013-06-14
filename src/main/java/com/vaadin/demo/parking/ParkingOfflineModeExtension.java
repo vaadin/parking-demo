@@ -9,7 +9,7 @@ import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
 /**
  * 
- * This is server side counter part for Parking offline application. Here we
+ * This is server side counter part for Parking offline extension. Here we
  * handle persisting the tickets stored during offline usage.
  * 
  */

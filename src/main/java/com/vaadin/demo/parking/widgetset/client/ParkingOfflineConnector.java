@@ -13,7 +13,7 @@ import com.vaadin.shared.ui.Connect;
 @Connect(ParkingOfflineModeExtension.class)
 public class ParkingOfflineConnector extends OfflineModeConnector {
 
-    PersistOfflineTicketsServerRpc rpc = RpcProxy.create(
+    private final PersistOfflineTicketsServerRpc rpc = RpcProxy.create(
             PersistOfflineTicketsServerRpc.class, this);
 
     @Override

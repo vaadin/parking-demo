@@ -18,7 +18,7 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 
 /**
- * A simple detail popup to display information about an ticket.
+ * A simple detail popup to display information about a ticket.
  */
 public class TicketDetailPopover extends Popover {
 

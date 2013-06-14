@@ -61,11 +61,11 @@ public class OfflineDataService {
         return al;
     }
 
-    public static String getDataUrl(final String imageUrl,
-            final int imageOrientation) {
+    public static String getDataUrl(final String imageUrl) {
         String dataUrl = null;
         // Get image data url
         if (imageUrl != null) {
+            // Get the data url using canvas
             Image image = new Image(imageUrl);
             Canvas canvas = Canvas.createIfSupported();
             ImageElement imageElement = ImageElement.as(image.getElement());
@@ -84,6 +84,7 @@ public class OfflineDataService {
             revokeObjectURL(imageUrl);
 
         }
+
         return dataUrl;
     }
 

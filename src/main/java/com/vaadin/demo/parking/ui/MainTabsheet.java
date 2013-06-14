@@ -10,9 +10,6 @@ import com.vaadin.ui.TabSheet.Tab;
  */
 public class MainTabsheet extends TabBarView {
 
-    private final MapView mapView;
-    private final ShiftsView shiftsView;
-
     public MainTabsheet() {
         /*
          * Populate main views
@@ -20,11 +17,9 @@ public class MainTabsheet extends TabBarView {
         TicketView ticketView = new TicketView();
         addTab(ticketView, "ticketstab", "Ticket");
 
-        mapView = new MapView();
-        addTab(mapView, "maptab", "24h Map");
+        addTab(new MapView(), "maptab", "24h Map");
 
-        shiftsView = new ShiftsView();
-        addTab(shiftsView, "shiftstab", "Shifts");
+        addTab(new ShiftsView(), "shiftstab", "Shifts");
 
         addTab(new StatsView(), "statstab", "Stats");
 

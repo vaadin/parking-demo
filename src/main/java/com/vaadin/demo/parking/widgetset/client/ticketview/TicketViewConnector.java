@@ -54,7 +54,7 @@ public class TicketViewConnector extends AbstractComponentConnector implements
     }
 
     @Override
-    public void updateState(Ticket ticket) {
+    public void updateState(final Ticket ticket) {
         rpc.updateState(ticket);
     }
 }
