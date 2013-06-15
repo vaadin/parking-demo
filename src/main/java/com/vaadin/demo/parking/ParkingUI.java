@@ -11,11 +11,11 @@ import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import com.google.gwt.thirdparty.guava.common.collect.Maps;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -164,29 +164,31 @@ public class ParkingUI extends UI {
             Image qrCode = new Image();
             qrCode.addStyleName("qrcode-image");
             qrCode.setSource(new StreamResource(new StreamSource() {
-
                 @Override
                 public InputStream getStream() {
                     InputStream result = null;
                     try {
-                        Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+                        final Map<EncodeHintType, ErrorCorrectionLevel> hintMap = Maps
+                                .newHashMap();
                         hintMap.put(EncodeHintType.ERROR_CORRECTION,
                                 ErrorCorrectionLevel.L);
-                        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-                        BitMatrix byteMatrix = qrCodeWriter.encode(qrCodeUrl,
-                                BarcodeFormat.QR_CODE, 150, 150, hintMap);
-                        int CrunchifyWidth = byteMatrix.getWidth();
-                        BufferedImage image = new BufferedImage(CrunchifyWidth,
-                                CrunchifyWidth, BufferedImage.TYPE_INT_RGB);
+                        final QRCodeWriter qrCodeWriter = new QRCodeWriter();
+                        final BitMatrix byteMatrix = qrCodeWriter.encode(
+                                qrCodeUrl, BarcodeFormat.QR_CODE, 150, 150,
+                                hintMap);
+                        final int width = byteMatrix.getWidth();
+                        final BufferedImage image = new BufferedImage(width,
+                                width, BufferedImage.TYPE_INT_RGB);
                         image.createGraphics();
 
-                        Graphics2D graphics = (Graphics2D) image.getGraphics();
+                        final Graphics2D graphics = (Graphics2D) image
+                                .getGraphics();
                         graphics.setColor(Color.WHITE);
-                        graphics.fillRect(0, 0, CrunchifyWidth, CrunchifyWidth);
+                        graphics.fillRect(0, 0, width, width);
                         graphics.setColor(Color.BLACK);
 
-                        for (int i = 0; i < CrunchifyWidth; i++) {
-                            for (int j = 0; j < CrunchifyWidth; j++) {
+                        for (int i = 0; i < width; i++) {
+                            for (int j = 0; j < width; j++) {
                                 if (byteMatrix.get(i, j)) {
                                     graphics.fillRect(i, j, 1, 1);
                                 }
@@ -205,7 +207,7 @@ public class ParkingUI extends UI {
                     }
                     return result;
                 }
-            }, "qrcode2.png"));
+            }, "qrcode.png"));
 
             CssLayout qrCodeLayout = new CssLayout(qrCode, info);
             qrCodeLayout.setSizeFull();

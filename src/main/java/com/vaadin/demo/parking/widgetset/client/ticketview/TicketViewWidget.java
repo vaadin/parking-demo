@@ -21,12 +21,13 @@ import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextArea;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.js.ParkingScriptLoader;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
-public class TicketViewWidget extends SimplePanel implements OfflineMode,
+public class TicketViewWidget extends VOverlay implements OfflineMode,
         TicketViewModuleListener {
     private InformationLayout informationLayout;
     private PhotoLayout photoLayout;
@@ -34,7 +35,7 @@ public class TicketViewWidget extends SimplePanel implements OfflineMode,
     private boolean validateFields;
 
     private VerticalComponentGroupWidget offlineIndicator;
-    private Label storagedTicketsIndicator;
+    private Label storedTicketsIndicator;
 
     private TicketViewWidgetListener listener;
 
@@ -56,13 +57,12 @@ public class TicketViewWidget extends SimplePanel implements OfflineMode,
         tabBar.setContent(buildContentView());
         tabBar.setToolbar(buildFakeToolbar());
 
-        // setShadowEnabled(false);
-        // show();
+        setShadowEnabled(false);
+        show();
         getElement().getStyle().setWidth(100, Unit.PCT);
         getElement().getStyle().setHeight(100, Unit.PCT);
         getElement().getFirstChildElement().getStyle().setHeight(100, Unit.PCT);
 
-        ticketUpdated(new Ticket(), false);
         Window.addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(final ResizeEvent event) {
@@ -70,7 +70,7 @@ public class TicketViewWidget extends SimplePanel implements OfflineMode,
             }
         });
         checkDeviceSize();
-
+        ticketUpdated(new Ticket(), false, true);
     }
 
     private void checkDeviceSize() {
@@ -93,7 +93,7 @@ public class TicketViewWidget extends SimplePanel implements OfflineMode,
         clearTicketButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                ticketUpdated(new Ticket(), false);
+                ticketUpdated(new Ticket(), false, false);
                 resetValidations();
                 validateFields = false;
             }
@@ -151,16 +151,15 @@ public class TicketViewWidget extends SimplePanel implements OfflineMode,
             validateFields = false;
             Ticket ticket = getTicket();
 
-            String imageUrl = ticket.getImageUrl();
-            if (imageUrl != null && imageUrl.startsWith("blob")) {
-                ticket.setImageUrl(OfflineDataService.getDataUrl(imageUrl));
+            if (ticket.getImageOrientation() != 0) {
+                ticket.setImageUrl(OfflineDataService.getCachedImage());
             }
 
             if (isNetworkOnline() && listener != null) {
                 listener.persistTicket(ticket);
             } else {
                 OfflineDataService.localStoreTicket(ticket);
-                ticketUpdated(new Ticket(), false);
+                ticketUpdated(new Ticket(), false, false);
             }
         }
     }
@@ -225,12 +224,12 @@ public class TicketViewWidget extends SimplePanel implements OfflineMode,
         toolBar.addStyleName("v-touchkit-toolbar");
 
         Widget ticketsTab = buildFakeTab("ticketstab", "Ticket", true);
-        storagedTicketsIndicator = new Label();
-        storagedTicketsIndicator.addStyleName("storagedtickets");
-        storagedTicketsIndicator.setWidth("20px");
-        storagedTicketsIndicator.setHeight("20px");
-        ticketsTab.getElement().appendChild(
-                storagedTicketsIndicator.getElement());
+        storedTicketsIndicator = new Label();
+        storedTicketsIndicator.addStyleName("storagedtickets");
+        storedTicketsIndicator.setWidth("20px");
+        storedTicketsIndicator.setHeight("20px");
+        ticketsTab.getElement()
+                .appendChild(storedTicketsIndicator.getElement());
 
         toolBar.addOrMove(ticketsTab, 0);
         toolBar.addOrMove(buildFakeTab("maptab", "24h Map", false), 1);
@@ -302,19 +301,17 @@ public class TicketViewWidget extends SimplePanel implements OfflineMode,
     }
 
     public final void ticketUpdated(final Ticket ticket,
-            final boolean skipStateChange) {
+            final boolean skipStateChange, final boolean initialize) {
         final TicketViewWidgetListener listener = this.listener;
         this.listener = null;
 
         informationLayout.ticketUpdated(ticket);
 
-        photoLayout.ticketUpdated(ticket);
+        photoLayout.ticketUpdated(ticket, initialize);
 
         notesField.setText(ticket.getNotes());
 
-        int count = OfflineDataService.getStoredTicketCount();
-        storagedTicketsIndicator.setText(String.valueOf(count));
-        storagedTicketsIndicator.setVisible(count > 0);
+        updateStoredTicketsIndicator();
 
         this.listener = listener;
 
@@ -323,6 +320,12 @@ public class TicketViewWidget extends SimplePanel implements OfflineMode,
         }
 
         saveTicketButton.setEnabled(true);
+    }
+
+    private void updateStoredTicketsIndicator() {
+        int count = OfflineDataService.getStoredTicketCount();
+        storedTicketsIndicator.setText(String.valueOf(count));
+        storedTicketsIndicator.setVisible(count > 0);
     }
 
     @Override

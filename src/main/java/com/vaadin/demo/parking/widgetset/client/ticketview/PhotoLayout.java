@@ -16,6 +16,7 @@ import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VUpload;
+import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
 public class PhotoLayout extends VerticalComponentGroupWidget {
@@ -39,7 +40,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         imagePanel.getElement().getStyle().setFontSize(width, Unit.PX);
     }
 
-    public PhotoLayout(TicketViewModuleListener listener) {
+    public PhotoLayout(final TicketViewModuleListener listener) {
         this.listener = listener;
 
         VCssLayout innerLayout = new VCssLayout();
@@ -85,7 +86,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         removeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                setImageSrc(null, 1);
+                setImageData(null, 0);
             }
         });
         buttonsLayout.add(removeButton);
@@ -104,24 +105,37 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
 
     private native void bindFileInput(final Element e, final PhotoLayout widget) /*-{
                                                                                       e.onchange = function(event){
-                                                                                      if(event.target.files.length == 1 && 
-                                                                                      event.target.files[0].type.indexOf("image/") == 0) {
-                                                                                      var file = event.target.files[0];
-                                                                                      var src = URL.createObjectURL(file);
-                                                                                      var reader = new FileReader();
-                                                                                      reader.onload = function(event) {
-                                                                                      var binary = event.target.result;
-                                                                                      var binaryFile = new $wnd.BinaryFile(binary);
-                                                                                      var exif = $wnd.EXIF.readFromBinaryFile(binaryFile);
-                                                                                      var orientation = exif.Orientation;
-                                                                                      if (!orientation){
-                                                                                          orientation = 1;
-                                                                                      }
-                                                                                      widget.@com.vaadin.demo.parking.widgetset.client.ticketview.PhotoLayout::setImageSrc(Ljava/lang/String;I)(src,orientation);
-                                                                                      }
-                                                                                      reader.readAsBinaryString(file);
-                                                                                      
-                                                                                      }
+                                                                                          if(event.target.files.length == 1 && 
+                                                                                          event.target.files[0].type.indexOf("image/") == 0) {
+                                                                                              var file = event.target.files[0];
+                                                                                              var reader = new FileReader();
+                                                                                              var orientation = 0;
+                                                                                              var imageData;
+                                                                                              
+                                                                                              reader.onload = function(event) {
+                                                                                                  var binary = event.target.result;
+                                                                                                  var binaryFile = new $wnd.BinaryFile(binary);
+                                                                                                  var exif = $wnd.EXIF.readFromBinaryFile(binaryFile);
+                                                                                                  orientation = exif.Orientation;
+                                                                                                  if (!orientation){
+                                                                                                      orientation = 1;
+                                                                                                  }
+                                                                                                  if (orientation > 0 && imageData != null){
+                                                                                                      widget.@com.vaadin.demo.parking.widgetset.client.ticketview.PhotoLayout::setImageData(Ljava/lang/String;I)(imageData,orientation);
+                                                                                                  }
+                                                                                              }
+                                                                                              reader.readAsBinaryString(file);
+                                                                                              
+                                                                                              var reader2 = new FileReader();
+                                                                                              reader2.onload = function(event) {
+                                                                                                  imageData = event.target.result;
+                                                                                                  if (orientation > 0 && imageData != null){
+                                                                                                      widget.@com.vaadin.demo.parking.widgetset.client.ticketview.PhotoLayout::setImageData(Ljava/lang/String;I)(imageData,orientation);
+                                                                                                  }
+                                                                                              }
+                                                                                              reader2.readAsDataURL(file);
+                                                                                          
+                                                                                          }
                                                                                       }
                                                                                       
                                                                                       if(!("url" in window) && ("webkitURL" in window)) {
@@ -129,27 +143,35 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
                                                                                       }
                                                                                       }-*/;
 
-    private void setImageSrc(final String src, final int oritentation) {
-        boolean empty = src == null;
-        imageLocalUrl = src;
+    private void setImageData(final String imageData, final int orientation) {
+        OfflineDataService.setCachedImage(imageData);
+        setImageOrientation(orientation, false);
+    }
+
+    private void setImageOrientation(final int oritentation,
+            final boolean initialize) {
         imageLocalOrientation = oritentation;
-        if (!empty) {
+        boolean empty = imageLocalOrientation == 0;
+        if (empty) {
+            if (!initialize) {
+                OfflineDataService.setCachedImage(null);
+            }
+            takePhotoButton.submitButton.setText("Take a photo");
+            takePhotoButton.addStyleName("empty");
+        } else {
+            String dataUrl = OfflineDataService.getCachedImage();
             imagePanel.getElement().getStyle()
-                    .setBackgroundImage("url(" + src + ")");
+                    .setBackgroundImage("url(" + dataUrl + ")");
             for (int i = 1; i < 9; i++) {
                 imagePanel.removeStyleName("orientation" + i);
             }
             imagePanel.addStyleName("orientation" + oritentation);
+
+            takePhotoButton.submitButton.setText("Replace...");
+            takePhotoButton.removeStyleName("empty");
         }
         imagePanel.setVisible(!empty);
         removeButton.setVisible(!empty);
-        takePhotoButton.submitButton.setText(empty ? "Take a photo"
-                : "Replace...");
-        if (empty) {
-            takePhotoButton.addStyleName("empty");
-        } else {
-            takePhotoButton.removeStyleName("empty");
-        }
         listener.fieldsChanged();
         setImagePanelScale();
     }
@@ -160,8 +182,9 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         ticket.setImageOrientation(imageLocalOrientation);
     }
 
-    public final void ticketUpdated(final Ticket ticket) {
-        setImageSrc(ticket.getImageUrl(), ticket.getImageOrientation());
+    public final void ticketUpdated(final Ticket ticket,
+            final boolean initialize) {
+        setImageOrientation(ticket.getImageOrientation(), initialize);
 
     }
 

@@ -48,7 +48,9 @@ public class Location implements Serializable {
             String[] split = str.split(DELIMITER);
             result.setLongitude(Double.parseDouble(split[0]));
             result.setLatitude(Double.parseDouble(split[1]));
-            result.setAddress(split[2]);
+            if (split.length > 2) {
+                result.setAddress(split[2]);
+            }
         }
         return result;
     }

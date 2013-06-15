@@ -30,7 +30,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
     private final VTextField addressField;
     private final Widget addressRow;
     private final DatePicker timeField;
-    private Date date;
+    private Date date = new Date();
     private final VTextField vehicleIdField;
     private final ListBox violationBox;
     private final ListBox areaBox;
@@ -90,7 +90,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         }
         if (date == null) {
             valid = false;
-            timeField.add(vehicleIdField);
+            invalidFields.add(timeField);
         }
         if (vehicleIdField.getText() == null
                 || vehicleIdField.getText().trim().isEmpty()) {
@@ -148,6 +148,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
 
         timeField = new DatePicker();
         timeField.setResolution(Resolution.TIME);
+        timeField.setDate(date);
         timeField.addValueChangeHandler(new ValueChangeHandler<Date>() {
             @Override
             public void onValueChange(final ValueChangeEvent<Date> event) {
