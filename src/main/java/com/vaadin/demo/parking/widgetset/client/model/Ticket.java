@@ -12,6 +12,7 @@ public class Ticket implements Serializable {
 
     private String imageUrl;
     private int imageOrientation;
+    private String thumbnailUrl;
     private String notes;
     private boolean myTicket;
 
@@ -87,6 +88,14 @@ public class Ticket implements Serializable {
         this.myTicket = myTicket;
     }
 
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
     private static final String DELIMITER = "<t-d>";
 
     public String serialize() {
@@ -95,7 +104,6 @@ public class Ticket implements Serializable {
         sb.append(timeStamp.getTime() + DELIMITER);
         sb.append(registerPlateNumber + DELIMITER);
         sb.append(violation.name() + DELIMITER);
-        sb.append(imageUrl + DELIMITER);
         sb.append(notes + DELIMITER);
         sb.append(area + DELIMITER);
         sb.append(imageOrientation + DELIMITER);
@@ -111,10 +119,9 @@ public class Ticket implements Serializable {
             result.setTimeStamp(new Date(Long.parseLong(split[1])));
             result.setRegisterPlateNumber(split[2]);
             result.setViolation(Violation.valueOf(split[3]));
-            result.setImageUrl("null".equals(split[4]) ? null : split[4]);
-            result.setNotes(split[5]);
-            result.setArea(split[6]);
-            result.setImageOrientation(Integer.parseInt(split[7]));
+            result.setNotes(split[4]);
+            result.setArea(split[5]);
+            result.setImageOrientation(Integer.parseInt(split[6]));
         }
         return result;
     }

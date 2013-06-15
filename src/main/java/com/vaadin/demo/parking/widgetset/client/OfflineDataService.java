@@ -44,9 +44,9 @@ public class OfflineDataService {
     public static List<Ticket> getAndResetLocallyStoredTickets() {
         ArrayList<Ticket> al = new ArrayList<Ticket>();
         StorageMap s = new StorageMap(Storage.getLocalStorageIfSupported());
-        String obscount = s.get(TICKETCOUNT_KEY);
-        if (obscount != null) {
-            int c = Integer.parseInt(obscount);
+        String ticketCount = s.get(TICKETCOUNT_KEY);
+        if (ticketCount != null) {
+            int c = Integer.parseInt(ticketCount);
             for (int i = 0; i < c; i++) {
                 String key = LOCALSTORAGE_PREFIX + i;
                 String json = s.get(key);
@@ -54,7 +54,7 @@ public class OfflineDataService {
                 al.add(fromJSON);
                 s.remove(key);
             }
-            s.remove(obscount);
+            s.remove(ticketCount);
         }
         s.put(TICKETCOUNT_KEY, "" + 0);
         return al;
@@ -70,7 +70,6 @@ public class OfflineDataService {
         if (imageData == null) {
             s.remove(CACHED_IMAGE_KEY);
         } else {
-            // TODO: Scale down?
             s.put(CACHED_IMAGE_KEY, imageData);
         }
     }

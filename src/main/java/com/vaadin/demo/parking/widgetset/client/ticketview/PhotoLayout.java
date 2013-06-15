@@ -1,15 +1,23 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
+import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
@@ -23,6 +31,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
     private final SimplePanel imagePanel;
     private String imageLocalUrl;
     private int imageLocalOrientation;
+    private String thumbnailUrl;
     private final TicketViewModuleListener listener;
 
     private final VButton removeButton = new VButton();
@@ -144,8 +153,71 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
                                                                                       }-*/;
 
     private void setImageData(final String imageData, final int orientation) {
-        OfflineDataService.setCachedImage(imageData);
-        setImageOrientation(orientation, false);
+        if (imageData == null) {
+            OfflineDataService.setCachedImage(null);
+            setImageOrientation(orientation, false);
+        } else {
+            scaleImage(imageData, 1024 * 768, true, new Callback() {
+                @Override
+                public void imageScaled(final String imageData) {
+                    OfflineDataService.setCachedImage(imageData);
+                    setImageOrientation(orientation, false);
+                }
+            });
+        }
+    }
+
+    public interface Callback {
+        void imageScaled(String imageData);
+    }
+
+    private void scaleImage(final String imageData, final int maxArea,
+            final boolean callbackNonNull, final Callback callback) {
+        final Canvas canvas = Canvas.createIfSupported();
+        if (canvas != null) {
+            final Image image = new Image();
+            image.addLoadHandler(new LoadHandler() {
+                @Override
+                public void onLoad(final LoadEvent event) {
+
+                    ImageElement imageElement = ImageElement.as(image
+                            .getElement());
+                    int[] scaledSize = getScaledSize(imageElement, maxArea);
+
+                    canvas.setCoordinateSpaceWidth(scaledSize[0]);
+                    canvas.setCoordinateSpaceHeight(scaledSize[1]);
+                    canvas.getContext2d().drawImage(imageElement, 0, 0,
+                            scaledSize[0], scaledSize[1]);
+
+                    String scaledData = canvas.toDataUrl("image/jpeg");
+                    remove(image);
+                    callback.imageScaled(scaledData);
+                }
+            });
+            image.setUrl(imageData);
+            Style style = image.getElement().getStyle();
+            style.setPosition(Position.ABSOLUTE);
+            style.setVisibility(Visibility.HIDDEN);
+            add(image);
+        } else {
+            callback.imageScaled(callbackNonNull ? imageData : null);
+        }
+    }
+
+    private static int[] getScaledSize(final ImageElement imageElement,
+            final int maxArea) {
+        int width = imageElement.getWidth();
+        int height = imageElement.getHeight();
+
+        double area = width * height;
+
+        if (area > maxArea) {
+            double multiplier = Math.sqrt(maxArea / area);
+            width = new Double(multiplier * width).intValue();
+            height = new Double(multiplier * height).intValue();
+        }
+
+        return new int[] { width, height };
     }
 
     private void setImageOrientation(final int oritentation,
@@ -169,6 +241,13 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
 
             takePhotoButton.submitButton.setText("Replace...");
             takePhotoButton.removeStyleName("empty");
+
+            scaleImage(dataUrl, 75 * 75, false, new Callback() {
+                @Override
+                public void imageScaled(final String imageData) {
+                    thumbnailUrl = imageData;
+                }
+            });
         }
         imagePanel.setVisible(!empty);
         removeButton.setVisible(!empty);
@@ -180,6 +259,8 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         ticket.setImageUrl(imageLocalUrl);
 
         ticket.setImageOrientation(imageLocalOrientation);
+
+        ticket.setThumbnailUrl(thumbnailUrl);
     }
 
     public final void ticketUpdated(final Ticket ticket,

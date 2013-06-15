@@ -63,11 +63,15 @@ public class TicketDetailPopover extends Popover {
         imageLabel.setWidth(73.0f, Unit.PIXELS);
         imageLabel.setHeight(73.0f, Unit.PIXELS);
         imageLabel.setContentMode(ContentMode.HTML);
-        if (ticket.getImageUrl() != null) {
+        String url = ticket.getThumbnailUrl();
+        if (url == null) {
+            url = ticket.getImageUrl();
+        }
+        if (url != null) {
             imageLabel.setValue("<div class='imagepanel orientation"
                     + ticket.getImageOrientation()
                     + "' style='width:100%;height:100%;background-image: url("
-                    + ticket.getImageUrl() + ")'/>");
+                    + url + ")'/>");
         }
         layout.addLayoutClickListener(new LayoutClickListener() {
             @Override

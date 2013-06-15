@@ -259,7 +259,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     @Override
     public boolean deactivate() {
         // Don't get out off offline mode automatically as user may be actively
-        // filling an observation
+        // filling a ticket
         return false;
     }
 
