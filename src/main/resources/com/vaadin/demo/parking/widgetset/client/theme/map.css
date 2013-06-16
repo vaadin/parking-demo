@@ -1,4 +1,4 @@
-@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel, orientation6, orientation8, orientation3, v-touchkit-verticalcomponentgroup, leaflet-bottom;
+@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel, orientation6, orientation8, orientation3, v-touchkit-verticalcomponentgroup, leaflet-bottom, v-window-ticketdetail;
 
 .v-touchkit-popover.v-touchkit-relative .v-window-wrap {
 	background: none;
@@ -71,4 +71,8 @@
 
 .leaflet-bottom {
 	display: none;
+}
+
+.v-window-ticketdetail {
+	box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.3);
 }

@@ -28,6 +28,8 @@ public class TicketDetailPopover extends Popover {
             DateFormat.SHORT, ParkingUI.getApp().getLocale());
 
     public TicketDetailPopover(final Ticket ticket) {
+        addStyleName("ticketdetail");
+
         final VerticalComponentGroup detailsGroup = new VerticalComponentGroup();
         Label ticketTitle = new Label(ticket.getViolation().getCaption());
         ticketTitle.addStyleName("textcentered");

@@ -330,7 +330,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     @Override
     public void positionReceived(final double latitude, final double longitude) {
-        listener.positionReceived(latitude, longitude);
+        if (listener != null) {
+            listener.positionReceived(latitude, longitude);
+        }
     }
 
 }

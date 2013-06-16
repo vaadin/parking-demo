@@ -107,6 +107,8 @@ public class Ticket implements Serializable {
         sb.append(notes + DELIMITER);
         sb.append(area + DELIMITER);
         sb.append(imageOrientation + DELIMITER);
+        sb.append(imageUrl + DELIMITER);
+        sb.append(thumbnailUrl + DELIMITER);
         return sb.toString();
     }
 
@@ -122,6 +124,8 @@ public class Ticket implements Serializable {
             result.setNotes(split[4]);
             result.setArea(split[5]);
             result.setImageOrientation(Integer.parseInt(split[6]));
+            result.setImageUrl("null".equals(split[7]) ? null : split[7]);
+            result.setThumbnailUrl("null".equals(split[8]) ? null : split[8]);
         }
         return result;
     }

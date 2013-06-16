@@ -5,8 +5,6 @@ import org.helios.gwt.fonts.client.FontResource;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.ImageResource.ImageOptions;
-import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
 public interface ParkingBundle extends ClientBundle {
 
@@ -27,11 +25,9 @@ public interface ParkingBundle extends ClientBundle {
     @Source("shifts.css")
     ShiftsCss shiftsCss();
 
-    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
-    @Source("aboutBackground.png")
-    ImageResource aboutBackground();
-
     @Source("parking.ttf")
     FontResource parkingFont();
 
+    @Source("switch.png")
+    ImageResource switchImage();
 }

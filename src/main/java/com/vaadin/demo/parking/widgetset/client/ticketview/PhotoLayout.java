@@ -1,21 +1,27 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
+import org.vectomatic.file.File;
+import org.vectomatic.file.FileReader;
+import org.vectomatic.file.FileUploadExt;
+import org.vectomatic.file.events.LoadEndEvent;
+import org.vectomatic.file.events.LoadEndHandler;
+
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -74,15 +80,14 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                Timer timer = new Timer() {
-
+                final FileUploadExt fileUpload = new ParkingFileUpload(
+                        takePhotoButton);
+                fileUpload.addChangeHandler(new ChangeHandler() {
                     @Override
-                    public void run() {
-                        bindFileInput(takePhotoButton.getElement(),
-                                PhotoLayout.this);
+                    public void onChange(final ChangeEvent event) {
+                        imageReceived(fileUpload.getFiles().getItem(0));
                     }
-                };
-                timer.schedule(1000);
+                });
             }
         });
 
@@ -112,52 +117,59 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         });
     }
 
-    private native void bindFileInput(final Element e, final PhotoLayout widget) /*-{
-                                                                                      e.onchange = function(event){
-                                                                                          if(event.target.files.length == 1 && 
-                                                                                          event.target.files[0].type.indexOf("image/") == 0) {
-                                                                                              var file = event.target.files[0];
-                                                                                              var reader = new FileReader();
-                                                                                              var orientation = 0;
-                                                                                              var imageData;
-                                                                                              
-                                                                                              reader.onload = function(event) {
-                                                                                                  var binary = event.target.result;
-                                                                                                  var binaryFile = new $wnd.BinaryFile(binary);
-                                                                                                  var exif = $wnd.EXIF.readFromBinaryFile(binaryFile);
-                                                                                                  orientation = exif.Orientation;
-                                                                                                  if (!orientation){
-                                                                                                      orientation = 1;
-                                                                                                  }
-                                                                                                  if (orientation > 0 && imageData != null){
-                                                                                                      widget.@com.vaadin.demo.parking.widgetset.client.ticketview.PhotoLayout::setImageData(Ljava/lang/String;I)(imageData,orientation);
-                                                                                                  }
-                                                                                              }
-                                                                                              reader.readAsBinaryString(file);
-                                                                                              
-                                                                                              var reader2 = new FileReader();
-                                                                                              reader2.onload = function(event) {
-                                                                                                  imageData = event.target.result;
-                                                                                                  if (orientation > 0 && imageData != null){
-                                                                                                      widget.@com.vaadin.demo.parking.widgetset.client.ticketview.PhotoLayout::setImageData(Ljava/lang/String;I)(imageData,orientation);
-                                                                                                  }
-                                                                                              }
-                                                                                              reader2.readAsDataURL(file);
-                                                                                          
-                                                                                          }
-                                                                                      }
-                                                                                      
-                                                                                      if(!("url" in window) && ("webkitURL" in window)) {
-                                                                                      window.URL = window.webkitURL;   
-                                                                                      }
-                                                                                      }-*/;
+    private void imageReceived(final File imageFile) {
+        final Object[] imageData = new Object[2];
 
-    private void setImageData(final String imageData, final int orientation) {
-        if (imageData == null) {
+        final FileReader orientationReader = new FileReader();
+        orientationReader.addLoadEndHandler(new LoadEndHandler() {
+            @Override
+            public void onLoadEnd(final LoadEndEvent event) {
+                if (orientationReader.getError() == null) {
+                    String binary = orientationReader.getStringResult();
+                    imageData[1] = getImageOrientation(binary);
+                } else {
+                    imageData[1] = 1;
+                }
+
+                if (imageData[0] != null && imageData[1] != null) {
+                    setImageData((String) imageData[0], (Integer) imageData[1]);
+                }
+            }
+        });
+        orientationReader.readAsBinaryString(imageFile);
+
+        final FileReader dataURLReader = new FileReader();
+        dataURLReader.addLoadEndHandler(new LoadEndHandler() {
+            @Override
+            public void onLoadEnd(final LoadEndEvent event) {
+                if (dataURLReader.getError() == null) {
+                    imageData[0] = dataURLReader.getStringResult();
+                }
+
+                if (imageData[0] != null && imageData[1] != null) {
+                    setImageData((String) imageData[0], (Integer) imageData[1]);
+                }
+            }
+        });
+        dataURLReader.readAsDataURL(imageFile);
+    }
+
+    public static native int getImageOrientation(final String binary) /*-{
+                                                                      var binaryFile = new $wnd.BinaryFile(binary);
+                                                                      var exif = $wnd.EXIF.readFromBinaryFile(binaryFile);
+                                                                      var orientation = exif.Orientation;
+                                                                      if (!orientation){
+                                                                          orientation = 1;
+                                                                      }
+                                                                      return orientation;
+                                                                      }-*/;
+
+    private void setImageData(final String dataUrl, final int orientation) {
+        if (dataUrl == null) {
             OfflineDataService.setCachedImage(null);
             setImageOrientation(orientation, false);
         } else {
-            scaleImage(imageData, 1024 * 768, true, new Callback() {
+            scaleImage(dataUrl, 1024 * 768, true, new Callback() {
                 @Override
                 public void imageScaled(final String imageData) {
                     OfflineDataService.setCachedImage(imageData);
@@ -171,7 +183,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         void imageScaled(String imageData);
     }
 
-    private void scaleImage(final String imageData, final int maxArea,
+    private void scaleImage(final String imageUrl, final int maxArea,
             final boolean callbackNonNull, final Callback callback) {
         final Canvas canvas = Canvas.createIfSupported();
         if (canvas != null) {
@@ -194,13 +206,13 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
                     callback.imageScaled(scaledData);
                 }
             });
-            image.setUrl(imageData);
+            image.setUrl(imageUrl);
             Style style = image.getElement().getStyle();
             style.setPosition(Position.ABSOLUTE);
             style.setVisibility(Visibility.HIDDEN);
             add(image);
         } else {
-            callback.imageScaled(callbackNonNull ? imageData : null);
+            callback.imageScaled(callbackNonNull ? imageUrl : null);
         }
     }
 
@@ -267,6 +279,13 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
             final boolean initialize) {
         setImageOrientation(ticket.getImageOrientation(), initialize);
 
+    }
+
+    public class ParkingFileUpload extends FileUploadExt {
+        public ParkingFileUpload(final VUpload upload) {
+            super(upload.fu.getElement(), false);
+            onAttach();
+        }
     }
 
 }

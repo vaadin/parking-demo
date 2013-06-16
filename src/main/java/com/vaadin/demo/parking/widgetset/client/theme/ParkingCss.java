@@ -4,8 +4,6 @@ import com.google.gwt.resources.client.CssResource;
 
 public interface ParkingCss extends CssResource {
 
-    String about();
-
     String details();
 
     String add();
