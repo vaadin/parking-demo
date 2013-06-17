@@ -32,6 +32,7 @@ import com.vaadin.addon.charts.model.style.Color;
 import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.addon.charts.themes.VaadinTheme;
 import com.vaadin.addon.touchkit.ui.NavigationView;
+import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
@@ -113,7 +114,9 @@ public class StatsView extends NavigationView {
         credits.setText("");
         credits.setHref("");
 
-        return chart;
+        VerticalComponentGroup wrapper = new VerticalComponentGroup();
+        wrapper.addComponent(chart);
+        return wrapper;
     }
 
     public final Component buildTicketsPerAreaChart() {
@@ -155,7 +158,9 @@ public class StatsView extends NavigationView {
         credits.setText("");
         credits.setHref("");
 
-        return chart;
+        VerticalComponentGroup wrapper = new VerticalComponentGroup();
+        wrapper.addComponent(chart);
+        return wrapper;
     }
 
     public final void updateTicketsPerDayChart(
