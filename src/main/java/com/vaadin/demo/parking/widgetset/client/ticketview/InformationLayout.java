@@ -224,10 +224,8 @@ public class InformationLayout extends VerticalComponentGroupWidget {
 
         ticket.setRegisterPlateNumber(vehicleIdField.getText());
 
-        String violationString = violationBox.getValue(violationBox
-                .getSelectedIndex());
-        ticket.setViolation("null".equals(violationString) ? null : Violation
-                .valueOf(violationString));
+        int vi = violationBox.getSelectedIndex();
+        ticket.setViolation(vi == 0 ? null : Violation.values()[vi - 1]);
 
         ticket.setArea(areaBox.getValue(areaBox.getSelectedIndex()));
     }
@@ -237,15 +235,9 @@ public class InformationLayout extends VerticalComponentGroupWidget {
 
         vehicleIdField.setText(ticket.getRegisterPlateNumber());
 
-        violationBox.setSelectedIndex(0);
-        for (int i = 0; i < violationBox.getItemCount(); i++) {
-            if (ticket.getViolation() != null
-                    && violationBox.getValue(i).equals(
-                            ticket.getViolation().name())) {
-                violationBox.setSelectedIndex(i);
-                break;
-            }
-        }
+        int vi = Arrays.asList(Violation.values()).indexOf(
+                ticket.getViolation()) + 1;
+        violationBox.setSelectedIndex(vi);
 
         areaBox.setSelectedIndex(0);
         for (int i = 0; i < areaBox.getItemCount(); i++) {
@@ -258,5 +250,4 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         date = ticket.getTimeStamp();
         timeField.setDate(date);
     }
-
 }
