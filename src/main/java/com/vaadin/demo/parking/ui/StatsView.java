@@ -81,7 +81,6 @@ public class StatsView extends NavigationView {
 
     public final Component buildTicketsPerDayChart() {
         Chart chart = new Chart(ChartType.COLUMN);
-        chart.addStyleName(STYLE_NAME_CHART);
 
         Configuration conf = chart.getConfiguration();
         conf.setTitle(new Title("Tickets / day"));
@@ -116,12 +115,12 @@ public class StatsView extends NavigationView {
 
         VerticalComponentGroup wrapper = new VerticalComponentGroup();
         wrapper.addComponent(chart);
+        wrapper.addStyleName(STYLE_NAME_CHART);
         return wrapper;
     }
 
     public final Component buildTicketsPerAreaChart() {
         Chart chart = new Chart(ChartType.PIE);
-        chart.addStyleName(STYLE_NAME_CHART);
 
         Configuration conf = chart.getConfiguration();
 
@@ -160,6 +159,7 @@ public class StatsView extends NavigationView {
 
         VerticalComponentGroup wrapper = new VerticalComponentGroup();
         wrapper.addComponent(chart);
+        wrapper.addStyleName(STYLE_NAME_CHART);
         return wrapper;
     }
 
