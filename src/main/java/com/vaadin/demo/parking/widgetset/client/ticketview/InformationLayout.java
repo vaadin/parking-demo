@@ -37,35 +37,29 @@ public class InformationLayout extends VerticalComponentGroupWidget {
     private final TicketViewModuleListener listener;
 
     private void requestUserPosition() {
-        Geolocation
-                .getIfSupported()
-                .getCurrentPosition(
-                        new Callback<com.google.gwt.geolocation.client.Position, PositionError>() {
-                            @Override
-                            public void onSuccess(
-                                    final com.google.gwt.geolocation.client.Position result) {
-                                currentPosition = result;
-                                if (listener != null) {
-                                    listener.positionReceived(result
-                                            .getCoordinates().getLatitude(),
-                                            result.getCoordinates()
-                                                    .getLongitude());
-                                }
-                                setUseCurrentPositionEnabled(true);
+        Geolocation geolocation = Geolocation.getIfSupported();
+        if (geolocation == null) {
+            useCurrentLocationSwitch.setValue(false);
+        } else {
+            geolocation
+                    .getCurrentPosition(new Callback<com.google.gwt.geolocation.client.Position, PositionError>() {
+                        @Override
+                        public void onSuccess(
+                                final com.google.gwt.geolocation.client.Position result) {
+                            currentPosition = result;
+                            if (listener != null) {
+                                listener.positionReceived(result
+                                        .getCoordinates().getLatitude(), result
+                                        .getCoordinates().getLongitude());
                             }
+                        }
 
-                            @Override
-                            public void onFailure(final PositionError reason) {
-                                setUseCurrentPositionEnabled(false);
-                            }
-                        });
-    }
-
-    private void setUseCurrentPositionEnabled(final boolean enabled) {
-        useCurrentLocationSwitch.setValue(enabled);
-        addressRow.getElement().getParentElement().getParentElement()
-                .getStyle()
-                .setProperty("display", enabled ? "none" : "-webkit-box");
+                        @Override
+                        public void onFailure(final PositionError reason) {
+                            useCurrentLocationSwitch.setValue(false, true);
+                        }
+                    });
+        }
     }
 
     private Element getRowElement(final Widget field) {
@@ -116,7 +110,6 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         this.listener = listener;
         final String styleOn = "v-touchkit-switch-on";
         useCurrentLocationSwitch = new VSwitch();
-        useCurrentLocationSwitch.addStyleName(styleOn);
         useCurrentLocationSwitch
                 .addValueChangeHandler(new ValueChangeHandler<Boolean>() {
                     @Override
@@ -127,8 +120,17 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                             requestUserPosition();
                         } else {
                             useCurrentLocationSwitch.removeStyleName(styleOn);
-                            setUseCurrentPositionEnabled(false);
                         }
+
+                        addressRow
+                                .getElement()
+                                .getParentElement()
+                                .getParentElement()
+                                .getStyle()
+                                .setProperty(
+                                        "display",
+                                        event.getValue() ? "none"
+                                                : "-webkit-box");
                     }
                 });
         add(buildFieldRowBox("Current location", useCurrentLocationSwitch));
@@ -188,8 +190,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         }
         add(buildFieldRowBox("Area", areaBox));
 
-        setUseCurrentPositionEnabled(true);
-        requestUserPosition();
+        useCurrentLocationSwitch.setValue(true, true);
     }
 
     private Widget buildFieldRowBox(final String title, final Widget widget) {

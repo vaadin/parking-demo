@@ -24,6 +24,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
@@ -285,6 +286,11 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         public ParkingFileUpload(final VUpload upload) {
             super(upload.fu.getElement(), false);
             onAttach();
+            try {
+                RootPanel.detachOnWindowClose(this);
+            } catch (java.lang.AssertionError e) {
+                // Occurs in dev mode, ignore
+            }
         }
     }
 

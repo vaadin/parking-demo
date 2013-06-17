@@ -127,6 +127,9 @@
  */
 .v-touchkit-verticalcomponentgroup {
 	border-radius: 0;
+	box-shadow: 0 1px rgba(0,0,0,0.1);
+	border: 1px solid #dadada;
+	border-bottom-color: #c2c2c2;
 }
 
 .v-touchkit-navbutton-back,
@@ -214,6 +217,10 @@ textarea {
 	font-size: 18px;
 	border: none;
 	margin: 10px 0 !important;
+}
+
+.v-touchkit-componentgroup-row {
+	border-top: 1px solid #e5e5e5;
 }
 
 .v-touchkit-componentgroup-row .v-touchkit-componentgroup-cell,
