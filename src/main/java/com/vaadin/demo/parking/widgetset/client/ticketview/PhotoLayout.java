@@ -9,6 +9,7 @@ import org.vectomatic.file.events.LoadEndHandler;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
@@ -170,7 +171,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
             OfflineDataService.setCachedImage(null);
             setImageOrientation(orientation, false);
         } else {
-            scaleImage(dataUrl, 1024 * 768, true, new Callback() {
+            scaleImage(dataUrl, 1024, 768, true, new Callback() {
                 @Override
                 public void imageScaled(final String imageData) {
                     OfflineDataService.setCachedImage(imageData);
@@ -184,23 +185,24 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         void imageScaled(String imageData);
     }
 
-    private void scaleImage(final String imageUrl, final int maxArea,
-            final boolean callbackNonNull, final Callback callback) {
+    private void scaleImage(final String imageUrl, final int width,
+            final int height, final boolean callbackNonNull,
+            final Callback callback) {
         final Canvas canvas = Canvas.createIfSupported();
         if (canvas != null) {
             final Image image = new Image();
             image.addLoadHandler(new LoadHandler() {
                 @Override
                 public void onLoad(final LoadEvent event) {
-
                     ImageElement imageElement = ImageElement.as(image
                             .getElement());
-                    int[] scaledSize = getScaledSize(imageElement, maxArea);
-
-                    canvas.setCoordinateSpaceWidth(scaledSize[0]);
-                    canvas.setCoordinateSpaceHeight(scaledSize[1]);
-                    canvas.getContext2d().drawImage(imageElement, 0, 0,
-                            scaledSize[0], scaledSize[1]);
+                    canvas.setCoordinateSpaceWidth(width);
+                    canvas.setCoordinateSpaceHeight(height);
+                    int sw = imageElement.getWidth();
+                    int sh = imageElement.getHeight();
+                    int vertSquashRatio = detectVerticalSquash(imageElement);
+                    drawImageIOSFix(canvas.getElement(), imageElement, 0, 0,
+                            sw, sh, 0, 0, width, height, vertSquashRatio);
 
                     String scaledData = canvas.toDataUrl("image/jpeg");
                     remove(image);
@@ -217,21 +219,38 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         }
     }
 
-    private static int[] getScaledSize(final ImageElement imageElement,
-            final int maxArea) {
-        int width = imageElement.getWidth();
-        int height = imageElement.getHeight();
+    public static native int detectVerticalSquash(final Element img) /*-{
+                                                                     var iw = img.naturalWidth, ih = img.naturalHeight;
+                                                                     var canvas = document.createElement('canvas');
+                                                                     canvas.width = 1;
+                                                                     canvas.height = ih;
+                                                                     var ctx = canvas.getContext('2d');
+                                                                     ctx.drawImage(img, 0, 0);
+                                                                     var data = ctx.getImageData(0, 0, 1, ih).data;
+                                                                     // search image edge pixel position in case it is squashed vertically.
+                                                                     var sy = 0;
+                                                                     var ey = ih;
+                                                                     var py = ih;
+                                                                     while (py > sy) {
+                                                                     var alpha = data[(py - 1) * 4 + 3];
+                                                                     if (alpha === 0) {
+                                                                     ey = py;
+                                                                     } else {
+                                                                     sy = py;
+                                                                     }
+                                                                     py = (ey + sy) >> 1;
+                                                                     }
+                                                                     var ratio = (py / ih);
+                                                                     return (ratio===0)?1:ratio;
+                                                                     }-*/;
 
-        double area = width * height;
-
-        if (area > maxArea) {
-            double multiplier = Math.sqrt(maxArea / area);
-            width = new Double(multiplier * width).intValue();
-            height = new Double(multiplier * height).intValue();
-        }
-
-        return new int[] { width, height };
-    }
+    public static native void drawImageIOSFix(final Element canvas,
+            final Element img, final int sx, final int sy, final int sw,
+            final int sh, final int dx, final int dy, final int dw,
+            final int dh, final int vertSquashRatio) /*-{
+                                                     var ctx = canvas.getContext('2d');
+                                                     ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+                                                     }-*/;
 
     private void setImageOrientation(final int oritentation,
             final boolean initialize) {
@@ -255,7 +274,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
             takePhotoButton.submitButton.setText("Replace...");
             takePhotoButton.removeStyleName("empty");
 
-            scaleImage(dataUrl, 75 * 75, false, new Callback() {
+            scaleImage(dataUrl, 75, 56, false, new Callback() {
                 @Override
                 public void imageScaled(final String imageData) {
                     thumbnailUrl = imageData;

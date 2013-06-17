@@ -1,10 +1,6 @@
-@external details, shiftstab, maptab, ticketstab, statstab, add, close, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-switch-on, v-touchkit-switch, v-touchkit-switch-slider; 
+@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-switch-on, v-touchkit-switch, v-touchkit-switch-slider; 
 
 @def darkText #3d3f41;
-
-.details .v-caption > div {
-	margin: 10px 0;
-}
 
 .v-app,
 .v-touchkit-navpanel-container,
@@ -100,26 +96,6 @@
 }
 .v-touchkit-tabbar-toolbar .v-button.selected span {
 	color: #00b4f0;
-}
-
-/*
- * Character icon. Caption is E.g. "+" or some unicode character that is used as an icon.
- */
-.add .v-button-caption:before {
-	content: "+";
-	font-size: 30px;
-	line-height:22px;
-}
-.add>span {
-	font-size:0;
-}
-.close .v-button-caption:before {
-	content: "\2716";
-	font-size: 20px;
-	line-height:26px;
-}
-.close>span {
-	font-size:0;
 }
 
 /*
