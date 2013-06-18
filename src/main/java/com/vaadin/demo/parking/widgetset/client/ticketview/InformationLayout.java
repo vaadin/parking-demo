@@ -133,7 +133,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                                                 : "-webkit-box");
                     }
                 });
-        add(buildFieldRowBox("Current location", useCurrentLocationSwitch));
+        add(buildFieldRowBox("My location", useCurrentLocationSwitch));
 
         final ValueChangeHandler<String> vch = new ValueChangeHandler<String>() {
             @Override
