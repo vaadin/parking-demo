@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>org.vaadin.addon</groupId>
 			<artifactId>v-leaflet</artifactId>
-			<version>0.0.7-SNAPSHOT</version>
+			<version>0.0.7</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
