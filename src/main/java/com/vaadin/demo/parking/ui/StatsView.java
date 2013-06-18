@@ -131,7 +131,7 @@ public class StatsView extends NavigationView {
         conf.setPlotOptions(pie);
 
         zoneSeries = new DataSeries();
-        zoneSeries.setName("Zone");
+        zoneSeries.setName("Tickets");
         PlotOptionsPie innerPieOptions = new PlotOptionsPie();
         zoneSeries.setPlotOptions(innerPieOptions);
         innerPieOptions.setSize("60%");
@@ -142,7 +142,7 @@ public class StatsView extends NavigationView {
         innerPieOptions.getDataLabels().setDistance(-30);
 
         regionSeries = new DataSeries();
-        regionSeries.setName("Area");
+        regionSeries.setName("Tickets");
         PlotOptionsPie outerSeriesOptions = new PlotOptionsPie();
         regionSeries.setPlotOptions(outerSeriesOptions);
         outerSeriesOptions.setInnerSize("60%");
