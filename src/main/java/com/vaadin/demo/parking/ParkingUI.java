@@ -11,6 +11,7 @@ import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -163,7 +164,7 @@ public class ParkingUI extends UI {
 
             Image qrCode = new Image();
             qrCode.addStyleName("qrcode-image");
-            qrCode.setSource(new StreamResource(new StreamSource() {
+            StreamResource resource = new StreamResource(new StreamSource() {
                 @Override
                 public InputStream getStream() {
                     InputStream result = null;
@@ -207,7 +208,9 @@ public class ParkingUI extends UI {
                     }
                     return result;
                 }
-            }, "qrcode.png"));
+            }, "qrcode-" + new Date().getTime() + ".png");
+            resource.setCacheTime(0);
+            qrCode.setSource(resource);
 
             CssLayout qrCodeLayout = new CssLayout(qrCode, info);
             qrCodeLayout.setSizeFull();
