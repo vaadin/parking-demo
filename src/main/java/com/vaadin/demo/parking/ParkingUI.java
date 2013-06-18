@@ -63,7 +63,7 @@ public class ParkingUI extends UI {
     @Override
     public void init(VaadinRequest request) {
         ticketContainer = new BeanItemContainer<Ticket>(Ticket.class,
-                DataUtil.generateRandomTickets());
+                DataUtil.generateDummyTickets());
         // Set a nice default for user for demo purposes.
         setUser("John Doe");
 

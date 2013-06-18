@@ -61,23 +61,40 @@ public class DataUtil {
     private static final int RANDOM_TICKETS_COUNT = 20;
 
     // TODO: Dummy images/data needed
-    public static Collection<Ticket> generateRandomTickets() {
+    public static Collection<Ticket> generateDummyTickets() {
         Random random = new Random();
-        double lat = ParkingUI.getApp().getCurrentLatitude();
-        double lon = ParkingUI.getApp().getCurrentLongitude();
+
+        final List<Location> locations = Lists.newArrayList();
+
+        locations
+                .add(createLocation("Savitehtaankatu 5", 60.453917, 22.298506));
+        locations.add(createLocation("Lemminkaisenkatu 20", 60.447885,
+                22.295459));
+        locations.add(createLocation("Vaha Hameenkatu 5-7", 60.451673,
+                22.285459));
+        locations.add(createLocation("Keskikatu 15", 60.456943, 22.295115));
+        locations.add(createLocation("Kuikkulankatu 8", 60.463735, 22.294472));
+        locations.add(createLocation("Yliopistonkatu 7", 60.454488, 22.273057));
+        locations.add(createLocation("Torninkatu 6", 60.453895, 22.263015));
+        locations.add(createLocation("Kirsikkatie 6", 60.441576, 22.30829));
+        locations.add(createLocation("Peralankatu 23", 60.451419, 22.32065));
+        locations.add(createLocation("Kupittaankatu 51", 60.442571, 22.274259));
+        locations.add(createLocation("Rauhankatu 5", 60.452139, 22.255848));
+        locations.add(createLocation("Murtomaantie 39", 60.462634, 22.275761));
+        locations.add(createLocation("Piispanpelto 3", 60.462084, 22.284945));
+        locations.add(createLocation("Harjukatu 3-5", 60.455081, 22.305329));
 
         Collection<Ticket> result = Lists.newArrayList();
-        for (int i = 0; i < RANDOM_TICKETS_COUNT; i++) {
+        for (Location location : locations) {
             Ticket ticket = new Ticket();
 
-            ticket.setNotes("Testing" + i);
+            ticket.setNotes("Notes for " + location.getAddress());
 
             ticket.setImageUrl("VAADIN/themes/parking/tickets/" + 1 + ".jpg");
             ticket.setThumbnailUrl("VAADIN/themes/parking/tickets/" + 1
                     + "thumbnail.jpg");
             ticket.setImageOrientation(1);
-            ticket.setRegisterPlateNumber("ABC-" + i + "" + (i + 1) + ""
-                    + (i + 2));
+            ticket.setRegisterPlateNumber("ABC-" + (random.nextInt(800) + 100));
 
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.HOUR, -random.nextInt(100));
@@ -87,13 +104,6 @@ public class DataUtil {
             ticket.setViolation(Violation.values()[random.nextInt(Violation
                     .values().length)]);
 
-            Location location = new Location();
-            location.setAddress("Test");
-
-            double latitude = lat + (random.nextDouble() - 0.5) * 0.1;
-            double longitude = lon + (random.nextDouble() - 0.5) * 0.1;
-            location.setLatitude(latitude);
-            location.setLongitude(longitude);
             ticket.setLocation(location);
 
             ticket.setMyTicket(random.nextDouble() < 0.1);
@@ -104,6 +114,15 @@ public class DataUtil {
             result.add(ticket);
         }
         return result;
+    }
+
+    private static Location createLocation(final String address,
+            final double latitude, final double longitude) {
+        Location location = new Location();
+        location.setAddress(address);
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        return location;
     }
 
     public static void persistTickets(final List<Ticket> tickets) {
