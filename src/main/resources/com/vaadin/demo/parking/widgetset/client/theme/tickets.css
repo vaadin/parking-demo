@@ -1,17 +1,46 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection;
 
 /*
  * Tickets view
  */
-.tickets .offlineindicator,
-.tickets .onlineindicator {
-	padding: 10px;
-	font-size: 18px;
-	color: #64635a;
+.tickets .offlineindicator {
+	width: 100%;
+	height: 35px;
 }
 
-.tickets .offlineindicator {
-	margin-top: 30px;
+.tickets .offlineindicator > div {
+	background: #64635a;
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 35px;
+}
+.tickets .offlineindicator .gwt-Label {
+	float: left;
+	color: #c8c7b5;
+	text-shadow: none;
+	margin-top: 9px;
+	margin-left: 40px;
+}
+
+.tickets .offlineindicator.connection .gwt-Label {
+	color: #fff;
+}
+
+.tickets .offlineindicator .gwt-Label:BEFORE {
+	font-family: value('parkingFont.getFontName');
+	content: "\e00B";
+	position: relative;
+	left: -5px;
+	top: 4px;
+	font-size: 20px;
+	line-height: 10px;
+}
+.tickets .offlineindicator a {
+	float: right;
+	text-shadow: none;
+	margin-top: 9px;
+	margin-right: 20px;
 }
 
 .tickets .sectioncaption {

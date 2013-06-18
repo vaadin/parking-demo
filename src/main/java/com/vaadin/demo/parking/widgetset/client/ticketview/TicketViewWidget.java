@@ -11,8 +11,8 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,8 +37,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private VTextArea notesField;
     private boolean validateFields;
 
-    private VerticalComponentGroupWidget offlineIndicator;
-    private VerticalComponentGroupWidget onlineIndicator;
+    private VCssLayout offlineOnlineIndicator;
+    private Label onlineStatusLabel;
+
     private Label storedTicketsIndicator;
 
     private TicketViewWidgetListener listener;
@@ -47,6 +48,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private VButton saveTicketButton;
 
     private boolean refreshOnSave;
+    private Anchor reconnectLabel;
 
     public TicketViewWidget() {
         ParkingScriptLoader.ensureInjected();
@@ -129,23 +131,21 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         FlowPanel panel = new FlowPanel();
         panel.setStyleName("v-csslayout-margin-left v-csslayout-margin-right");
 
-        offlineIndicator = new VerticalComponentGroupWidget();
-        offlineIndicator.addStyleName("offlineindicator");
-        offlineIndicator
-                .add(new Label(
-                        "You're currently in offline mode. All new tickets will be cached to your "
-                                + "browser's local storage and sent to the server once you regain connection."));
-        panel.add(offlineIndicator);
+        offlineOnlineIndicator = new VCssLayout();
+        offlineOnlineIndicator.addStyleName("offlineindicator");
 
-        onlineIndicator = new VerticalComponentGroupWidget();
-        onlineIndicator.setVisible(false);
-        onlineIndicator.addStyleName("onlineindicator");
-        onlineIndicator
-                .add(new HTML(
-                        "Ok, your internet connection is up again. <a href='"
-                                + Window.Location.getHref()
-                                + "'>Refresh</a> the browser window to use Parking in online mode."));
-        panel.add(onlineIndicator);
+        VCssLayout indicatorWrapper = new VCssLayout();
+        indicatorWrapper.setWidth("100%");
+
+        onlineStatusLabel = new Label("Connection Offline");
+        indicatorWrapper.add(onlineStatusLabel);
+
+        reconnectLabel = new Anchor("Reconnect", Window.Location.getHref());
+        reconnectLabel.setVisible(false);
+        indicatorWrapper.add(reconnectLabel);
+
+        offlineOnlineIndicator.add(indicatorWrapper);
+        panel.add(offlineOnlineIndicator);
 
         informationLayout = new InformationLayout(this);
         panel.add(buildSectionWrapper(informationLayout, "Information",
@@ -289,7 +289,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         if (isActive()) {
             if (isNetworkOnline()) {
                 // offline -> online
-                onlineIndicator.setVisible(true);
+                offlineOnlineIndicator.addStyleName("connection");
+                reconnectLabel.setVisible(true);
+                onlineStatusLabel.setText("Connection Available");
             }
         } else {
             if (!isNetworkOnline()) {
@@ -312,7 +314,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     @Override
     public boolean isActive() {
-        return offlineIndicator.isVisible();
+        return offlineOnlineIndicator.isVisible();
     }
 
     public interface TicketViewWidgetListener {
@@ -327,7 +329,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             final TicketViewWidgetListener listener) {
         this.listener = listener;
         tabBar.setToolbar(new SimplePanel());
-        offlineIndicator.setVisible(false);
+        offlineOnlineIndicator.setVisible(false);
     }
 
     private Ticket getTicket() {
