@@ -1,20 +1,27 @@
-@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-switch-on, v-touchkit-switch, v-touchkit-switch-slider; 
+@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-switch-on, v-touchkit-switch, v-touchkit-switch-slider, v-touchkit-popover; 
 
 @def darkText #3d3f41;
 
 .v-app,
 .v-touchkit-navpanel-container,
 .v-touchkit-offlinemode {
-	background: #efefec !important;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9f9f6), to(#ebebe8));
 }
 
+.v-app .v-touchkit-navbar-left .v-touchkit-navbutton {
+  -webkit-border-image: none;
+}
 /*
  * Main Tab sheets icons via css
  */
 
 a {
-	color: #00b4f0;
+	color: #00b4f0 !important;
 	text-decoration: none;
+}
+ 
+.v-touchkit-popover {
+	background: #000;
 }
  
 .v-touchkit-toolbar {
@@ -114,6 +121,12 @@ a {
 	border-bottom-color: #c2c2c2;
 }
 
+.v-touchkit-navbar {
+	position: absolute;
+	right: 0;
+	left: 0;
+	z-index: 100;
+}
 .v-touchkit-navbutton-back,
 .v-touchkit-navbar .v-button {
 	background: #00b4f0;
@@ -263,6 +276,12 @@ textarea {
 	font-family: value('parkingFont.getFontName');
 	background: transparent;
 	color: #00b4f0;
+}
+
+.v-touchkit-navbutton:active{
+	background: #fff !important;
+	color: #64635a !important;
+	text-shadow: none !important;
 }
 
  @sprite .v-touchkit-switch {

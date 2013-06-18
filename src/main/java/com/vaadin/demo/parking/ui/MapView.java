@@ -48,6 +48,7 @@ public class MapView extends NavigationView implements PositionCallback,
 
     private void buildView() {
         setCaption("Map");
+        addStyleName("mapview");
 
         map = new ParkingMap();
         map.addMoveEndListener(new LeafletMoveEndListener() {
@@ -69,13 +70,13 @@ public class MapView extends NavigationView implements PositionCallback,
         you.setPoint(new Point(60.452, 22.301));
         setCenter();
 
-        locatebutton = new Button("Locate yourself", new ClickListener() {
+        locatebutton = new Button("", new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
                 Geolocator.detect(MapView.this);
-                locatebutton.setCaption("Locating...");
             }
         });
+        locatebutton.setWidth(29, Unit.PIXELS);
         locatebutton.setDisableOnClick(true);
         setLeftComponent(locatebutton);
     }
@@ -122,7 +123,6 @@ public class MapView extends NavigationView implements PositionCallback,
 
         setCenter();
 
-        locatebutton.setCaption("Locate yourself");
         locatebutton.setEnabled(true);
 
         updateMarkers();

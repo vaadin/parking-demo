@@ -1,9 +1,20 @@
-@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel, orientation6, orientation8, orientation3, v-touchkit-verticalcomponentgroup, leaflet-bottom, v-window-ticketdetail;
+@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel, orientation6, orientation8, orientation3, v-touchkit-verticalcomponentgroup, leaflet-bottom, v-window-ticketdetail, v-touchkit-navbar, mapview, v-button-wrap;
 
 .v-touchkit-popover.v-touchkit-relative .v-window-wrap {
 	background: none;
 	border: none;
 	-webkit-box-shadow: none;
+}
+
+.mapview .v-touchkit-navbar .v-button-wrap:BEFORE{
+	font-family: value('parkingFont.getFontName');
+	content: "\e00A";
+	position: absolute;
+	left: 3px;
+	top: -3px;
+	font-size: 24px;
+	font-weight: normal;
+	text-shadow: none;
 }
 
 .v-touchkit-popover-pointer-bottom {

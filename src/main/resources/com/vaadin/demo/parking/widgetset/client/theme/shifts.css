@@ -12,6 +12,10 @@
 	float: left;
 }
 
+.shifts .editfiltersbutton {
+	margin-bottom: 0;
+}
+
 .v-ui[width-range~="801px-"] .shifts .shiftstable {
     width: 65% !important;
 }

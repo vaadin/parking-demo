@@ -140,6 +140,7 @@ public class StatsView extends NavigationView {
                 "this.y > 5 ? this.point.name : null");
         innerPieOptions.getDataLabels().setColor(new SolidColor(255, 255, 255));
         innerPieOptions.getDataLabels().setDistance(-30);
+        innerPieOptions.setSize(200);
 
         regionSeries = new DataSeries();
         regionSeries.setName("Tickets");
@@ -149,6 +150,8 @@ public class StatsView extends NavigationView {
         outerSeriesOptions.setDataLabels(new Labels());
         outerSeriesOptions.getDataLabels().setFormatter(
                 "this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y : null");
+        outerSeriesOptions.setInnerSize(200);
+        outerSeriesOptions.setSize(270);
 
         conf.setSeries(zoneSeries, regionSeries);
         chart.drawChart(conf);

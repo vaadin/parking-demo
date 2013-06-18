@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>com.vaadin.addon</groupId>
 			<artifactId>vaadin-charts</artifactId>
-			<version>1.0.1</version>
+			<version>1.1.1</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
