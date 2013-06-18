@@ -82,8 +82,8 @@ public class DataUtil {
             cal.set(Calendar.MINUTE, 0);
             ticket.setTimeStamp(cal.getTime());
 
-            ticket.setViolation(i % 2 == 0 ? Violation.HANDICAPPED_ZONE
-                    : Violation.PROHIBITED_SPACE);
+            ticket.setViolation(Violation.values()[random.nextInt(Violation
+                    .values().length)]);
 
             Location location = new Location();
             location.setAddress("Test");
