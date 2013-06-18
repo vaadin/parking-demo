@@ -19,6 +19,7 @@ public class ParkingScriptLoader {
     protected void injectResources() {
         inject(ParkingResources.INSTANCE.exif().getText());
         inject(ParkingResources.INSTANCE.binaryajax().getText());
+        inject(ParkingResources.INSTANCE.megapixImage().getText());
     }
 
     protected static native void inject(String script)

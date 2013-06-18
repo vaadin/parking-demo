@@ -60,10 +60,6 @@ public class OfflineDataService {
         return al;
     }
 
-    public static String scaleImage(final String imageData, final int maxArea) {
-        return null;
-    }
-
     public static void setCachedImage(final String imageData) {
         final StorageMap s = new StorageMap(
                 Storage.getLocalStorageIfSupported());

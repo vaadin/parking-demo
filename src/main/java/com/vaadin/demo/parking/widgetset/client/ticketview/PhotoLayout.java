@@ -1,30 +1,18 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
-import org.vectomatic.file.File;
-import org.vectomatic.file.FileReader;
 import org.vectomatic.file.FileUploadExt;
-import org.vectomatic.file.events.LoadEndEvent;
-import org.vectomatic.file.events.LoadEndHandler;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,10 +22,10 @@ import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VUpload;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
+import com.vaadin.demo.parking.widgetset.client.ticketview.ImageUtil.ImageDataCallback;
 
 public class PhotoLayout extends VerticalComponentGroupWidget {
     private final SimplePanel imagePanel;
-    private String imageLocalUrl;
     private int imageLocalOrientation;
     private String thumbnailUrl;
     private final TicketViewModuleListener listener;
@@ -87,7 +75,17 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
                 fileUpload.addChangeHandler(new ChangeHandler() {
                     @Override
                     public void onChange(final ChangeEvent event) {
-                        imageReceived(fileUpload.getFiles().getItem(0));
+                        ImageUtil.getImageData(fileUpload,
+                                new ImageDataCallback() {
+                                    @Override
+                                    public void dataReceived(
+                                            final String dataUrl,
+                                            final int orientation) {
+                                        OfflineDataService
+                                                .setCachedImage(dataUrl);
+                                        setImageOrientation(orientation, false);
+                                    }
+                                });
                     }
                 });
             }
@@ -102,7 +100,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         removeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                setImageData(null, 0);
+                setImageOrientation(0, false);
             }
         });
         buttonsLayout.add(removeButton);
@@ -118,145 +116,6 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
             }
         });
     }
-
-    private void imageReceived(final File imageFile) {
-        final Object[] imageData = new Object[2];
-
-        final FileReader orientationReader = new FileReader();
-        orientationReader.addLoadEndHandler(new LoadEndHandler() {
-            @Override
-            public void onLoadEnd(final LoadEndEvent event) {
-                if (orientationReader.getError() == null) {
-                    String binary = orientationReader.getStringResult();
-                    imageData[1] = getImageOrientation(binary);
-                } else {
-                    imageData[1] = 1;
-                }
-
-                if (imageData[0] != null && imageData[1] != null) {
-                    setImageData((String) imageData[0], (Integer) imageData[1]);
-                }
-            }
-        });
-        orientationReader.readAsBinaryString(imageFile);
-
-        final FileReader dataURLReader = new FileReader();
-        dataURLReader.addLoadEndHandler(new LoadEndHandler() {
-            @Override
-            public void onLoadEnd(final LoadEndEvent event) {
-                if (dataURLReader.getError() == null) {
-                    imageData[0] = dataURLReader.getStringResult();
-                }
-
-                if (imageData[0] != null && imageData[1] != null) {
-                    setImageData((String) imageData[0], (Integer) imageData[1]);
-                }
-            }
-        });
-        dataURLReader.readAsDataURL(imageFile);
-    }
-
-    public static native int getImageOrientation(final String binary) /*-{
-                                                                      var binaryFile = new $wnd.BinaryFile(binary);
-                                                                      var exif = $wnd.EXIF.readFromBinaryFile(binaryFile);
-                                                                      var orientation = exif.Orientation;
-                                                                      if (!orientation){
-                                                                          orientation = 1;
-                                                                      }
-                                                                      return orientation;
-                                                                      }-*/;
-
-    private void setImageData(final String dataUrl, final int orientation) {
-        if (dataUrl == null) {
-            OfflineDataService.setCachedImage(null);
-            setImageOrientation(orientation, false);
-        } else {
-            scaleImage(dataUrl, 1024, true, new Callback() {
-                @Override
-                public void imageScaled(final String imageData) {
-                    OfflineDataService.setCachedImage(imageData);
-                    setImageOrientation(orientation, false);
-                }
-            });
-        }
-    }
-
-    public interface Callback {
-        void imageScaled(String imageData);
-    }
-
-    private void scaleImage(final String imageUrl, final int width,
-            final boolean callbackNonNull, final Callback callback) {
-        final Canvas canvas = Canvas.createIfSupported();
-        if (canvas != null) {
-            final Image image = new Image();
-            image.addLoadHandler(new LoadHandler() {
-                @Override
-                public void onLoad(final LoadEvent event) {
-
-                    ImageElement imageElement = ImageElement.as(image
-                            .getElement());
-                    double vertSquashRatio = detectVerticalSquash(imageElement);
-                    int sw = imageElement.getPropertyInt("naturalWidth");
-                    int sh = imageElement.getPropertyInt("naturalHeight");
-                    double aspectRatio = Math.min(sh, sw)
-                            / (double) Math.max(sh, sw);
-
-                    int height = (int) (width * aspectRatio);
-
-                    canvas.setCoordinateSpaceWidth(width);
-                    canvas.setCoordinateSpaceHeight(height);
-
-                    drawImageIOSFix(canvas.getElement(), imageElement, 0, 0,
-                            sw, sh, 0, 0, width, height, vertSquashRatio);
-
-                    String scaledData = canvas.toDataUrl("image/jpeg");
-                    remove(image);
-                    callback.imageScaled(scaledData);
-                }
-            });
-            image.setUrl(imageUrl);
-            Style style = image.getElement().getStyle();
-            style.setPosition(Position.ABSOLUTE);
-            style.setVisibility(Visibility.HIDDEN);
-            add(image);
-        } else {
-            callback.imageScaled(callbackNonNull ? imageUrl : null);
-        }
-    }
-
-    public static native double detectVerticalSquash(final Element img) /*-{
-                                                                        var iw = img.naturalWidth, ih = img.naturalHeight;
-                                                                        var canvas = document.createElement('canvas');
-                                                                        canvas.width = 1;
-                                                                        canvas.height = ih;
-                                                                        var ctx = canvas.getContext('2d');
-                                                                        ctx.drawImage(img, 0, 0);
-                                                                        var data = ctx.getImageData(0, 0, 1, ih).data;
-                                                                        // search image edge pixel position in case it is squashed vertically.
-                                                                        var sy = 0;
-                                                                        var ey = ih;
-                                                                        var py = ih;
-                                                                        while (py > sy) {
-                                                                        var alpha = data[(py - 1) * 4 + 3];
-                                                                        if (alpha === 0) {
-                                                                        ey = py;
-                                                                        } else {
-                                                                        sy = py;
-                                                                        }
-                                                                        py = (ey + sy) >> 1;
-                                                                        }
-                                                                        var ratio = (py / ih);
-                                                                        return (ratio===0)?1:ratio;
-                                                                        }-*/;
-
-    public static native void drawImageIOSFix(final Element canvas,
-            final Element img, final int sx, final int sy, final int sw,
-            final int sh, final int dx, final int dy, final int dw,
-            final int dh, final double vertSquashRatio) /*-{
-                                                        var ctx = canvas.getContext('2d');
-                                                        ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
-                                                        }-*/;
 
     private void setImageOrientation(final int oritentation,
             final boolean initialize) {
@@ -280,12 +139,19 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
             takePhotoButton.submitButton.setText("Replace...");
             takePhotoButton.removeStyleName("empty");
 
-            scaleImage(dataUrl, 75, false, new Callback() {
-                @Override
-                public void imageScaled(final String imageData) {
-                    thumbnailUrl = imageData;
-                }
-            });
+            if (Canvas.isSupported()) {
+                ImageUtil.scaleAndRotateImage(dataUrl, 75, 1,
+                        new ImageDataCallback() {
+                            @Override
+                            public void dataReceived(final String dataUrl,
+                                    final int orientation) {
+                                thumbnailUrl = dataUrl;
+                            }
+                        });
+            } else {
+                thumbnailUrl = null;
+            }
+
         }
         imagePanel.setVisible(!empty);
         removeButton.setVisible(!empty);
@@ -294,8 +160,6 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
     }
 
     public final void populateTicket(final Ticket ticket) {
-        ticket.setImageUrl(imageLocalUrl);
-
         ticket.setImageOrientation(imageLocalOrientation);
 
         ticket.setThumbnailUrl(thumbnailUrl);

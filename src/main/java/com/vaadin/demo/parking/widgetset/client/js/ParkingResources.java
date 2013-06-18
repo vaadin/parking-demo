@@ -12,4 +12,7 @@ public interface ParkingResources extends ClientBundle {
 
     @Source("binaryajax.js")
     TextResource binaryajax();
+
+    @Source("megapix-image.js")
+    TextResource megapixImage();
 }
