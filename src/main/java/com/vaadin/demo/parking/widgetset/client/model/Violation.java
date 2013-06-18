@@ -7,7 +7,7 @@ public enum Violation {
             "No special permit"), PERMIT_NOT_VISIBLE("Permit not visible"), SNOW_EMERGENCY(
             "Snow emergency area"), STREET_SWEEPING("Street sweeping area"), OVER_MAX_TIME(
             "Max time exceeded"), AGAINST_TRAFFC_DIRECTION(
-            "Against traffic dircetion");
+            "Against traffic direction");
 
     private final String caption;
 
