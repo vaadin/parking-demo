@@ -1,5 +1,7 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,6 +12,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -28,19 +31,22 @@ import com.vaadin.demo.parking.widgetset.client.js.ParkingScriptLoader;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
 public class TicketViewWidget extends VOverlay implements OfflineMode,
-        TicketViewModuleListener {
+        TicketViewModuleListener, RepeatingCommand {
     private InformationLayout informationLayout;
     private PhotoLayout photoLayout;
     private VTextArea notesField;
     private boolean validateFields;
 
     private VerticalComponentGroupWidget offlineIndicator;
+    private VerticalComponentGroupWidget onlineIndicator;
     private Label storedTicketsIndicator;
 
     private TicketViewWidgetListener listener;
 
     private final VTabBar tabBar;
     private VButton saveTicketButton;
+
+    private boolean refreshOnSave;
 
     public TicketViewWidget() {
         ParkingScriptLoader.ensureInjected();
@@ -71,6 +77,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         });
         checkDeviceSize();
         ticketUpdated(new Ticket(), false, true);
+        Scheduler.get().scheduleFixedPeriod(this, 1000);
     }
 
     private void checkDeviceSize() {
@@ -130,6 +137,16 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                                 + "browser's local storage and sent to the server once you regain connection."));
         panel.add(offlineIndicator);
 
+        onlineIndicator = new VerticalComponentGroupWidget();
+        onlineIndicator.setVisible(false);
+        onlineIndicator.addStyleName("onlineindicator");
+        onlineIndicator
+                .add(new HTML(
+                        "Ok, your internet connection is up again. <a href='"
+                                + Window.Location.getHref()
+                                + "'>Refresh</a> the browser window to use Parking in online mode."));
+        panel.add(onlineIndicator);
+
         informationLayout = new InformationLayout(this);
         panel.add(buildSectionWrapper(informationLayout, "Information",
                 "informationlayout"));
@@ -160,6 +177,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             } else {
                 OfflineDataService.localStoreTicket(ticket);
                 ticketUpdated(new Ticket(), false, false);
+            }
+
+            if (refreshOnSave) {
+                Window.Location.reload();
             }
         }
     }
@@ -263,6 +284,23 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         return false;
     }
 
+    @Override
+    public boolean execute() {
+        if (isActive()) {
+            if (isNetworkOnline()) {
+                // offline -> online
+                onlineIndicator.setVisible(true);
+            }
+        } else {
+            if (!isNetworkOnline()) {
+                // online -> offline
+                listener = null;
+                refreshOnSave = true;
+            }
+        }
+        return true;
+    }
+
     private static native boolean isNetworkOnline()
     /*-{
         return $wnd.navigator.onLine;
@@ -274,7 +312,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     @Override
     public boolean isActive() {
-        return !isNetworkOnline();
+        return offlineIndicator.isVisible();
     }
 
     public interface TicketViewWidgetListener {

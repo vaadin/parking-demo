@@ -1,13 +1,17 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator;
 
 /*
  * Tickets view
  */
-.tickets .offlineindicator {
+.tickets .offlineindicator,
+.tickets .onlineindicator {
 	padding: 10px;
-	margin-top: 30px;
 	font-size: 18px;
 	color: #64635a;
+}
+
+.tickets .offlineindicator {
+	margin-top: 30px;
 }
 
 .tickets .sectioncaption {

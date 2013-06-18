@@ -11,6 +11,12 @@
 /*
  * Main Tab sheets icons via css
  */
+
+a {
+	color: #00b4f0;
+	text-decoration: none;
+}
+ 
 .v-touchkit-toolbar {
    font-family: value('parkingFont.getFontName');
 }
