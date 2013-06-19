@@ -32,10 +32,10 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ui.MainTabsheet;
 import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
+import com.vaadin.server.Page;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
@@ -79,7 +79,7 @@ public class ParkingUI extends UI {
         setImmediate(true);
 
         if (isLargeScreenDevice()) {
-            showNonMobileNotification(request);
+            showNonMobileNotification();
         }
     }
 
@@ -146,12 +146,9 @@ public class ParkingUI extends UI {
         this.user = user;
     }
 
-    private void showNonMobileNotification(VaadinRequest request) {
-        VaadinServletRequest vsr = (VaadinServletRequest) request;
-
+    private void showNonMobileNotification() {
         try {
-            URL appUrl = ((ParkingServlet) vsr.getService().getServlet())
-                    .getApplicationUrl(vsr);
+            URL appUrl = Page.getCurrent().getLocation().toURL();
             String myIp = Inet4Address.getLocalHost().getHostAddress();
             final String qrCodeUrl = appUrl.toString().replaceAll("localhost",
                     myIp);
