@@ -22,9 +22,7 @@ public class ParkingServlet extends TouchKitServlet {
                 .getContextPath();
 
         s.getApplicationIcons().addApplicationIcon(
-                contextPath + "VAADIN/themes/parking/icon.png");
-        s.getWebAppSettings().setStartupImage(
-                contextPath + "VAADIN/themes/parking/startup.png");
+                contextPath + "/VAADIN/themes/parking/icon.png");
 
         s.getApplicationCacheSettings().setCacheManifestEnabled(true);
 
