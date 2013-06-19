@@ -8,6 +8,7 @@ import org.vectomatic.file.events.LoadEndHandler;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Visibility;
@@ -15,6 +16,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.vaadin.client.BrowserInfo;
 
 /**
  * This class contains some image processing utility methods not related to
@@ -24,12 +26,6 @@ public class ImageUtil {
 
     public static void getImageData(final FileUploadExt fileUpload,
             final ImageDataCallback imageDataCallback) {
-        final RootPanel rootPanel = RootPanel.get();
-
-        final Image image = new Image();
-        Style style = image.getElement().getStyle();
-        style.setPosition(Position.ABSOLUTE);
-        style.setVisibility(Visibility.HIDDEN);
 
         final Object[] imageData = new Object[2];
 
@@ -39,7 +35,12 @@ public class ImageUtil {
                     public void dataReceived(final String dataUrl,
                             final int orientation) {
                         imageData[1] = orientation;
-                        if (imageData[0] != null) {
+                        if (BrowserInfo.get().isAndroid()) {
+                            // For android devices, just scale the image data
+                            // and send it back
+                            scaleImage(dataUrl, 1024, orientation,
+                                    imageDataCallback);
+                        } else if (imageData[0] != null) {
                             callbackImageData(imageDataCallback,
                                     (String) imageData[0],
                                     (Integer) imageData[1]);
@@ -53,7 +54,12 @@ public class ImageUtil {
 
                 });
 
-        if (Canvas.isSupported()) {
+        if (Canvas.isSupported() && !BrowserInfo.get().isAndroid()) {
+            final RootPanel rootPanel = RootPanel.get();
+            final Image image = new Image();
+            Style style = image.getElement().getStyle();
+            style.setPosition(Position.ABSOLUTE);
+            style.setVisibility(Visibility.HIDDEN);
             image.addLoadHandler(new LoadHandler() {
                 @Override
                 public void onLoad(final LoadEvent event) {
@@ -74,15 +80,14 @@ public class ImageUtil {
             final ImageDataCallback imageDataCallback, final String dataUrl,
             final int orientation) {
         if (Canvas.isSupported()) {
-            scaleAndRotateImage(dataUrl, 1024, orientation, imageDataCallback);
+            rotateImage(dataUrl, 1024, orientation, imageDataCallback);
         } else {
             imageDataCallback.dataReceived(dataUrl, orientation);
         }
     }
 
-    public static void scaleAndRotateImage(final String imageUrl,
-            final int maxScale, final int orientation,
-            final ImageDataCallback imageDataCallback) {
+    private static void rotateImage(final String imageUrl, final int maxScale,
+            final int orientation, final ImageDataCallback imageDataCallback) {
         final RootPanel rootPanel = RootPanel.get();
         // Rotate the image to reset orientation fix
         final Image image = new Image(imageUrl);
@@ -100,6 +105,45 @@ public class ImageUtil {
 
         scaleAndRotateImage(image.getElement(), maxScale, orientation);
         rootPanel.add(image);
+    }
+
+    public static void scaleImage(final String imageUrl, final int width,
+            final int orientation, final ImageDataCallback callback) {
+        final Canvas canvas = Canvas.createIfSupported();
+        if (BrowserInfo.get().isIOS() && canvas != null) {
+            rotateImage(imageUrl, width, orientation, callback);
+        } else if (canvas != null) {
+            final RootPanel rootPanel = RootPanel.get();
+            final Image image = new Image();
+            Style style = image.getElement().getStyle();
+            style.setPosition(Position.ABSOLUTE);
+            style.setVisibility(Visibility.HIDDEN);
+
+            image.addLoadHandler(new LoadHandler() {
+                @Override
+                public void onLoad(final LoadEvent event) {
+                    ImageElement imageElement = ImageElement.as(image
+                            .getElement());
+                    int sw = imageElement.getPropertyInt("naturalWidth");
+                    int sh = imageElement.getPropertyInt("naturalHeight");
+                    double aspectRatio = Math.min(sh, sw)
+                            / (double) Math.max(sh, sw);
+
+                    int height = (int) (width * aspectRatio);
+
+                    canvas.setCoordinateSpaceWidth(width);
+                    canvas.setCoordinateSpaceHeight(height);
+                    canvas.getContext2d().drawImage(imageElement, 0, 0, width,
+                            height);
+                    String scaledData = canvas.toDataUrl("image/jpeg");
+                    rootPanel.remove(image);
+                    callback.dataReceived(scaledData, orientation);
+                }
+            });
+            image.setUrl(imageUrl);
+
+            rootPanel.add(image);
+        }
     }
 
     private static void getImageFilereaderData(final File imageFile,

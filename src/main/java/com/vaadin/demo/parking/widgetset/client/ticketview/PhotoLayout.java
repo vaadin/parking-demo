@@ -140,14 +140,13 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
             takePhotoButton.removeStyleName("empty");
 
             if (Canvas.isSupported()) {
-                ImageUtil.scaleAndRotateImage(dataUrl, 75, 1,
-                        new ImageDataCallback() {
-                            @Override
-                            public void dataReceived(final String dataUrl,
-                                    final int orientation) {
-                                thumbnailUrl = dataUrl;
-                            }
-                        });
+                ImageUtil.scaleImage(dataUrl, 75, 1, new ImageDataCallback() {
+                    @Override
+                    public void dataReceived(final String dataUrl,
+                            final int orientation) {
+                        thumbnailUrl = dataUrl;
+                    }
+                });
             } else {
                 thumbnailUrl = null;
             }
