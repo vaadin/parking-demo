@@ -182,6 +182,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             if (refreshOnSave) {
                 Window.Location.reload();
             }
+        } else {
+            Window.alert("Required information missing");
         }
     }
 

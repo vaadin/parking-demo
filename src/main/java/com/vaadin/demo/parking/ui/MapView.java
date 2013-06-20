@@ -14,7 +14,6 @@ import org.vaadin.addon.leaflet.shared.Point;
 import com.vaadin.addon.touchkit.extensions.Geolocator;
 import com.vaadin.addon.touchkit.extensions.PositionCallback;
 import com.vaadin.addon.touchkit.gwt.client.vcom.Position;
-import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
@@ -24,10 +23,11 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 
-public class MapView extends NavigationView implements PositionCallback,
+public class MapView extends CssLayout implements PositionCallback,
         LeafletClickListener {
 
     private ParkingMap map;
@@ -50,6 +50,7 @@ public class MapView extends NavigationView implements PositionCallback,
     private void buildView() {
         setCaption("Map");
         addStyleName("mapview");
+        setSizeFull();
 
         map = new ParkingMap();
         map.addMoveEndListener(new LeafletMoveEndListener() {
@@ -65,7 +66,7 @@ public class MapView extends NavigationView implements PositionCallback,
 
         map.setSizeFull();
         map.setZoomLevel(12);
-        setContent(map);
+        addComponent(map);
 
         // Default to Vaadin HQ
         you.setPoint(new Point(60.452, 22.301));
@@ -77,9 +78,11 @@ public class MapView extends NavigationView implements PositionCallback,
                 Geolocator.detect(MapView.this);
             }
         });
-        locatebutton.setWidth(29, Unit.PIXELS);
+        locatebutton.addStyleName("locatebutton");
+        locatebutton.setWidth(30, Unit.PIXELS);
+        locatebutton.setHeight(30, Unit.PIXELS);
         locatebutton.setDisableOnClick(true);
-        setLeftComponent(locatebutton);
+        addComponent(locatebutton);
     }
 
     public final void updateMarkers() {
@@ -148,7 +151,7 @@ public class MapView extends NavigationView implements PositionCallback,
     }
 
     private void showPopup(final Ticket ticket) {
-        new TicketDetailPopover(ticket).showRelativeTo(getNavigationBar());
+        new TicketDetailPopover(ticket).showRelativeTo(this);
     }
 
     @Override
