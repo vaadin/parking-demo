@@ -1,5 +1,6 @@
 package com.vaadin.demo.parking.ui;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.vaadin.addon.leaflet.LMarker;
@@ -93,19 +94,22 @@ public class MapView extends NavigationView implements PositionCallback,
         List<Ticket> tickets = ticketContainer.getItemIds();
 
         map.removeAllComponents();
-
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
         for (Ticket ticket : tickets) {
-            Location location = ticket.getLocation();
+            if (ticket.getTimeStamp().after(cal.getTime())) {
+                Location location = ticket.getLocation();
 
-            LMarker leafletMarker = new LMarker(location.getLatitude(),
-                    location.getLongitude());
-            leafletMarker.setIcon(new ThemeResource("pin.png"));
-            leafletMarker.setIconSize(new Point(24, 38));
-            leafletMarker.setIconAnchor(new Point(11, 38));
-            leafletMarker.setData(ticket);
-            leafletMarker.addClickListener(this);
+                LMarker leafletMarker = new LMarker(location.getLatitude(),
+                        location.getLongitude());
+                leafletMarker.setIcon(new ThemeResource("pin.png"));
+                leafletMarker.setIconSize(new Point(24, 38));
+                leafletMarker.setIconAnchor(new Point(11, 38));
+                leafletMarker.setData(ticket);
+                leafletMarker.addClickListener(this);
 
-            map.addComponent(leafletMarker);
+                map.addComponent(leafletMarker);
+            }
         }
 
         you.setPoint(new Point(ParkingUI.getApp().getCurrentLatitude(),

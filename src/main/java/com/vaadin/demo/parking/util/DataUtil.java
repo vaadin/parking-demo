@@ -58,11 +58,9 @@ public class DataUtil {
         return result;
     }
 
-    private static final int RANDOM_TICKETS_COUNT = 20;
+    private static final int RANDOM_TICKETS_COUNT = 50;
 
-    // TODO: Dummy images/data needed
     public static Collection<Ticket> generateDummyTickets() {
-        Random random = new Random();
 
         final List<Location> locations = Lists.newArrayList();
 
@@ -86,34 +84,65 @@ public class DataUtil {
 
         Collection<Ticket> result = Lists.newArrayList();
         for (Location location : locations) {
-            Ticket ticket = new Ticket();
-
-            ticket.setNotes("Notes for " + location.getAddress());
-
-            ticket.setImageUrl("VAADIN/themes/parking/tickets/" + 1 + ".jpg");
-            ticket.setThumbnailUrl("VAADIN/themes/parking/tickets/" + 1
-                    + "thumbnail.jpg");
-            ticket.setImageOrientation(1);
-            ticket.setRegisterPlateNumber("ABC-" + (random.nextInt(800) + 100));
-
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.HOUR, -random.nextInt(100));
-            cal.set(Calendar.MINUTE, 0);
-            ticket.setTimeStamp(cal.getTime());
-
-            ticket.setViolation(Violation.values()[random.nextInt(Violation
-                    .values().length)]);
-
-            ticket.setLocation(location);
-
-            ticket.setMyTicket(random.nextDouble() < 0.1);
-
-            ticket.setArea("ABC".charAt(random.nextInt(3))
-                    + String.valueOf(random.nextInt(4) + 1));
-
-            result.add(ticket);
+            result.add(createRandomTicket(location));
         }
+
+        for (int i = 0; i < RANDOM_TICKETS_COUNT; i++) {
+            result.add(createRandomTicket(null));
+        }
+
         return result;
+    }
+
+    private static Ticket createRandomTicket(final Location location) {
+        final Random random = new Random();
+        final Ticket ticket = new Ticket();
+
+        Calendar cal = Calendar.getInstance();
+
+        if (location == null) {
+            cal.add(Calendar.HOUR, -(30 + random.nextInt(70)));
+            ticket.setNotes("Dummy notes");
+            ticket.setLocation(createDummyLocation());
+        } else {
+            cal.add(Calendar.HOUR, -random.nextInt(24));
+            ticket.setLocation(location);
+            ticket.setNotes("Notes for " + location.getAddress());
+        }
+        cal.set(Calendar.MINUTE, 0);
+        ticket.setTimeStamp(cal.getTime());
+
+        ticket.setImageUrl("VAADIN/themes/parking/tickets/" + 1 + ".jpg");
+        ticket.setThumbnailUrl("VAADIN/themes/parking/tickets/" + 1
+                + "thumbnail.jpg");
+        ticket.setImageOrientation(1);
+        ticket.setRegisterPlateNumber("ABC-" + (random.nextInt(800) + 100));
+
+        ticket.setViolation(Violation.values()[random.nextInt(Violation
+                .values().length)]);
+
+        ticket.setMyTicket(random.nextDouble() < 0.1);
+
+        ticket.setArea("ABC".charAt(random.nextInt(3))
+                + String.valueOf(random.nextInt(4) + 1));
+        return ticket;
+    }
+
+    private static Location createDummyLocation() {
+        final Random random = new Random();
+
+        double lat = ParkingUI.getApp().getCurrentLatitude();
+        double lon = ParkingUI.getApp().getCurrentLongitude();
+
+        Location location = new Location();
+        location.setAddress("Test");
+
+        double latitude = lat + (random.nextDouble() - 0.5) * 0.1;
+        double longitude = lon + (random.nextDouble() - 0.5) * 0.1;
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+
+        return location;
     }
 
     private static Location createLocation(final String address,
