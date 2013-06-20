@@ -1,4 +1,4 @@
-@external v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-table-sort-indicator, v-table-caption-container, v-table-header-wrap, v-table-cell-content, v-table-row, v-table-row-odd, v-table-cell-wrapper, v-table-header, v-table-resizer, v-table-body-wrapper, editfiltersbutton, filtersview;
+@external v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-table-sort-indicator, v-table-caption-container, v-table-header-wrap, v-table-cell-content, v-table-row, v-table-row-odd, v-table-cell-wrapper, v-table-header, v-table-resizer, v-table-body-wrapper, editfiltersbutton, filtersview, v-touchkit-navbutton;
 
 /*
  * Shifts view
@@ -14,6 +14,11 @@
 
 .shifts .editfiltersbutton {
 	margin-bottom: 0;
+}
+.editfiltersbutton .v-touchkit-navbutton:active{
+	background: #fff !important;
+	color: #64635a !important;
+	text-shadow: none !important;
 }
 
 .v-ui[width-range~="801px-"] .shifts .shiftstable {

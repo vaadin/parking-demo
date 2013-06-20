@@ -128,6 +128,7 @@ a {
 	z-index: 100;
 }
 .v-touchkit-navbutton-back,
+.v-touchkit-navbutton-back:ACTIVE,
 .v-touchkit-navbar .v-button {
 	background: #00b4f0;
 	border: none;
@@ -276,12 +277,6 @@ textarea {
 	font-family: value('parkingFont.getFontName');
 	background: transparent;
 	color: #00b4f0;
-}
-
-.v-touchkit-navbutton:active{
-	background: #fff !important;
-	color: #64635a !important;
-	text-shadow: none !important;
 }
 
  @sprite .v-touchkit-switch {
