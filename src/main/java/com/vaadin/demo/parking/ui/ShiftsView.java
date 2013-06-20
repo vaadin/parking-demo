@@ -16,6 +16,8 @@ import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.demo.parking.ParkingUI;
@@ -23,6 +25,7 @@ import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.model.Shift;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -88,8 +91,42 @@ public class ShiftsView extends NavigationManager {
         navigationView.addStyleName("filtersview");
         navigationView.setSizeFull();
         navigationView.setRightComponent(buildClearButton());
-        NavigationButton editButton = new NavigationButton("Edit filters...",
-                navigationView);
+        final NavigationButton editButton = new NavigationButton(
+                "Edit filters...", navigationView);
+
+        ValueChangeListener vcl = new ValueChangeListener() {
+            @Override
+            public void valueChange(final ValueChangeEvent event) {
+                if (shiftContainer.hasContainerFilters()) {
+                    StringBuilder sb = new StringBuilder();
+                    for (Field<?> field : filterFields) {
+                        Object value = field.getValue();
+                        if (value != null
+                                && !String.valueOf(value).trim().isEmpty()) {
+                            if (!sb.toString().isEmpty()) {
+                                sb.append(", ");
+                            }
+
+                            if (value instanceof Date) {
+                                sb.append(dateFormat.format(value));
+                            } else if (field instanceof AbstractSelect) {
+                                sb.append(((AbstractSelect) field)
+                                        .getItemCaption(value));
+                            } else {
+                                sb.append(String.valueOf(value));
+                            }
+                        }
+                    }
+                    editButton.setCaption(sb.toString());
+                } else {
+                    editButton.setCaption("Edit filters...");
+                }
+            }
+        };
+
+        for (Field<?> field : filterFields) {
+            field.addValueChangeListener(vcl);
+        }
 
         addNavigationListener(new NavigationListener() {
             @Override
