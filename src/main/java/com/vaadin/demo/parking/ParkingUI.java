@@ -48,7 +48,7 @@ import com.vaadin.ui.Window;
 @Theme("parking")
 @Widgetset("com.vaadin.demo.parking.widgetset.ParkingWidgetset")
 @PreserveOnRefresh
-@Title("Parking")
+@Title("Vaadin Parking Demo")
 public class ParkingUI extends UI {
 
     /*
