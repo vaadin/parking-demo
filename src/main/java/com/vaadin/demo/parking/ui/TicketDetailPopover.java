@@ -99,6 +99,7 @@ public class TicketDetailPopover extends Popover {
                 new ExternalResource(ticket.getImageUrl()));
         image.addStyleName("imagepanel");
         image.addStyleName("orientation" + ticket.getImageOrientation());
+        image.setWidth(100.0f, Unit.PERCENTAGE);
         image.addClickListener(new ClickListener() {
             @Override
             public void click(final ClickEvent event) {
