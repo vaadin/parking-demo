@@ -29,6 +29,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
     private com.google.gwt.geolocation.client.Position currentPosition;
     private final VTextField addressField;
     private final Widget addressRow;
+    private final Widget geolocationRow;
     private final DatePicker timeField;
     private Date date = new Date();
     private final VTextField vehicleIdField;
@@ -57,6 +58,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                         @Override
                         public void onFailure(final PositionError reason) {
                             useCurrentLocationSwitch.setValue(false, true);
+                            geolocationRow.setVisible(false);
                         }
                     });
         }
@@ -121,7 +123,9 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                         } else {
                             useCurrentLocationSwitch.removeStyleName(styleOn);
                         }
-
+                        if (!event.getValue()) {
+                            currentPosition = null;
+                        }
                         addressRow
                                 .getElement()
                                 .getParentElement()
@@ -133,7 +137,9 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                                                 : "-webkit-box");
                     }
                 });
-        add(buildFieldRowBox("My location", useCurrentLocationSwitch));
+        geolocationRow = buildFieldRowBox("My location",
+                useCurrentLocationSwitch);
+        add(geolocationRow);
 
         final ValueChangeHandler<String> vch = new ValueChangeHandler<String>() {
             @Override
@@ -212,7 +218,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
 
     public final void populateTicket(final Ticket ticket) {
         final Location location = new Location();
-        if (!addressRow.isVisible() && currentPosition != null) {
+        if (currentPosition != null) {
             location.setLatitude(currentPosition.getCoordinates().getLatitude());
             location.setLongitude(currentPosition.getCoordinates()
                     .getLongitude());
