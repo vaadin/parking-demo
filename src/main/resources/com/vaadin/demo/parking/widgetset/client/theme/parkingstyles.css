@@ -213,6 +213,7 @@ textarea {
 	font-size: 18px;
 	border: none;
 	margin: 10px 0 !important;
+	-webkit-appearance: none;
 }
 
 .v-touchkit-componentgroup-row {
