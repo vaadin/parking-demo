@@ -10,10 +10,12 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
@@ -377,4 +379,15 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         }
     }
 
+    @Override
+    public Element getOverlayContainer() {
+        ApplicationConnection ac = getApplicationConnection();
+        if (ac == null) {
+            // could not figure out which one we belong to, styling will
+            // probably fail
+            return RootPanel.get().getElement();
+        } else {
+            return getOverlayContainer(ac);
+        }
+    }
 }
