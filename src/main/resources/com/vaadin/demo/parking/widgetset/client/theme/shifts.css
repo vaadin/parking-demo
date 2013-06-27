@@ -1,4 +1,4 @@
-@external v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-table-sort-indicator, v-table-caption-container, v-table-header-wrap, v-table-cell-content, v-table-row, v-table-row-odd, v-table-cell-wrapper, v-table-header, v-table-resizer, v-table-body-wrapper, editfiltersbutton, filtersview, v-touchkit-navbutton;
+@external v-ui, shifts, v-csslayout, shiftstable, shiftsfilter, v-table-sort-indicator, v-table-caption-container, v-table-header-wrap, v-table-cell-content, v-table-row, v-table-row-odd, v-table-cell-wrapper, v-table-header, v-table-resizer, v-table-body-wrapper, editfiltersbutton, filtersview, v-touchkit-navbutton, v-table-header-cell-asc, v-table-header-cell-desc;
 
 /*
  * Shifts view
@@ -61,8 +61,24 @@
 	padding-top: 15px;
 }
 
-.shifts .v-table-sort-indicator {
-	display: none;
+.shifts .v-table-header-cell-asc .v-table-sort-indicator,
+.shifts .v-table-header-cell-desc .v-table-sort-indicator {
+	background: transparent;
+	height: 0;
+	width: 0;
+	border: 6px solid transparent;
+	position: relative;
+	right: 11px;
+}
+
+.shifts .v-table-header-cell-desc .v-table-sort-indicator {
+	border-top-color: #fff;
+	top: 10px;
+}
+
+.shifts .v-table-header-cell-asc .v-table-sort-indicator {
+	border-bottom-color: #fff;
+	top: 4px;
 }
 
 .shifts .v-table-cell-wrapper {
@@ -73,7 +89,6 @@
 	border-right-color: transparent;
 	padding: 6px;
 }
-
 
 .shifts .v-table-row .v-table-cell-content {
 	border-top: 2px solid #f3f3f3;
