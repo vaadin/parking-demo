@@ -13,7 +13,9 @@ public class ParkingMap extends LMap {
         // Note, this url should only be used for testing purposes. If you wish
         // to use cloudmade base maps, get your own API key.
         baselayer
-                .setUrl("http://{s}.tile.cloudmade.com/a751804431c2443ab399100902c651e8/997/256/{z}/{x}/{y}.png");
+                .setUrl("http://{s}.tile.cloudmade.com/366f57fccbdf47d68c484187d8f59e5f/997/256/{z}/{x}/{y}.png");
+        baselayer
+                .setAttributionString("&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors");
         setBaseLayers(baselayer);
     }
 }
