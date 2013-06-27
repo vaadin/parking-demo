@@ -1,6 +1,7 @@
 package com.vaadin.demo.parking.widgetset.client.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Shift implements Serializable {
@@ -41,12 +42,16 @@ public class Shift implements Serializable {
         this.durationMillis = durationMillis;
     }
 
-    public Date getStart() {
-        return date;
+    public int getStart() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.HOUR_OF_DAY);
     }
 
-    public Date getEnd() {
-        return new Date(date.getTime() + durationMillis);
+    public int getEnd() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(date.getTime() + durationMillis));
+        return cal.get(Calendar.HOUR_OF_DAY);
     }
 
 }

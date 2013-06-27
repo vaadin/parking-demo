@@ -172,7 +172,10 @@ public class ShiftsView extends NavigationManager {
                 if ("date".equals(colId)) {
                     result = dateFormat.format(property.getValue());
                 } else if ("start".equals(colId) || "end".equals(colId)) {
-                    result = timeFormat.format(property.getValue());
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(Calendar.HOUR_OF_DAY, (Integer) property.getValue());
+                    cal.set(Calendar.MINUTE, 0);
+                    result = timeFormat.format(cal.getTime());
                 }
                 return result;
             }
