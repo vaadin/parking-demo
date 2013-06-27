@@ -15,8 +15,8 @@ import org.json.JSONObject;
 
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.vaadin.demo.parking.ParkingUI;
+import com.vaadin.demo.parking.model.Shift;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
-import com.vaadin.demo.parking.widgetset.client.model.Shift;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
 import com.vaadin.ui.JavaScript;
