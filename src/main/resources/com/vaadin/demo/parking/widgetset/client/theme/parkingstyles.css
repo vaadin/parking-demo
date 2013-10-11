@@ -1,4 +1,4 @@
-@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-switch-on, v-touchkit-switch, v-touchkit-switch-slider, v-touchkit-popover, v-touchkit-tabbar; 
+@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-switch-on, v-touchkit-switch, v-touchkit-switch-slider, v-touchkit-popover, v-touchkit-tabbar, v-scrollable; 
 
 @def darkText #3d3f41;
 
@@ -14,6 +14,9 @@
 /*
  * Main Tab sheets icons via css
  */
+.v-scrollable{
+  -webkit-overflow-scrolling: touch;
+}
 
 a {
 	color: #00b4f0 !important;
