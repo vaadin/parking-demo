@@ -325,11 +325,8 @@ public class ShiftsView extends NavigationManager {
                             public boolean passesFilter(final Object itemId,
                                     final Item item)
                                     throws UnsupportedOperationException {
-                                Date propertyValue = (Date) item
-                                        .getItemProperty(propertyId).getValue();
-                                Calendar cal = Calendar.getInstance();
-                                cal.setTime(propertyValue);
-                                return cal.get(Calendar.HOUR_OF_DAY) == filterValue;
+                                return filterValue.equals(item.getItemProperty(
+                                        propertyId).getValue());
                             }
 
                             @Override

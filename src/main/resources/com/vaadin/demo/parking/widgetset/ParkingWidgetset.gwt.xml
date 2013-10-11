@@ -14,6 +14,8 @@
 		webkit based browsers including Google Chrome. -->
 	<!-- <set-property name="user.agent" value="gecko1_8"/> -->
 
+	<inherits name="com.vaadin.addon.touchkit.gwt.Ios7HotFixes" />
+
 	<inherits name="com.vaadin.addon.touchkit.gwt.TouchKitWidgetSet" />
 
 	<inherits name="org.vaadin.addon.leaflet.Widgetset" />
