@@ -16,6 +16,7 @@ import com.vaadin.addon.responsive.client.ResponsiveConnector;
 import com.vaadin.addon.touchkit.gwt.TouchKitBundleLoaderFactory;
 import com.vaadin.addon.touchkit.gwt.client.vcom.DatePickerConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.GeolocatorConnector;
+import com.vaadin.addon.touchkit.gwt.client.vcom.HorizontalButtonGroupConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.NumberFieldConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.SwitchConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.TabBarConnector;
@@ -56,6 +57,7 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
         usedConnectors.add(ChartConnector.class.getName());
         usedConnectors.add(CssLayoutConnector.class.getName());
         usedConnectors.add(DatePickerConnector.class.getName());
+        usedConnectors.add(HorizontalButtonGroupConnector.class.getName());
         usedConnectors.add(ImageConnector.class.getName());
         usedConnectors.add(GeolocatorConnector.class.getName());
         usedConnectors.add(LabelConnector.class.getName());
