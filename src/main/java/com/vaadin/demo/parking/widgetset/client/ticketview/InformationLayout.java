@@ -157,10 +157,10 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         timeField = new DatePicker();
         timeField.setResolution(Resolution.TIME);
         timeField.setDate(date);
-        timeField.addValueChangeHandler(new ValueChangeHandler<Date>() {
+        timeField.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
-            public void onValueChange(final ValueChangeEvent<Date> event) {
-                date = event.getValue();
+            public void onValueChange(final ValueChangeEvent<String> event) {
+                date = timeField.getDateValue();
                 listener.fieldsChanged();
             }
         });
