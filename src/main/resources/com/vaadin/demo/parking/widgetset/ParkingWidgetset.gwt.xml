@@ -24,7 +24,7 @@
 	
 	<inherits name="com.vaadin.addon.responsive.ResponsiveWidgetSet" />
 	
-	<inherits name="org.helios.gwt.fonts.GwtWebFonts"/>
+	<!-- <inherits name="org.helios.gwt.fonts.GwtWebFonts"/> -->
 	
 	<inherits name="org.vectomatic.libgwtfile"/>
 

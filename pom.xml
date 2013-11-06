@@ -86,11 +86,6 @@
 			<version>2.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.helios.gwt</groupId>
-			<artifactId>gwt-webfonts</artifactId>
-			<version>0.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.vectomatic</groupId>
 			<artifactId>lib-gwt-file</artifactId>
 			<version>0.3.3</version>

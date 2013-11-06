@@ -1,9 +1,8 @@
 package com.vaadin.demo.parking.widgetset.client.theme;
 
-import org.helios.gwt.fonts.client.FontResource;
-
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 
 public interface ParkingBundle extends ClientBundle {
@@ -26,7 +25,7 @@ public interface ParkingBundle extends ClientBundle {
     ShiftsCss shiftsCss();
 
     @Source("parking.ttf")
-    FontResource parkingFont();
+    DataResource parkingFont();
 
     @Source("switch.png")
     ImageResource switchImage();
