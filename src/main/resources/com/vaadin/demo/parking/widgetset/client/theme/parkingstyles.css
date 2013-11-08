@@ -128,12 +128,6 @@ a {
 	border-bottom-color: #c2c2c2;
 }
 
-.v-touchkit-navbar {
-	position: absolute;
-	right: 0;
-	left: 0;
-	z-index: 100;
-}
 .v-touchkit-navbutton-back,
 .v-touchkit-navbutton-back:ACTIVE,
 .v-touchkit-navbar .v-button {
@@ -169,22 +163,10 @@ a {
 	border-right-width: 10px;
 }
 
-.v-touchkit-navbar-caption {
-	background: #fff;
-	box-shadow: 0px 0px 5px #888888;
-	z-index: 10;
-	position: relative;
-}
-
 .v-touchkit-navbar-caption span {
 	color: #00b4f0;
 	font-weight: normal;
 	font-size: 25px;
-}
-
-.v-touchkit-navbar-right,
-.v-touchkit-navbar-left {
-	z-index: 10;
 }
 
 .parkingbutton {
