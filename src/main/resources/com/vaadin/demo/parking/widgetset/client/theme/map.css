@@ -23,7 +23,7 @@
 
 
 .mapview .locatebutton .v-button-wrap:BEFORE{
-	/* font-family: value('parkingFont.getFontName'); */
+	font-family: parkingFont;
 	content: "\e00A";
 	position: absolute;
 	left: 3px;

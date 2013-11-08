@@ -28,7 +28,7 @@ a {
 }
  
 .v-touchkit-toolbar {
-   /* font-family: value('parkingFont.getFontName'); */
+   font-family: parkingFont;
 }
 
 
@@ -282,7 +282,7 @@ textarea {
 
 .v-touchkit-navbutton:after {
 	content: "\e006";
-	/* font-family: value('parkingFont.getFontName'); */
+	font-family: parkingFont;
 	background: transparent;
 	color: #00b4f0;
 }
@@ -309,7 +309,7 @@ textarea {
 .v-touchkit-switch:BEFORE {
 	position: absolute;
 	color: #fff;
-	/* font-family: value('parkingFont.getFontName'); */
+	font-family: parkingFont;
 	top: 6px;
 	-webkit-transition: opacity 0.5s;
 }

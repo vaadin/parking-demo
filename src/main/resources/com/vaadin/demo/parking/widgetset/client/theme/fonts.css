@@ -1,0 +1,9 @@
+
+@url parkingFont parkingFont;
+
+@font-face {
+    font-family: "parkingFont";
+    src: parkingFont;
+    font-weight: normal;
+    font-style: normal;
+}

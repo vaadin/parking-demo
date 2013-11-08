@@ -28,7 +28,7 @@
 }
 
 .tickets .offlineindicator .gwt-Label:BEFORE {
-	/* font-family: value('parkingFont.getFontName'); */
+	font-family: parkingFont;
 	content: "\e00B";
 	position: relative;
 	left: -5px;
@@ -151,7 +151,7 @@
 }
 .tickets .photolayout .parkingbutton-caption:before {
 	content: "\e000";
-	/* font-family: value('parkingFont.getFontName'); */
+	font-family: parkingFont;
 	position: relative;
 	left: -5px;
 	top: 1px;
