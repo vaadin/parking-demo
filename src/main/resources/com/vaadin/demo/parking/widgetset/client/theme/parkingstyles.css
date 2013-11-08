@@ -223,10 +223,6 @@ textarea {
 	-webkit-appearance: none;
 }
 
-.v-touchkit-componentgroup-row {
-	border-top: 1px solid #e5e5e5;
-}
-
 .v-touchkit-componentgroup-row .v-touchkit-componentgroup-cell,
 .v-label-grey-title {
 	color: #64635a !important;
