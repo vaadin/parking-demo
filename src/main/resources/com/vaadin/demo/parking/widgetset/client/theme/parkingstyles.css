@@ -1,4 +1,4 @@
-@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-switch-on, v-touchkit-switch, v-touchkit-switch-slider, v-touchkit-popover, v-touchkit-tabbar, v-scrollable; 
+@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-popover, v-touchkit-tabbar, v-scrollable; 
 
 @def darkText #3d3f41;
 
@@ -264,50 +264,6 @@ textarea {
 	background: transparent;
 	color: #00b4f0;
 }
-
- @sprite .v-touchkit-switch {
-	gwt-image: "switchImage";
-}
-
-.v-touchkit-switch {
-	background-color: #c8c7b5;
-	-webkit-transition: background 0.5s;
-	height: 28px;
-	width: 80px;
-	background-size: cover;
-	background-position-x: -35px !important;
-}
-
-.v-touchkit-switch-on .v-touchkit-switch {
-	background-color: #00b4f0;
-	background-position-x: 5px !important;
-}
-
-.v-touchkit-switch:AFTER,
-.v-touchkit-switch:BEFORE {
-	position: absolute;
-	color: #fff;
-	font-family: parkingFont;
-	top: 6px;
-	-webkit-transition: opacity 0.5s;
-}
-.v-touchkit-switch:AFTER {
-	content: "\e008";
-	right: 10px;
-}
-.v-touchkit-switch:BEFORE {
-	content: "\e009";
-	left: 10px;
-	opacity: 0;
-}
-.v-touchkit-switch-on .v-touchkit-switch:AFTER {
-	opacity: 0;
-}
-.v-touchkit-switch-on .v-touchkit-switch:BEFORE {
-	opacity: 1;
-}
-
-
 
 /* QR code popup */
 .v-app .qr-code {
