@@ -195,67 +195,6 @@ select {
 	color: #64635a;
 }
 
-input,
-textarea {
-	outline: none;
-	color: #64635a !important;
-	font-size: 18px;
-	border: none;
-	-webkit-appearance: none;
-}
-
-.v-touchkit-componentgroup-row .v-touchkit-componentgroup-cell,
-.v-label-grey-title {
-	color: #64635a !important;
-	font-weight: normal;
-	text-shadow: none;
-}
-
-.v-touchkit-componentgroup-row > .v-caption,
-.v-label-grey-title:FIRST-CHILD {
-	color: #a09f91 !important;
-	font-weight: normal;
-	text-shadow: none;
-	white-space: nowrap;
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-}
-
-.v-touchkit-datepicker {
-	margin: 10px 0;
-}
-
-.v-touchkit-datepicker > input{
-	-webkit-appearance: button;
-	padding-left: 0;
-	margin: 0 !important;
-}
-
-.v-touchkit-datepicker > div{
-	margin: 0;
-	min-width: 100px;
-}
-
-
-.v-touchkit-datepicker .v-button,
-.v-touchkit-datepicker .v-button-wrap,
-.v-touchkit-datepicker .v-button-wrap:AFTER,
-.v-touchkit-datepicker .v-button-caption {
-	background: transparent !important;
-	-webkit-box-shadow: none;
-	color: #64635a;
-	text-shadow: none;
-	padding-left: 0;
-	font-weight: normal;
-	font-size: 18px;
-}
-
-.v-touchkit-datepicker .v-button-caption,
-.v-touchkit-datepicker .v-button-wrap {
-	line-height: 20px;
-	height: 20px;
-}
-
 .v-touchkit-navbutton:after {
 	content: "\e006";
 	font-family: parkingFont;
