@@ -212,10 +212,6 @@
 	margin-bottom: 46px;
 }
 
-.tickets .v-touchkit-switch-wrapper {
-	margin: 9px 0;
-}
-
 .tickets .invalid .v-label-grey-title:FIRST-CHILD {
 	color: #e61e6e !important;
 }

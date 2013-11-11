@@ -12,7 +12,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.geolocation.client.Geolocation;
 import com.google.gwt.geolocation.client.PositionError;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker;
@@ -28,8 +27,6 @@ public class InformationLayout extends VerticalComponentGroupWidget {
     private final VSwitch useCurrentLocationSwitch;
     private com.google.gwt.geolocation.client.Position currentPosition;
     private final VTextField addressField;
-    private final Widget addressRow;
-    private final Widget geolocationRow;
     private final DatePicker timeField;
     private Date date = new Date();
     private final VTextField vehicleIdField;
@@ -58,7 +55,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                         @Override
                         public void onFailure(final PositionError reason) {
                             useCurrentLocationSwitch.setValue(false, true);
-                            geolocationRow.setVisible(false);
+                            useCurrentLocationSwitch.setVisible(false);
                         }
                     });
         }
@@ -126,7 +123,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                         if (!event.getValue()) {
                             currentPosition = null;
                         }
-                        addressRow
+                        addressField
                                 .getElement()
                                 .getParentElement()
                                 .getParentElement()
@@ -137,9 +134,9 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                                                 : "-webkit-box");
                     }
                 });
-        geolocationRow = buildFieldRowBox("My location",
-                useCurrentLocationSwitch);
-        add(geolocationRow);
+        add(useCurrentLocationSwitch);
+        updateCaption(useCurrentLocationSwitch, "My location", null, "100.0%",
+                "v-caption");
 
         final ValueChangeHandler<String> vch = new ValueChangeHandler<String>() {
             @Override
@@ -151,8 +148,8 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         addressField = new VTextField();
         addressField.addValueChangeHandler(vch);
         addressField.getElement().getStyle().setProperty("width", "auto");
-        addressRow = buildFieldRowBox("Address", addressField);
-        add(addressRow);
+        add(addressField);
+        updateCaption(addressField, "Address", null, "100.0%", "v-caption");
 
         timeField = new DatePicker();
         timeField.setResolution(Resolution.TIME);
@@ -164,11 +161,13 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                 listener.fieldsChanged();
             }
         });
-        add(buildFieldRowBox("Time", timeField));
+        add(timeField);
+        updateCaption(timeField, "Time", null, "100.0%", "v-caption");
 
         vehicleIdField = new VTextField();
         vehicleIdField.addValueChangeHandler(vch);
-        add(buildFieldRowBox("Vehicle ID", vehicleIdField));
+        add(vehicleIdField);
+        updateCaption(vehicleIdField, "Vehicle ID", null, "100.0%", "v-caption");
 
         final ChangeHandler ch = new ChangeHandler() {
             @Override
@@ -183,7 +182,8 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         for (Violation violation : Violation.values()) {
             violationBox.addItem(violation.getCaption(), violation.name());
         }
-        add(buildFieldRowBox("Violation", violationBox));
+        add(violationBox);
+        updateCaption(violationBox, "Violation", null, "100.0%", "v-caption");
 
         areaBox = new ListBox();
         areaBox.addChangeHandler(ch);
@@ -194,19 +194,10 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                 areaBox.addItem(area, area);
             }
         }
-        add(buildFieldRowBox("Area", areaBox));
+        add(areaBox);
+        updateCaption(areaBox, "Area", null, "100.0%", "v-caption");
 
         useCurrentLocationSwitch.setValue(true, true);
-    }
-
-    private Widget buildFieldRowBox(final String title, final Widget widget) {
-        CaptionComponentFlexBox fb = new CaptionComponentFlexBox();
-        Label label = new Label(title);
-        label.setWidth("40%");
-        fb.add(label);
-        widget.setWidth("60%");
-        fb.add(widget);
-        return fb;
     }
 
     public final void resetValidations() {

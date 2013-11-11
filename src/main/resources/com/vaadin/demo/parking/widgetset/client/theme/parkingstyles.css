@@ -201,7 +201,6 @@ textarea {
 	color: #64635a !important;
 	font-size: 18px;
 	border: none;
-	margin: 10px 0 !important;
 	-webkit-appearance: none;
 }
 
@@ -217,7 +216,6 @@ textarea {
 	color: #a09f91 !important;
 	font-weight: normal;
 	text-shadow: none;
-	margin: 14px 0;
 	white-space: nowrap;
 	overflow-x: hidden;
 	text-overflow: ellipsis;
