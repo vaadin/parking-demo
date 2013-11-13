@@ -246,7 +246,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private Widget buildFakeToolbar() {
         VCssLayout toolBar = new VCssLayout();
         toolBar.setWidth("100%");
-        toolBar.addStyleName("v-touchkit-toolbar");
+        toolBar.setStyleName("v-touchkit-toolbar");
 
         Widget ticketsTab = buildFakeTab("ticketstab", "Ticket", true);
         storedTicketsIndicator = new Label();
