@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.geolocation.client.Geolocation;
 import com.google.gwt.geolocation.client.PositionError;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker;
 import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker.Resolution;
@@ -182,8 +183,13 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         for (Violation violation : Violation.values()) {
             violationBox.addItem(violation.getCaption(), violation.name());
         }
-        add(violationBox);
-        updateCaption(violationBox, "Violation", null, "100.0%", "v-caption");
+        violationBox.setWidth("100%");
+        violationBox.setStyleName("v-select-select");
+        SimplePanel violationWrapper = new SimplePanel(violationBox);
+        violationWrapper.setStyleName("v-select");
+        add(violationWrapper);
+        updateCaption(violationWrapper, "Violation", null, "100.0%",
+                "v-caption");
 
         areaBox = new ListBox();
         areaBox.addChangeHandler(ch);
@@ -194,8 +200,12 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                 areaBox.addItem(area, area);
             }
         }
-        add(areaBox);
-        updateCaption(areaBox, "Area", null, "100.0%", "v-caption");
+        areaBox.setWidth("100%");
+        areaBox.setStyleName("v-select-select");
+        SimplePanel areaWrapper = new SimplePanel(areaBox);
+        areaWrapper.setStyleName("v-select");
+        add(areaWrapper);
+        updateCaption(areaWrapper, "Area", null, "100.0%", "v-caption");
 
         useCurrentLocationSwitch.setValue(true, true);
     }
