@@ -14,7 +14,7 @@
 /*
  * Main Tab sheets icons via css
  */
-.v-scrollable{
+.v-scrollable {
   -webkit-overflow-scrolling: touch;
 }
 
@@ -37,11 +37,8 @@ a {
 	padding-bottom: 62px;
 }
 
-.v-touchkit-tabbar-toolbar .v-csslayout {
+.v-touchkit-tabbar-toolbar .v-touchkit-toolbar {
 	background: #fcfcfb;
-	padding: 0;
-	box-shadow: 0px 0px 5px #888888;
-	border-top: none;
 	height: 60px;
 }
 
@@ -50,7 +47,6 @@ a {
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: 7px;
 	font-size: 27px;
 	text-shadow: none;
 }
@@ -73,7 +69,6 @@ a {
 
 .v-touchkit-tabbar-toolbar .v-button {
 	width: 80px !important;
-	border-right: 1px solid #e7e7e7;
 	height: 100% !important;
 	border-radius: 0 !important;
 	position: absolute !important;
@@ -98,21 +93,20 @@ a {
 .v-touchkit-tabbar-toolbar .v-button.ticketstab {
 	margin-left: -160px;
 }
+
 .v-touchkit-tabbar-toolbar .v-button.maptab {
 	margin-left: -80px;
 }
+
 .v-touchkit-tabbar-toolbar .v-button.statstab {
 	margin-left: 80px;
-}
-
-.v-touchkit-tabbar-toolbar .v-button.selected {
-	background: #fff;
+	border-right: 1px solid #e7e7e7;
 }
 
 .v-touchkit-tabbar-toolbar .v-button span {
 	color: #a09f91;
 	text-shadow: none;
-	margin-bottom: 9px !important;
+	margin-bottom: 9px;
 }
 .v-touchkit-tabbar-toolbar .v-button.selected span {
 	color: #00b4f0;
