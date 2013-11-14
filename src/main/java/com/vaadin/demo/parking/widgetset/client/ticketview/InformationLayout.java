@@ -148,7 +148,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
 
         addressField = new VTextField();
         addressField.addValueChangeHandler(vch);
-        addressField.getElement().getStyle().setProperty("width", "auto");
+        addressField.setWidth("100%");
         add(addressField);
         updateCaption(addressField, "Address", null, "100.0%", "v-caption");
 
@@ -167,6 +167,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
 
         vehicleIdField = new VTextField();
         vehicleIdField.addValueChangeHandler(vch);
+        vehicleIdField.setWidth("100%");
         add(vehicleIdField);
         updateCaption(vehicleIdField, "Vehicle ID", null, "100.0%", "v-caption");
 
