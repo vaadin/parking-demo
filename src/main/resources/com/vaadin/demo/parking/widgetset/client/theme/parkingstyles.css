@@ -8,14 +8,6 @@
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9f9f6), to(#ebebe8));
 }
 
-.v-app .v-touchkit-navbar-left .v-touchkit-navbutton {
-  -webkit-border-image: none;
-}
-
-.v-scrollable {
-  -webkit-overflow-scrolling: touch;
-}
-
 a {
 	color: #00b4f0 !important;
 	text-decoration: none;
@@ -123,21 +115,11 @@ a {
 .v-touchkit-navbutton-back:ACTIVE,
 .v-touchkit-navbar .v-button {
 	background: #00b4f0;
-	border: none;
-	border-radius: 2px;
-}
-
-.v-touchkit-navbar .v-button-wrap {
-	background: transparent;
-	-webkit-box-shadow: none;
-	padding-top: 1px;
 }
 
 .v-touchkit-navbutton-back,
 .v-touchkit-navbar .v-button-caption {
 	color: #fff;
-	text-shadow: none;
-	font-weight: normal;
 	letter-spacing: 1px;
 }
 
@@ -157,15 +139,16 @@ a {
 	border-right-width: 10px;
 }
 
+.v-touchkit-navbutton-back:AFTER {
+	content: none;
+}
+
 .v-touchkit-navbar-caption span {
 	color: #00b4f0;
-	font-weight: normal;
 	font-size: 25px;
 }
 
 .parkingbutton {
-	font-size: 16px;
-	padding: 16px 0;
 	outline: none;
 }
 
@@ -182,13 +165,6 @@ a {
  */
 select {
 	outline: none;
-}
-
-.v-touchkit-navbutton:after {
-	content: "\e006";
-	font-family: parkingFont;
-	background: transparent;
-	color: #00b4f0;
 }
 
 /* QR code popup */
