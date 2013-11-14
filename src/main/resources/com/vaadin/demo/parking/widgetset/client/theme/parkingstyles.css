@@ -11,9 +11,7 @@
 .v-app .v-touchkit-navbar-left .v-touchkit-navbutton {
   -webkit-border-image: none;
 }
-/*
- * Main Tab sheets icons via css
- */
+
 .v-scrollable {
   -webkit-overflow-scrolling: touch;
 }
@@ -54,6 +52,9 @@ a {
 	color: #00b4f0;
 }
 
+/*
+ * Main Tab sheets icons via css
+ */
 .v-touchkit-tabbar-toolbar .ticketstab:before {
 	content: "\e003";
 }
