@@ -16,9 +16,9 @@
 	margin-bottom: 0;
 }
 .editfiltersbutton .v-touchkit-navbutton:active{
-	background: #fff !important;
-	color: #64635a !important;
-	text-shadow: none !important;
+	background: #fff;
+	color: #64635a;
+	text-shadow: none;
 }
 
 .v-ui[width-range~="801px-"] .shifts .shiftstable {
@@ -36,7 +36,7 @@
 }
 
 .v-ui[width-range~="801px-"] .shifts .shiftsfilter {
-    width: 35% !important;
+    width: 35%;
     display: block;
 }
 
