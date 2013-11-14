@@ -1,4 +1,4 @@
-@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-popover, v-touchkit-tabbar, v-scrollable; 
+@external shiftstab, maptab, ticketstab, statstab, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-popover, v-touchkit-tabbar, v-scrollable; 
 
 @def darkText #3d3f41;
 
@@ -22,11 +22,11 @@ a {
 	color: #00b4f0 !important;
 	text-decoration: none;
 }
- 
+
 .v-touchkit-popover {
 	background: #000;
 }
- 
+
 .v-touchkit-toolbar {
    font-family: parkingFont;
 }
@@ -57,12 +57,15 @@ a {
 .v-touchkit-tabbar-toolbar .ticketstab:before {
 	content: "\e003";
 }
+
 .v-touchkit-tabbar-toolbar .maptab:before {
 	content: "\e007";
 }
+
 .v-touchkit-tabbar-toolbar .shiftstab:before {
 	content: "\e002";
 }
+
 .v-touchkit-tabbar-toolbar .statstab:before {
 	content: "\e00C";
 }
@@ -115,11 +118,6 @@ a {
 /*
  * Common styles
  */
-.v-touchkit-verticalcomponentgroup {
-	border: 1px solid #dadada;
-	border-bottom-color: #c2c2c2;
-}
-
 .v-touchkit-navbutton-back,
 .v-touchkit-navbutton-back:ACTIVE,
 .v-touchkit-navbar .v-button {
@@ -146,6 +144,7 @@ a {
 	margin-left: 10px;
 	overflow: visible;
 }
+
 .v-touchkit-navbutton-back:BEFORE {
 	content: "";
 	position: absolute;

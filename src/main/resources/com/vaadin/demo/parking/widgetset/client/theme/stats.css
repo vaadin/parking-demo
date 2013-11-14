@@ -1,10 +1,15 @@
-@external stats, statschart, v-ui;
+@external stats, statschart, v-ui, v-touchkit-verticalcomponentgroup;
 
 .stats .statschart {
 	margin-bottom: 30px;
 	margin-top: 10px;
 	float: left;
 	width: 100%;
+}
+
+.stats .v-touchkit-verticalcomponentgroup {
+    border: 1px solid #e6e6e6;
+    border-bottom-color: #ccc;
 }
 
 .v-ui[width-range~="801px-"] .stats .statschart {

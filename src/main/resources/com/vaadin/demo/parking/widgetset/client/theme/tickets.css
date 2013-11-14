@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, v-touchkit-verticalcomponentgroup, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection;
 
 /*
  * Tickets view
@@ -70,6 +70,10 @@
 	width: 50% !important;
 }
 
+.tickets .v-touchkit-verticalcomponentgroup {
+    border: 1px solid #e6e6e6;
+    border-bottom-color: #ccc;
+}
 
 .tickets .noteslayout textarea {
 	border: none;
