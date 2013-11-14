@@ -116,8 +116,6 @@ a {
  * Common styles
  */
 .v-touchkit-verticalcomponentgroup {
-	border-radius: 0;
-	box-shadow: 0 1px rgba(0,0,0,0.1);
 	border: 1px solid #dadada;
 	border-bottom-color: #c2c2c2;
 }
@@ -129,11 +127,13 @@ a {
 	border: none;
 	border-radius: 2px;
 }
+
 .v-touchkit-navbar .v-button-wrap {
 	background: transparent;
 	-webkit-box-shadow: none;
 	padding-top: 1px;
 }
+
 .v-touchkit-navbutton-back,
 .v-touchkit-navbar .v-button-caption {
 	color: #fff;
@@ -181,12 +181,7 @@ a {
  * Components
  */
 select {
-	font-size: 16px;
-	background: #fff;
-	-webkit-appearance: button;
-	border: none;
 	outline: none;
-	color: #64635a;
 }
 
 .v-touchkit-navbutton:after {
