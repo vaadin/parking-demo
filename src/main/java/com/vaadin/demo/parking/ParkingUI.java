@@ -64,7 +64,7 @@ public class ParkingUI extends UI {
     }
 
     public final boolean isLargeScreenDevice() {
-        float viewPortWidth = getSession().getBrowser().getScreenWidth();
+        float viewPortWidth = getPage().getWebBrowser().getScreenWidth();
         return viewPortWidth > 1024;
     }
 
