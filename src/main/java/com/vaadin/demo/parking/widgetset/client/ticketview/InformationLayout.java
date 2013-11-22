@@ -212,7 +212,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
     }
 
     public final void resetValidations() {
-        for (Widget field : Arrays.asList(addressField, timeField,
+        for (Widget field : Arrays.<Widget> asList(addressField, timeField,
                 vehicleIdField, violationBox, areaBox)) {
             getRowElement(field).removeClassName("invalid");
         }
