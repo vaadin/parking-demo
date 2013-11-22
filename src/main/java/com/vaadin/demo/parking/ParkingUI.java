@@ -17,7 +17,6 @@ import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
@@ -133,17 +132,15 @@ public class ParkingUI extends UI {
             String myIp = Inet4Address.getLocalHost().getHostAddress();
             String qrCodeUrl = appUrl.toString().replaceAll("localhost", myIp);
 
-            Label info = new Label(
+            QRCode qrCode = new QRCode(
                     "You appear to be running this demo on a non-portable device. "
                             + "Parking is intended for touch devices primarily. "
-                            + "Please read the QR code on your touch device to access the demo.");
-            info.setWidth("310px");
-
-            QRCode qrCode = new QRCode(null, qrCodeUrl);
+                            + "Please read the QR code on your touch device to access the demo.",
+                    qrCodeUrl);
             qrCode.setWidth("150px");
             qrCode.setHeight("150px");
 
-            CssLayout qrCodeLayout = new CssLayout(qrCode, info);
+            CssLayout qrCodeLayout = new CssLayout(qrCode);
             qrCodeLayout.setSizeFull();
 
             Window window = new Window(null, qrCodeLayout);
