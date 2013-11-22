@@ -24,6 +24,8 @@
 	
 	<inherits name="com.vaadin.addon.responsive.ResponsiveWidgetSet" />
 	
+	<inherits name="fi.jasoft.qrcode.QrcodeWidgetset" />
+	
 	<!-- <inherits name="org.helios.gwt.fonts.GwtWebFonts"/> -->
 	
 	<inherits name="org.vectomatic.libgwtfile"/>

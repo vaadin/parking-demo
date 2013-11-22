@@ -43,6 +43,8 @@ import com.vaadin.demo.parking.widgetset.client.ParkingOfflineConnector;
 import com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewConnector;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 
+import fi.jasoft.qrcode.client.ui.QRCodeConnector;
+
 /**
  * This customized widget map generator is used to get full control to optimize
  * the generated widgetset.
@@ -85,6 +87,7 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
         usedConnectors.add(ResponsiveConnector.class.getName());
         usedConnectors.add(JavaScriptManagerConnector.class.getName());
         usedConnectors.add(VerticalLayoutConnector.class.getName());
+        usedConnectors.add(QRCodeConnector.class.getName());
     }
 
     @Override

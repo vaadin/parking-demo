@@ -1,4 +1,4 @@
-@external shiftstab, maptab, ticketstab, statstab, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-contents, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-popover, v-touchkit-tabbar, v-scrollable; 
+@external shiftstab, maptab, ticketstab, statstab, v-caption, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-touchkit-navbar-left, v-touchkit-navbar, v-label, v-qrcode, v-window-contents, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-popover, v-touchkit-tabbar, v-scrollable; 
 
 @def darkText #3d3f41;
 
@@ -196,7 +196,7 @@ select {
 	content: "OK, show me the demo anyway";
 }
 
-.qr-code .qrcode-image {
+.qr-code .v-qrcode {
 	-webkit-box-shadow: 0 2px 8px #000;
 	box-shadow: 0 2px 8px #000;
 	float: left;
