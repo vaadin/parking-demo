@@ -58,14 +58,9 @@ public class ParkingUI extends UI {
         new Responsive(this);
         setImmediate(true);
 
-        if (isLargeScreenDevice()) {
+        if (!getPage().getWebBrowser().isTouchDevice()) {
             showNonMobileNotification();
         }
-    }
-
-    public final boolean isLargeScreenDevice() {
-        float viewPortWidth = getPage().getWebBrowser().getScreenWidth();
-        return viewPortWidth > 1024;
     }
 
     public void goOffline() {
