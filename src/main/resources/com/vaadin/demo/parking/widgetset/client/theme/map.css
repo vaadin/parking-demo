@@ -25,9 +25,10 @@
 .mapview .locatebutton .v-button-wrap:BEFORE{
 	font-family: parkingFont;
 	content: "\e00A";
+	color: #fff;
 	position: absolute;
 	left: 3px;
-	top: -3px;
+	top: -7px;
 	font-size: 24px;
 	font-weight: normal;
 	text-shadow: none;
