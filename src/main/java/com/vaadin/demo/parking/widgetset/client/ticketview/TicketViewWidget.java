@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
@@ -48,6 +47,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private final VTabBar tabBar;
     private VButton saveTicketButton;
+    private final Widget contentView;
 
     private boolean refreshOnSave;
     private Anchor reconnectLabel;
@@ -64,7 +64,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         tabBar.getElement().getStyle().setPosition(Position.STATIC);
         tabBar.setHeight("100%");
 
-        tabBar.setContent(buildContentView());
+        contentView = buildContentView();
+        tabBar.setContent(contentView);
         tabBar.setToolbar(buildFakeToolbar());
 
         setShadowEnabled(false);
@@ -332,7 +333,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     public final void setTicketViewWidgetListener(
             final TicketViewWidgetListener listener) {
         this.listener = listener;
-        tabBar.setToolbar(new SimplePanel());
+        setWidget(contentView);
         offlineOnlineIndicator.setVisible(false);
     }
 
