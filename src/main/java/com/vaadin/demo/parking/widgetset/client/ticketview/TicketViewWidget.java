@@ -28,7 +28,6 @@ import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextArea;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
-import com.vaadin.demo.parking.widgetset.client.js.ParkingScriptLoader;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
 public class TicketViewWidget extends VOverlay implements OfflineMode,
@@ -53,8 +52,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private Anchor reconnectLabel;
 
     public TicketViewWidget() {
-        ParkingScriptLoader.ensureInjected();
-
         addStyleName("v-window");
         addStyleName("v-touchkit-offlinemode");
         addStyleName("tickets");
@@ -171,7 +168,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             validateFields = false;
             Ticket ticket = getTicket();
 
-            if (ticket.getImageOrientation() != 0) {
+            if (ticket.isImageIncluded()) {
                 ticket.setImageUrl(OfflineDataService.getCachedImage());
             }
 
@@ -352,7 +349,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         informationLayout.ticketUpdated(ticket);
 
-        photoLayout.ticketUpdated(ticket, initialize);
+        photoLayout.ticketUpdated(ticket);
 
         notesField.setText(ticket.getNotes());
 

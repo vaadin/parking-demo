@@ -1,11 +1,12 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
-import org.vectomatic.file.FileUploadExt;
+import org.vaadin.juho.imageupload.client.EXIFOrientationNormalizer;
+import org.vaadin.juho.imageupload.client.ImageLoadedEvent;
+import org.vaadin.juho.imageupload.client.ImageLoadedHandler;
+import org.vaadin.juho.imageupload.client.ImageTransformer;
+import org.vaadin.juho.imageupload.client.ImageUpload;
 
-import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -18,17 +19,15 @@ import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
-import com.vaadin.demo.parking.widgetset.client.ticketview.ImageUtil.ImageDataCallback;
 
 public class PhotoLayout extends VerticalComponentGroupWidget {
     private final SimplePanel imagePanel;
-    private int imageLocalOrientation;
     private String thumbnailUrl;
     private final TicketViewModuleListener listener;
 
     private final VButton removeButton = new VButton();
     private final VButton takePhotoButton = new VButton();
-    private final FileUploadExt fileUpload = new FileUploadExt(false);
+    private final ImageUpload fileUpload = new ImageUpload();
 
     private void setImagePanelScale() {
         Widget parent = imagePanel.getParent();
@@ -57,19 +56,27 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         });
 
         fileUpload.getElement().setId("takephotobutton");
-        fileUpload.getElement().setAttribute("capture", "camera");
-        fileUpload.getElement().setAttribute("accept", "image/*");
-        fileUpload.addChangeHandler(new ChangeHandler() {
+        fileUpload.setCapture(true);
+
+        EXIFOrientationNormalizer normalizer = new EXIFOrientationNormalizer();
+        normalizer.setMaxWidth(1024);
+        normalizer.setMaxWidth(1024);
+        fileUpload.addImageManipulator(normalizer);
+        fileUpload.addImageLoadedHandler(new ImageLoadedHandler() {
             @Override
-            public void onChange(final ChangeEvent event) {
-                ImageUtil.getImageData(fileUpload, new ImageDataCallback() {
-                    @Override
-                    public void dataReceived(final String dataUrl,
-                            final int orientation) {
-                        OfflineDataService.setCachedImage(dataUrl);
-                        setImageOrientation(orientation, false);
-                    }
-                });
+            public void onImageLoaded(ImageLoadedEvent event) {
+                setImage(event.getImageData().getDataURL());
+            }
+        });
+
+        ImageTransformer thumbnailGenerator = new ImageTransformer();
+        thumbnailGenerator.setImageDataSource(fileUpload);
+        thumbnailGenerator.setMaxWidth(75);
+        thumbnailGenerator.setMaxHeigth(75);
+        thumbnailGenerator.addImageLoadedHandler(new ImageLoadedHandler() {
+            @Override
+            public void onImageLoaded(ImageLoadedEvent event) {
+                thumbnailUrl = event.getImageData().getDataURL();
             }
         });
 
@@ -85,7 +92,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         removeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                setImageOrientation(0, false);
+                removeImage();
             }
         });
         buttonsLayout.add(removeButton);
@@ -102,56 +109,41 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         });
     }
 
-    private void setImageOrientation(final int oritentation,
-            final boolean initialize) {
-        imageLocalOrientation = oritentation;
-        boolean empty = imageLocalOrientation == 0;
-        if (empty) {
-            if (!initialize) {
-                OfflineDataService.setCachedImage(null);
-            }
-            takePhotoButton.setText("Take a photo");
-            takePhotoButton.addStyleName("empty");
-        } else {
-            String dataUrl = OfflineDataService.getCachedImage();
-            imagePanel.getElement().getStyle()
-                    .setBackgroundImage("url(" + dataUrl + ")");
-            for (int i = 1; i < 9; i++) {
-                imagePanel.removeStyleName("orientation" + i);
-            }
-            imagePanel.addStyleName("orientation" + oritentation);
+    private void setImage(String dataURL) {
+        OfflineDataService.setCachedImage(dataURL);
 
-            takePhotoButton.setText("Replace...");
-            takePhotoButton.removeStyleName("empty");
+        imagePanel.getElement().getStyle()
+                .setBackgroundImage("url(" + dataURL + ")");
+        takePhotoButton.setText("Replace...");
+        takePhotoButton.removeStyleName("empty");
 
-            if (Canvas.isSupported()) {
-                ImageUtil.scaleImage(dataUrl, 75, 1, new ImageDataCallback() {
-                    @Override
-                    public void dataReceived(final String dataUrl,
-                            final int orientation) {
-                        thumbnailUrl = dataUrl;
-                    }
-                });
-            } else {
-                thumbnailUrl = null;
-            }
-
-        }
-        imagePanel.setVisible(!empty);
-        removeButton.setVisible(!empty);
+        imagePanel.setVisible(true);
+        removeButton.setVisible(true);
         listener.fieldsChanged();
         setImagePanelScale();
     }
 
-    public final void populateTicket(final Ticket ticket) {
-        ticket.setImageOrientation(imageLocalOrientation);
-
-        ticket.setThumbnailUrl(thumbnailUrl);
+    private void removeImage() {
+        OfflineDataService.setCachedImage(null);
+        thumbnailUrl = null;
+        takePhotoButton.setText("Take a photo");
+        takePhotoButton.addStyleName("empty");
+        imagePanel.setVisible(false);
+        removeButton.setVisible(false);
+        listener.fieldsChanged();
+        setImagePanelScale();
     }
 
-    public final void ticketUpdated(final Ticket ticket,
-            final boolean initialize) {
-        setImageOrientation(ticket.getImageOrientation(), initialize);
+    public void ticketUpdated(Ticket ticket) {
+        if (!ticket.isImageIncluded()) {
+            removeImage();
+        } else {
+            setImage(OfflineDataService.getCachedImage());
+        }
+    }
 
+    public final void populateTicket(final Ticket ticket) {
+        ticket.setImageIncluded(OfflineDataService.getCachedImage() != null);
+        ticket.setThumbnailUrl(thumbnailUrl);
     }
 }

@@ -26,9 +26,7 @@
 	
 	<inherits name="fi.jasoft.qrcode.QrcodeWidgetset" />
 	
-	<!-- <inherits name="org.helios.gwt.fonts.GwtWebFonts"/> -->
-	
-	<inherits name="org.vectomatic.libgwtfile"/>
+	<inherits name="org.vaadin.juho.imageupload.libgwtimageupload"/>
 
  	<generate-with class="com.vaadin.demo.parking.widgetset.WidgetLoaderFactory">
         <when-type-assignable class="com.vaadin.client.metadata.ConnectorBundleLoader" />
