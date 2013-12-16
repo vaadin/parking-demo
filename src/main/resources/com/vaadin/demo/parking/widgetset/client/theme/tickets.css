@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, v-touchkit-verticalcomponentgroup, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, v-touchkit-verticalcomponentgroup, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection;
 
 /*
  * Tickets view
@@ -104,16 +104,6 @@
 	background-position: left top;
 }
 
-.tickets .imagepanel.orientation6 {
-	-webkit-transform:rotate(90deg);
-}
-.tickets .imagepanel.orientation8 {
-	-webkit-transform:rotate(270deg);
-}
-.tickets .imagepanel.orientation3 {
-	-webkit-transform:rotate(180deg);
-}
-
 .tickets .buttonslayout {
 	padding-left: 20px;
 	padding-right: 10px;
@@ -130,13 +120,6 @@
 .tickets.tablet .imagepanel {
 	width: 100%;
 	height: 306px;
-}
-
-.tickets.tablet .imagepanel.orientation6,
-.tickets.tablet .imagepanel.orientation8 {
-	height: 1em;
-	width: 1em;
-	background-size: cover;
 }
 
 .tickets .photolayout .parkingbutton {
