@@ -55,7 +55,6 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
             }
         });
 
-        fileUpload.getElement().setId("takephotobutton");
         fileUpload.setCapture(true);
 
         EXIFOrientationNormalizer normalizer = new EXIFOrientationNormalizer();
