@@ -45,6 +45,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         imagePanel.addStyleName("imagepanel");
         innerLayout.add(imagePanel);
 
+        takePhotoButton.getElement().setId("uploadbutton");
         takePhotoButton.setStyleName("parkingbutton");
         takePhotoButton.addStyleName("blue");
         takePhotoButton.addStyleName("textcentered");
@@ -84,6 +85,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         buttonsLayout.add(fileUpload);
         buttonsLayout.add(takePhotoButton);
 
+        removeButton.getElement().setId("removebutton");
         removeButton.setText("Remove");
         removeButton.setStyleName("parkingbutton");
         removeButton.addStyleName("blue");

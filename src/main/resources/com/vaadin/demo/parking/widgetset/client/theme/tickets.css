@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, v-touchkit-verticalcomponentgroup, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, uploadbutton, removebutton, v-csslayout, v-touchkit-verticalcomponentgroup, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection;
 
 /*
  * Tickets view
@@ -143,22 +143,27 @@
 	left: -5px;
 	top: 1px;
 }
-.tickets .photolayout form .parkingbutton-caption:before {
+.tickets .photolayout #uploadbutton .parkingbutton-caption:before {
 	content: "\e001";
 }
 
-.tickets form.empty .parkingbutton,
+.tickets #uploadbutton.empty,
 .tickets.tablet .photolayout .parkingbutton {
 	padding: 16px 0px;
 }
 
-.tickets .photolayout .v-csslayout > .parkingbutton {
+.tickets .photolayout .v-csslayout > #removebutton {
 	border-top: 1px solid #e5e5e5;
 }
 
-.tickets.tablet .photolayout .v-csslayout > .parkingbutton {
+.tickets.tablet .photolayout .v-csslayout > #removebutton {
 	border-top: none;
 	float: right;
+}
+
+.tickets .buttonslayout input {
+	position: absolute;
+	opacity: 0;
 }
 
 .tickets.tablet .photolayout > div {
@@ -171,11 +176,11 @@
 	margin-left: 7px;
 }
 
-.tickets.tablet form {
+.tickets.tablet #uploadbutton {
 	float: left;
 }
 
-.tickets.tablet form.empty {
+.tickets.tablet #uploadbutton.empty {
 	float: none;
 }
 
