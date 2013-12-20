@@ -4,7 +4,6 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.DataResource.DoNotEmbed;
-import com.google.gwt.resources.client.ImageResource;
 
 public interface ParkingBundle extends ClientBundle {
 
@@ -32,6 +31,4 @@ public interface ParkingBundle extends ClientBundle {
     @DoNotEmbed
     DataResource parkingFont();
 
-    @Source("switch.png")
-    ImageResource switchImage();
 }
