@@ -23,6 +23,7 @@ import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 public class PhotoLayout extends VerticalComponentGroupWidget {
     private final SimplePanel imagePanel;
     private String thumbnailUrl;
+    private boolean imageLoaded;
     private final TicketViewModuleListener listener;
 
     private final VButton removeButton = new VButton();
@@ -112,6 +113,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
 
     private void setImage(String dataURL) {
         OfflineDataService.setCachedImage(dataURL);
+        imageLoaded = true;
 
         imagePanel.getElement().getStyle()
                 .setBackgroundImage("url(" + dataURL + ")");
@@ -125,7 +127,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
     }
 
     private void removeImage() {
-        OfflineDataService.setCachedImage(null);
+        imageLoaded = false;
         thumbnailUrl = null;
         takePhotoButton.setText("Take a photo");
         takePhotoButton.addStyleName("empty");
@@ -144,7 +146,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
     }
 
     public final void populateTicket(final Ticket ticket) {
-        ticket.setImageIncluded(OfflineDataService.getCachedImage() != null);
+        ticket.setImageIncluded(imageLoaded);
         ticket.setThumbnailUrl(thumbnailUrl);
     }
 }
