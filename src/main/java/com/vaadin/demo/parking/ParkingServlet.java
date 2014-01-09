@@ -12,11 +12,9 @@ public class ParkingServlet extends TouchKitServlet {
         super.servletInitialized();
 
         TouchKitSettings s = getTouchKitSettings();
-        s.getWebAppSettings().setWebAppCapable(true);
-        s.getWebAppSettings().setStatusBarStyle("black");
+
         String contextPath = getServletConfig().getServletContext()
                 .getContextPath();
-
         s.getApplicationIcons().addApplicationIcon(
                 contextPath + "/VAADIN/themes/parking/icon.png");
 
