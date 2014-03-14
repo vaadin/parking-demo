@@ -61,7 +61,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
 
         EXIFOrientationNormalizer normalizer = new EXIFOrientationNormalizer();
         normalizer.setMaxWidth(1024);
-        normalizer.setMaxWidth(1024);
+        normalizer.setMaxHeight(1024);
         fileUpload.addImageManipulator(normalizer);
         fileUpload.addImageLoadedHandler(new ImageLoadedHandler() {
             @Override
@@ -73,7 +73,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         ImageTransformer thumbnailGenerator = new ImageTransformer();
         thumbnailGenerator.setImageDataSource(fileUpload);
         thumbnailGenerator.setMaxWidth(75);
-        thumbnailGenerator.setMaxHeigth(75);
+        thumbnailGenerator.setMaxHeight(75);
         thumbnailGenerator.addImageLoadedHandler(new ImageLoadedHandler() {
             @Override
             public void onImageLoaded(ImageLoadedEvent event) {
