@@ -56,7 +56,7 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                         @Override
                         public void onFailure(final PositionError reason) {
                             useCurrentLocationSwitch.setValue(false, true);
-                            useCurrentLocationSwitch.setVisible(false);
+                            remove(useCurrentLocationSwitch);
                         }
                     });
         }
@@ -124,15 +124,9 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                         if (!event.getValue()) {
                             currentPosition = null;
                         }
-                        addressField
-                                .getElement()
-                                .getParentElement()
-                                .getParentElement()
-                                .getStyle()
-                                .setProperty(
-                                        "display",
-                                        event.getValue() ? "none"
-                                                : "-webkit-box");
+
+                        getRowElement(addressField).getStyle().setProperty(
+                                "display", event.getValue() ? "none" : "");
                     }
                 });
         add(useCurrentLocationSwitch);
