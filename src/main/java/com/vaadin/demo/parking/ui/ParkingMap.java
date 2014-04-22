@@ -11,9 +11,9 @@ public class ParkingMap extends LMap {
         baselayer.setName("CloudMade");
 
         // Note, this url should only be used for testing purposes. If you wish
-        // to use cloudmade base maps, get your own API key.
+        // to use Mapbox base maps, get your own API key.
         baselayer
-                .setUrl("http://{s}.tile.cloudmade.com/366f57fccbdf47d68c484187d8f59e5f/997/256/{z}/{x}/{y}.png");
+                .setUrl("http://{s}.tiles.mapbox.com/v3/vaadin.i1pikm9o/{z}/{x}/{y}.png");
         baselayer
                 .setAttributionString("&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors");
         setBaseLayers(baselayer);
