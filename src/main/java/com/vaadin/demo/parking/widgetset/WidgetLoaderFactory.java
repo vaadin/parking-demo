@@ -3,9 +3,11 @@ package com.vaadin.demo.parking.widgetset;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.vaadin.addon.leaflet.client.vaadin.LeafletCircleConnector;
-import org.vaadin.addon.leaflet.client.vaadin.LeafletMapConnector;
-import org.vaadin.addon.leaflet.client.vaadin.LeafletMarkerConnector;
+import org.vaadin.addon.leaflet.client.LeafletCircleConnector;
+import org.vaadin.addon.leaflet.client.LeafletLayersConnector;
+import org.vaadin.addon.leaflet.client.LeafletMapConnector;
+import org.vaadin.addon.leaflet.client.LeafletMarkerConnector;
+import org.vaadin.addon.leaflet.client.LeafletTileLayerConnector;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -16,6 +18,7 @@ import com.vaadin.addon.responsive.client.ResponsiveConnector;
 import com.vaadin.addon.touchkit.gwt.TouchKitBundleLoaderFactory;
 import com.vaadin.addon.touchkit.gwt.client.vcom.DatePickerConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.GeolocatorConnector;
+import com.vaadin.addon.touchkit.gwt.client.vcom.HorizontalButtonGroupConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.NumberFieldConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.SwitchConnector;
 import com.vaadin.addon.touchkit.gwt.client.vcom.TabBarConnector;
@@ -42,6 +45,8 @@ import com.vaadin.demo.parking.widgetset.client.ParkingOfflineConnector;
 import com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewConnector;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 
+import fi.jasoft.qrcode.client.ui.QRCodeConnector;
+
 /**
  * This customized widget map generator is used to get full control to optimize
  * the generated widgetset.
@@ -56,12 +61,15 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
         usedConnectors.add(ChartConnector.class.getName());
         usedConnectors.add(CssLayoutConnector.class.getName());
         usedConnectors.add(DatePickerConnector.class.getName());
+        usedConnectors.add(HorizontalButtonGroupConnector.class.getName());
         usedConnectors.add(ImageConnector.class.getName());
         usedConnectors.add(GeolocatorConnector.class.getName());
         usedConnectors.add(LabelConnector.class.getName());
         usedConnectors.add(LeafletCircleConnector.class.getName());
         usedConnectors.add(LeafletMapConnector.class.getName());
+        usedConnectors.add(LeafletTileLayerConnector.class.getName());
         usedConnectors.add(LeafletMarkerConnector.class.getName());
+        usedConnectors.add(LeafletLayersConnector.class.getName());
         usedConnectors.add(LinkConnector.class.getName());
         usedConnectors.add(NativeSelectConnector.class.getName());
         usedConnectors.add(NavigationBarConnector.class.getName());
@@ -83,6 +91,7 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
         usedConnectors.add(ResponsiveConnector.class.getName());
         usedConnectors.add(JavaScriptManagerConnector.class.getName());
         usedConnectors.add(VerticalLayoutConnector.class.getName());
+        usedConnectors.add(QRCodeConnector.class.getName());
     }
 
     @Override

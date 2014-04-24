@@ -1,4 +1,4 @@
-@external shiftstab, maptab, ticketstab, statstab, v-caption, v-touchkit-componentgroup-cell, v-touchkit-componentgroup-row, v-button-caption, v-button-wrap, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-verticalcomponentgroup, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-label-grey-title, v-touchkit-datepicker, v-touchkit-navbar-right, v-touchkit-navbar-left, v-touchkit-navbar, v-label, qrcode-image, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-switch-on, v-touchkit-switch, v-touchkit-switch-slider, v-touchkit-popover, v-touchkit-tabbar, v-scrollable; 
+@external shiftstab, maptab, ticketstab, statstab, v-caption, v-captiontext, v-button-caption, v-button-wrap, v-touchkit-tabbar, v-touchkit-tabbar-wrapper, v-touchkit-tabbar-toolbar, v-button, selected, v-ui, v-csslayout, v-touchkit-navbar-caption, parkingbutton, blue, textcentered, v-touchkit-navpanel-container, v-app, v-touchkit-offlinemode, v-touchkit-navbar-left, v-touchkit-navbar, v-qrcode, v-window-contents, v-window-closebox, qr-code, v-touchkit-toolbar, v-touchkit-navbutton-back, v-touchkit-navbutton, v-touchkit-popover, v-scrollable; 
 
 @def darkText #3d3f41;
 
@@ -8,40 +8,31 @@
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f9f9f6), to(#ebebe8));
 }
 
-.v-app .v-touchkit-navbar-left .v-touchkit-navbutton {
-  -webkit-border-image: none;
-}
-/*
- * Main Tab sheets icons via css
- */
-.v-scrollable{
-  -webkit-overflow-scrolling: touch;
-}
-
 a {
 	color: #00b4f0 !important;
 	text-decoration: none;
 }
- 
+
 .v-touchkit-popover {
 	background: #000;
 }
- 
+
 .v-touchkit-toolbar {
-   font-family: value('parkingFont.getFontName');
+   font-family: parkingFont;
 }
 
 
 /* Sizing etc for tab icons */
 .v-touchkit-tabbar {
-	padding-bottom: 62px;
+	padding: 0;
 }
 
-.v-touchkit-tabbar-toolbar .v-csslayout {
+.v-touchkit-tabbar-wrapper {
+	bottom: 60px;
+}
+
+.v-touchkit-tabbar-toolbar .v-touchkit-toolbar {
 	background: #fcfcfb;
-	padding: 0;
-	box-shadow: 0px 0px 5px #888888;
-	border-top: none;
 	height: 60px;
 }
 
@@ -50,7 +41,6 @@ a {
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: 7px;
 	font-size: 27px;
 	text-shadow: none;
 }
@@ -58,22 +48,27 @@ a {
 	color: #00b4f0;
 }
 
+/*
+ * Main Tab sheets icons via css
+ */
 .v-touchkit-tabbar-toolbar .ticketstab:before {
 	content: "\e003";
 }
+
 .v-touchkit-tabbar-toolbar .maptab:before {
 	content: "\e007";
 }
+
 .v-touchkit-tabbar-toolbar .shiftstab:before {
 	content: "\e002";
 }
+
 .v-touchkit-tabbar-toolbar .statstab:before {
 	content: "\e00C";
 }
 
 .v-touchkit-tabbar-toolbar .v-button {
 	width: 80px !important;
-	border-right: 1px solid #e7e7e7;
 	height: 100% !important;
 	border-radius: 0 !important;
 	position: absolute !important;
@@ -98,21 +93,20 @@ a {
 .v-touchkit-tabbar-toolbar .v-button.ticketstab {
 	margin-left: -160px;
 }
+
 .v-touchkit-tabbar-toolbar .v-button.maptab {
 	margin-left: -80px;
 }
+
 .v-touchkit-tabbar-toolbar .v-button.statstab {
 	margin-left: 80px;
-}
-
-.v-touchkit-tabbar-toolbar .v-button.selected {
-	background: #fff;
+	border-right: 1px solid #e7e7e7;
 }
 
 .v-touchkit-tabbar-toolbar .v-button span {
 	color: #a09f91;
 	text-shadow: none;
-	margin-bottom: 9px !important;
+	margin-bottom: 9px;
 }
 .v-touchkit-tabbar-toolbar .v-button.selected span {
 	color: #00b4f0;
@@ -121,36 +115,15 @@ a {
 /*
  * Common styles
  */
-.v-touchkit-verticalcomponentgroup {
-	border-radius: 0;
-	box-shadow: 0 1px rgba(0,0,0,0.1);
-	border: 1px solid #dadada;
-	border-bottom-color: #c2c2c2;
-}
-
-.v-touchkit-navbar {
-	position: absolute;
-	right: 0;
-	left: 0;
-	z-index: 100;
-}
 .v-touchkit-navbutton-back,
 .v-touchkit-navbutton-back:ACTIVE,
 .v-touchkit-navbar .v-button {
 	background: #00b4f0;
-	border: none;
-	border-radius: 2px;
 }
-.v-touchkit-navbar .v-button-wrap {
-	background: transparent;
-	-webkit-box-shadow: none;
-	padding-top: 1px;
-}
+
 .v-touchkit-navbutton-back,
 .v-touchkit-navbar .v-button-caption {
 	color: #fff;
-	text-shadow: none;
-	font-weight: normal;
 	letter-spacing: 1px;
 }
 
@@ -158,6 +131,7 @@ a {
 	margin-left: 10px;
 	overflow: visible;
 }
+
 .v-touchkit-navbutton-back:BEFORE {
 	content: "";
 	position: absolute;
@@ -169,27 +143,16 @@ a {
 	border-right-width: 10px;
 }
 
-.v-touchkit-navbar-caption {
-	background: #fff;
-	box-shadow: 0px 0px 5px #888888;
-	z-index: 10;
-	position: relative;
+.v-touchkit-navbutton-back:AFTER {
+	content: none;
 }
 
 .v-touchkit-navbar-caption span {
 	color: #00b4f0;
-	font-weight: normal;
 	font-size: 25px;
 }
 
-.v-touchkit-navbar-right,
-.v-touchkit-navbar-left {
-	z-index: 10;
-}
-
 .parkingbutton {
-	font-size: 16px;
-	padding: 16px 0;
 	outline: none;
 }
 
@@ -205,137 +168,17 @@ a {
  * Components
  */
 select {
-	font-size: 16px;
-	background: #fff;
-	-webkit-appearance: button;
-	border: none;
 	outline: none;
-	color: #64635a;
 }
-
-input,
-textarea {
-	outline: none;
-	color: #64635a !important;
-	font-size: 18px;
-	border: none;
-	margin: 10px 0 !important;
-	-webkit-appearance: none;
-}
-
-.v-touchkit-componentgroup-row {
-	border-top: 1px solid #e5e5e5;
-}
-
-.v-touchkit-componentgroup-row .v-touchkit-componentgroup-cell,
-.v-label-grey-title {
-	color: #64635a !important;
-	font-weight: normal;
-	text-shadow: none;
-}
-
-.v-touchkit-componentgroup-row > .v-caption,
-.v-label-grey-title:FIRST-CHILD {
-	color: #a09f91 !important;
-	font-weight: normal;
-	text-shadow: none;
-	margin: 14px 0;
-	white-space: nowrap;
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-}
-
-.v-touchkit-datepicker {
-	margin: 10px 0;
-}
-
-.v-touchkit-datepicker > input{
-	-webkit-appearance: button;
-	padding-left: 0;
-	margin: 0 !important;
-}
-
-.v-touchkit-datepicker > div{
-	margin: 0;
-	min-width: 100px;
-}
-
-
-.v-touchkit-datepicker .v-button,
-.v-touchkit-datepicker .v-button-wrap,
-.v-touchkit-datepicker .v-button-wrap:AFTER,
-.v-touchkit-datepicker .v-button-caption {
-	background: transparent !important;
-	-webkit-box-shadow: none;
-	color: #64635a;
-	text-shadow: none;
-	padding-left: 0;
-	font-weight: normal;
-	font-size: 18px;
-}
-
-.v-touchkit-datepicker .v-button-caption,
-.v-touchkit-datepicker .v-button-wrap {
-	line-height: 20px;
-	height: 20px;
-}
-
-.v-touchkit-navbutton:after {
-	content: "\e006";
-	font-family: value('parkingFont.getFontName');
-	background: transparent;
-	color: #00b4f0;
-}
-
- @sprite .v-touchkit-switch {
-	gwt-image: "switchImage";
-}
-
-.v-touchkit-switch {
-	background-color: #c8c7b5;
-	-webkit-transition: background 0.5s;
-	height: 28px;
-	width: 80px;
-	background-size: cover;
-	background-position-x: -35px !important;
-}
-
-.v-touchkit-switch-on .v-touchkit-switch {
-	background-color: #00b4f0;
-	background-position-x: 5px !important;
-}
-
-.v-touchkit-switch:AFTER,
-.v-touchkit-switch:BEFORE {
-	position: absolute;
-	color: #fff;
-	font-family: value('parkingFont.getFontName');
-	top: 6px;
-	-webkit-transition: opacity 0.5s;
-}
-.v-touchkit-switch:AFTER {
-	content: "\e008";
-	right: 10px;
-}
-.v-touchkit-switch:BEFORE {
-	content: "\e009";
-	left: 10px;
-	opacity: 0;
-}
-.v-touchkit-switch-on .v-touchkit-switch:AFTER {
-	opacity: 0;
-}
-.v-touchkit-switch-on .v-touchkit-switch:BEFORE {
-	opacity: 1;
-}
-
-
 
 /* QR code popup */
 .v-app .qr-code {
 	background: transparent;
-	text-shadow: none;
 	color: #fff;
+}
+
+.qr-code .v-window-contents {
+	background: transparent;
 }
 
 .qr-code .v-window-closebox {
@@ -347,7 +190,6 @@ textarea {
 	width: auto;
 	height: auto;
 	padding: .3em 0;
-	white-space: nowrap;
 	border-bottom: 1px solid #FFF;
 	z-index: 100;
 }
@@ -356,14 +198,20 @@ textarea {
 	content: "OK, show me the demo anyway";
 }
 
-.qr-code .qrcode-image {
-	-webkit-box-shadow: 0 2px 8px #000;
-	box-shadow: 0 2px 8px #000;
-	float: left;
+.qr-code .v-caption {
+    float: right;
+    width: 310px;
 }
 
-.qr-code .v-label {
-	font-weight: bold;
-	line-height: 1.4;
-	float: right;
+.v-app .qr-code .v-captiontext {
+    color: #fff;
+    font-weight: bold;
+    line-height: 1.4;
+    margin: 0;
+    white-space: normal;
+}
+
+.qr-code .v-qrcode {
+	-webkit-box-shadow: 0 2px 8px #000;
+	box-shadow: 0 2px 8px #000;
 }

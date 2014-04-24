@@ -72,10 +72,9 @@ public class TicketDetailPopover extends Popover {
             url = ticket.getImageUrl();
         }
         if (url != null) {
-            imageLabel.setValue("<div class='imagepanel orientation"
-                    + ticket.getImageOrientation()
-                    + "' style='width:100%;height:100%;background-image: url("
-                    + url + ")'/>");
+            imageLabel
+                    .setValue("<div class='imagepanel' style='width:100%;height:100%;background-image: url("
+                            + url + ")'/>");
         }
         layout.addLayoutClickListener(new LayoutClickListener() {
             @Override
@@ -98,7 +97,6 @@ public class TicketDetailPopover extends Popover {
         Image image = new Image(null,
                 new ExternalResource(ticket.getImageUrl()));
         image.addStyleName("imagepanel");
-        image.addStyleName("orientation" + ticket.getImageOrientation());
         image.setWidth(100.0f, Unit.PERCENTAGE);
         image.addClickListener(new ClickListener() {
             @Override

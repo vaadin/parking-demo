@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
@@ -29,7 +28,6 @@ import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTextArea;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
-import com.vaadin.demo.parking.widgetset.client.js.ParkingScriptLoader;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
 public class TicketViewWidget extends VOverlay implements OfflineMode,
@@ -48,13 +46,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private final VTabBar tabBar;
     private VButton saveTicketButton;
+    private final Widget contentView;
 
     private boolean refreshOnSave;
     private Anchor reconnectLabel;
 
     public TicketViewWidget() {
-        ParkingScriptLoader.ensureInjected();
-
         addStyleName("v-window");
         addStyleName("v-touchkit-offlinemode");
         addStyleName("tickets");
@@ -64,7 +61,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         tabBar.getElement().getStyle().setPosition(Position.STATIC);
         tabBar.setHeight("100%");
 
-        tabBar.setContent(buildContentView());
+        contentView = buildContentView();
+        tabBar.setContent(contentView);
         tabBar.setToolbar(buildFakeToolbar());
 
         setShadowEnabled(false);
@@ -170,7 +168,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             validateFields = false;
             Ticket ticket = getTicket();
 
-            if (ticket.getImageOrientation() != 0) {
+            if (ticket.isImageIncluded()) {
                 ticket.setImageUrl(OfflineDataService.getCachedImage());
             }
 
@@ -246,7 +244,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private Widget buildFakeToolbar() {
         VCssLayout toolBar = new VCssLayout();
         toolBar.setWidth("100%");
-        toolBar.addStyleName("v-touchkit-toolbar");
+        toolBar.setStyleName("v-touchkit-toolbar");
 
         Widget ticketsTab = buildFakeTab("ticketstab", "Ticket", true);
         storedTicketsIndicator = new Label();
@@ -332,7 +330,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     public final void setTicketViewWidgetListener(
             final TicketViewWidgetListener listener) {
         this.listener = listener;
-        tabBar.setToolbar(new SimplePanel());
+        setWidget(contentView);
         offlineOnlineIndicator.setVisible(false);
     }
 
@@ -351,7 +349,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         informationLayout.ticketUpdated(ticket);
 
-        photoLayout.ticketUpdated(ticket, initialize);
+        photoLayout.ticketUpdated(ticket);
 
         notesField.setText(ticket.getNotes());
 

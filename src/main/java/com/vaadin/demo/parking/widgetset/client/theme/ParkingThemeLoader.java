@@ -9,12 +9,12 @@ public class ParkingThemeLoader extends ThemeLoader {
         // Load default TouchKit theme...
         super.load();
         // ... and Parking specific additions from own client bundle
+        ParkingBundle.INSTANCE.fontsCss().ensureInjected();
         ParkingBundle.INSTANCE.css().ensureInjected();
         ParkingBundle.INSTANCE.ticketsCss().ensureInjected();
         ParkingBundle.INSTANCE.statsCss().ensureInjected();
         ParkingBundle.INSTANCE.shiftsCss().ensureInjected();
         ParkingBundle.INSTANCE.mapCss().ensureInjected();
-        ParkingBundle.INSTANCE.parkingFont().ensureInjected();
     }
 
 }

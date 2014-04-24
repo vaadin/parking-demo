@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, v-csslayout, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, v-touchkit-tabbar, offlineindicator, v-touchkit-switch-wrapper, v-label-grey-title, invalid, orientation6, orientation8, orientation3, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, uploadbutton, removebutton, v-csslayout, v-touchkit-verticalcomponentgroup, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, offlineindicator, v-touchkit-switch-wrapper, invalid, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection, v-caption;
 
 /*
  * Tickets view
@@ -28,7 +28,7 @@
 }
 
 .tickets .offlineindicator .gwt-Label:BEFORE {
-	font-family: value('parkingFont.getFontName');
+	font-family: parkingFont;
 	content: "\e00B";
 	position: relative;
 	left: -5px;
@@ -70,6 +70,10 @@
 	width: 50% !important;
 }
 
+.tickets .v-touchkit-verticalcomponentgroup {
+    border: 1px solid #e6e6e6;
+    border-bottom-color: #ccc;
+}
 
 .tickets .noteslayout textarea {
 	border: none;
@@ -100,16 +104,6 @@
 	background-position: left top;
 }
 
-.tickets .imagepanel.orientation6 {
-	-webkit-transform:rotate(90deg);
-}
-.tickets .imagepanel.orientation8 {
-	-webkit-transform:rotate(270deg);
-}
-.tickets .imagepanel.orientation3 {
-	-webkit-transform:rotate(180deg);
-}
-
 .tickets .buttonslayout {
 	padding-left: 20px;
 	padding-right: 10px;
@@ -128,13 +122,6 @@
 	height: 306px;
 }
 
-.tickets.tablet .imagepanel.orientation6,
-.tickets.tablet .imagepanel.orientation8 {
-	height: 1em;
-	width: 1em;
-	background-size: cover;
-}
-
 .tickets .photolayout .parkingbutton {
 	padding: 28px 0;
 	overflow: hidden;
@@ -151,27 +138,32 @@
 }
 .tickets .photolayout .parkingbutton-caption:before {
 	content: "\e000";
-	font-family: value('parkingFont.getFontName');
+	font-family: parkingFont;
 	position: relative;
 	left: -5px;
 	top: 1px;
 }
-.tickets .photolayout form .parkingbutton-caption:before {
+.tickets .photolayout #uploadbutton .parkingbutton-caption:before {
 	content: "\e001";
 }
 
-.tickets form.empty .parkingbutton,
+.tickets #uploadbutton.empty,
 .tickets.tablet .photolayout .parkingbutton {
 	padding: 16px 0px;
 }
 
-.tickets .photolayout .v-csslayout > .parkingbutton {
+.tickets .photolayout .v-csslayout > #removebutton {
 	border-top: 1px solid #e5e5e5;
 }
 
-.tickets.tablet .photolayout .v-csslayout > .parkingbutton {
+.tickets.tablet .photolayout .v-csslayout > #removebutton {
 	border-top: none;
 	float: right;
+}
+
+.tickets .buttonslayout input {
+	position: absolute;
+	opacity: 0;
 }
 
 .tickets.tablet .photolayout > div {
@@ -184,11 +176,11 @@
 	margin-left: 7px;
 }
 
-.tickets.tablet form {
+.tickets.tablet #uploadbutton {
 	float: left;
 }
 
-.tickets.tablet form.empty {
+.tickets.tablet #uploadbutton.empty {
 	float: none;
 }
 
@@ -204,18 +196,10 @@
 	position: absolute;
 }
 
-.tickets .v-touchkit-tabbar {
-	padding-bottom: 0 !important;
-}
-
 .tickets .noteslayout {
 	margin-bottom: 46px;
 }
 
-.tickets .v-touchkit-switch-wrapper {
-	margin: 9px 0;
-}
-
-.tickets .invalid .v-label-grey-title:FIRST-CHILD {
+.tickets .invalid > .v-caption {
 	color: #e61e6e !important;
 }

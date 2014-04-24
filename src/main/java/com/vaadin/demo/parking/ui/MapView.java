@@ -1,14 +1,16 @@
 package com.vaadin.demo.parking.ui;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
+import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LMarker;
+import org.vaadin.addon.leaflet.LTileLayer;
 import org.vaadin.addon.leaflet.LeafletClickEvent;
 import org.vaadin.addon.leaflet.LeafletClickListener;
-import org.vaadin.addon.leaflet.LeafletMoveEndEvent;
-import org.vaadin.addon.leaflet.LeafletMoveEndListener;
-import org.vaadin.addon.leaflet.shared.Bounds;
 import org.vaadin.addon.leaflet.shared.Point;
 
 import com.vaadin.addon.touchkit.extensions.Geolocator;
@@ -23,6 +25,7 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -30,8 +33,7 @@ import com.vaadin.ui.Notification.Type;
 public class MapView extends CssLayout implements PositionCallback,
         LeafletClickListener {
 
-    private ParkingMap map;
-    private Bounds extent;
+    private LMap map;
     private Button locatebutton;
     private final LMarker you = new LMarker();
 
@@ -52,15 +54,14 @@ public class MapView extends CssLayout implements PositionCallback,
         addStyleName("mapview");
         setSizeFull();
 
-        map = new ParkingMap();
-        map.addMoveEndListener(new LeafletMoveEndListener() {
+        map = new LMap();
 
-            @Override
-            public void onMoveEnd(LeafletMoveEndEvent event) {
-                extent = event.getBounds();
-                updateMarkers();
-            }
-        });
+        // Note, if you wish to use Mapbox base maps, get your own API key.
+        LTileLayer mapBoxTiles = new LTileLayer(
+                "http://{s}.tiles.mapbox.com/v3/vaadin.i1pikm9o/{z}/{x}/{y}.png");
+        map.addLayer(mapBoxTiles);
+
+        map.setAttributionPrefix("Powered by <a href=\"leafletjs.com\">Leaflet</a> — &copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors");
 
         map.setImmediate(true);
 
@@ -86,17 +87,26 @@ public class MapView extends CssLayout implements PositionCallback,
     }
 
     public final void updateMarkers() {
-        Location topLeft = new Location();
-        topLeft.setLatitude(extent.getNorthEastLat());
-        topLeft.setLongitude(extent.getSouthWestLon());
-
-        Location bottomRight = new Location();
-        bottomRight.setLatitude(extent.getSouthWestLat());
-        bottomRight.setLongitude(extent.getNorthEastLon());
-
         List<Ticket> tickets = ticketContainer.getItemIds();
 
-        map.removeAllComponents();
+        Iterator<Component> iterator = map.iterator();
+        Collection<Component> remove = new ArrayList<Component>();
+        while (iterator.hasNext()) {
+            Component next = iterator.next();
+            if (next instanceof LMarker) {
+                remove.add(next);
+            }
+        }
+        for (Component component : remove) {
+            map.removeComponent(component);
+        }
+
+        you.setPoint(new Point(ParkingUI.getApp().getCurrentLatitude(),
+                ParkingUI.getApp().getCurrentLongitude()));
+        if (you.getParent() == null) {
+            map.addComponent(you);
+        }
+
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -1);
         for (Ticket ticket : tickets) {
@@ -114,12 +124,6 @@ public class MapView extends CssLayout implements PositionCallback,
                 map.addComponent(leafletMarker);
             }
         }
-
-        you.setPoint(new Point(ParkingUI.getApp().getCurrentLatitude(),
-                ParkingUI.getApp().getCurrentLongitude()));
-        if (you.getParent() == null) {
-            map.addComponent(you);
-        }
     }
 
     @Override
@@ -131,15 +135,11 @@ public class MapView extends CssLayout implements PositionCallback,
         setCenter();
 
         locatebutton.setEnabled(true);
-
-        updateMarkers();
-
     }
 
     private void setCenter() {
         if (map != null) {
-            extent = new Bounds(you.getPoint());
-            map.zoomToExtent(extent);
+            map.setCenter(you.getPoint());
         }
     }
 

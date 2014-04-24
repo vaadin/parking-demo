@@ -14,8 +14,6 @@
 		webkit based browsers including Google Chrome. -->
 	<!-- <set-property name="user.agent" value="gecko1_8"/> -->
 
-	<inherits name="org.vaadin.addon.ios7fixes.Ios7HotFixesWidgetset" />
-
 	<inherits name="com.vaadin.addon.touchkit.gwt.TouchKitWidgetSet" />
 
 	<inherits name="org.vaadin.addon.leaflet.Widgetset" />
@@ -24,9 +22,9 @@
 	
 	<inherits name="com.vaadin.addon.responsive.ResponsiveWidgetSet" />
 	
-	<inherits name="org.helios.gwt.fonts.GwtWebFonts"/>
+	<inherits name="fi.jasoft.qrcode.QrcodeWidgetset" />
 	
-	<inherits name="org.vectomatic.libgwtfile"/>
+	<inherits name="org.vaadin.juho.imageupload.libgwtimageupload"/>
 
  	<generate-with class="com.vaadin.demo.parking.widgetset.WidgetLoaderFactory">
         <when-type-assignable class="com.vaadin.client.metadata.ConnectorBundleLoader" />

@@ -1,43 +1,34 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
-import org.vectomatic.file.FileUploadExt;
+import org.vaadin.juho.imageupload.client.EXIFOrientationNormalizer;
+import org.vaadin.juho.imageupload.client.ImageLoadedEvent;
+import org.vaadin.juho.imageupload.client.ImageLoadedHandler;
+import org.vaadin.juho.imageupload.client.ImageTransformer;
+import org.vaadin.juho.imageupload.client.ImageUpload;
 
-import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
-import com.vaadin.client.ui.VUpload;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
-import com.vaadin.demo.parking.widgetset.client.ticketview.ImageUtil.ImageDataCallback;
 
 public class PhotoLayout extends VerticalComponentGroupWidget {
     private final SimplePanel imagePanel;
-    private int imageLocalOrientation;
     private String thumbnailUrl;
+    private boolean imageLoaded;
     private final TicketViewModuleListener listener;
 
     private final VButton removeButton = new VButton();
-    private final VUpload takePhotoButton = new VUpload() {
-        @Override
-        public void submit() {
-            // VUpload submit uses application connection so it needs to
-            // be overridden to avoid npe.
-        };
-    };
+    private final VButton takePhotoButton = new VButton();
+    private final ImageUpload fileUpload = new ImageUpload();
 
     private void setImagePanelScale() {
         Widget parent = imagePanel.getParent();
@@ -55,44 +46,47 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         imagePanel.addStyleName("imagepanel");
         innerLayout.add(imagePanel);
 
-        takePhotoButton.setImmediate(true);
-        takePhotoButton.submitButton.setStyleName("parkingbutton");
-        takePhotoButton.submitButton.addStyleName("blue");
-        takePhotoButton.submitButton.addStyleName("textcentered");
-
-        takePhotoButton.fu.getElement().setId("takephotobutton");
-        takePhotoButton.fu.getElement().setAttribute("capture", "camera");
-        takePhotoButton.fu.getElement().setAttribute("accept", "image/*");
-
-        VCssLayout buttonsLayout = new VCssLayout();
-        buttonsLayout.addStyleName("buttonslayout");
-
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+        takePhotoButton.getElement().setId("uploadbutton");
+        takePhotoButton.setStyleName("parkingbutton");
+        takePhotoButton.addStyleName("blue");
+        takePhotoButton.addStyleName("textcentered");
+        takePhotoButton.addClickHandler(new ClickHandler() {
             @Override
-            public void execute() {
-                final FileUploadExt fileUpload = new ParkingFileUpload(
-                        takePhotoButton);
-                fileUpload.addChangeHandler(new ChangeHandler() {
-                    @Override
-                    public void onChange(final ChangeEvent event) {
-                        ImageUtil.getImageData(fileUpload,
-                                new ImageDataCallback() {
-                                    @Override
-                                    public void dataReceived(
-                                            final String dataUrl,
-                                            final int orientation) {
-                                        OfflineDataService
-                                                .setCachedImage(dataUrl);
-                                        setImageOrientation(orientation, false);
-                                    }
-                                });
-                    }
-                });
+            public void onClick(ClickEvent event) {
+                fileUpload.click();
             }
         });
 
+        fileUpload.setCapture(true);
+
+        EXIFOrientationNormalizer normalizer = new EXIFOrientationNormalizer();
+        normalizer.setMaxWidth(1024);
+        normalizer.setMaxHeight(1024);
+        fileUpload.addImageManipulator(normalizer);
+        fileUpload.addImageLoadedHandler(new ImageLoadedHandler() {
+            @Override
+            public void onImageLoaded(ImageLoadedEvent event) {
+                setImage(event.getImageData().getDataURL());
+            }
+        });
+
+        ImageTransformer thumbnailGenerator = new ImageTransformer();
+        thumbnailGenerator.setImageDataSource(fileUpload);
+        thumbnailGenerator.setMaxWidth(75);
+        thumbnailGenerator.setMaxHeight(75);
+        thumbnailGenerator.addImageLoadedHandler(new ImageLoadedHandler() {
+            @Override
+            public void onImageLoaded(ImageLoadedEvent event) {
+                thumbnailUrl = event.getImageData().getDataURL();
+            }
+        });
+
+        VCssLayout buttonsLayout = new VCssLayout();
+        buttonsLayout.addStyleName("buttonslayout");
+        buttonsLayout.add(fileUpload);
         buttonsLayout.add(takePhotoButton);
 
+        removeButton.getElement().setId("removebutton");
         removeButton.setText("Remove");
         removeButton.setStyleName("parkingbutton");
         removeButton.addStyleName("blue");
@@ -100,7 +94,7 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         removeButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                setImageOrientation(0, false);
+                removeImage();
             }
         });
         buttonsLayout.add(removeButton);
@@ -117,69 +111,42 @@ public class PhotoLayout extends VerticalComponentGroupWidget {
         });
     }
 
-    private void setImageOrientation(final int oritentation,
-            final boolean initialize) {
-        imageLocalOrientation = oritentation;
-        boolean empty = imageLocalOrientation == 0;
-        if (empty) {
-            if (!initialize) {
-                OfflineDataService.setCachedImage(null);
-            }
-            takePhotoButton.submitButton.setText("Take a photo");
-            takePhotoButton.addStyleName("empty");
-        } else {
-            String dataUrl = OfflineDataService.getCachedImage();
-            imagePanel.getElement().getStyle()
-                    .setBackgroundImage("url(" + dataUrl + ")");
-            for (int i = 1; i < 9; i++) {
-                imagePanel.removeStyleName("orientation" + i);
-            }
-            imagePanel.addStyleName("orientation" + oritentation);
+    private void setImage(String dataURL) {
+        OfflineDataService.setCachedImage(dataURL);
+        imageLoaded = true;
 
-            takePhotoButton.submitButton.setText("Replace...");
-            takePhotoButton.removeStyleName("empty");
+        imagePanel.getElement().getStyle()
+                .setBackgroundImage("url(" + dataURL + ")");
+        takePhotoButton.setText("Replace...");
+        takePhotoButton.removeStyleName("empty");
 
-            if (Canvas.isSupported()) {
-                ImageUtil.scaleImage(dataUrl, 75, 1, new ImageDataCallback() {
-                    @Override
-                    public void dataReceived(final String dataUrl,
-                            final int orientation) {
-                        thumbnailUrl = dataUrl;
-                    }
-                });
-            } else {
-                thumbnailUrl = null;
-            }
-
-        }
-        imagePanel.setVisible(!empty);
-        removeButton.setVisible(!empty);
+        imagePanel.setVisible(true);
+        removeButton.setVisible(true);
         listener.fieldsChanged();
         setImagePanelScale();
     }
 
-    public final void populateTicket(final Ticket ticket) {
-        ticket.setImageOrientation(imageLocalOrientation);
-
-        ticket.setThumbnailUrl(thumbnailUrl);
+    private void removeImage() {
+        imageLoaded = false;
+        thumbnailUrl = null;
+        takePhotoButton.setText("Take a photo");
+        takePhotoButton.addStyleName("empty");
+        imagePanel.setVisible(false);
+        removeButton.setVisible(false);
+        listener.fieldsChanged();
+        setImagePanelScale();
     }
 
-    public final void ticketUpdated(final Ticket ticket,
-            final boolean initialize) {
-        setImageOrientation(ticket.getImageOrientation(), initialize);
-
-    }
-
-    public class ParkingFileUpload extends FileUploadExt {
-        public ParkingFileUpload(final VUpload upload) {
-            super(upload.fu.getElement(), false);
-            onAttach();
-            try {
-                RootPanel.detachOnWindowClose(this);
-            } catch (java.lang.AssertionError e) {
-                // Occurs in dev mode, ignore
-            }
+    public void ticketUpdated(Ticket ticket) {
+        if (!ticket.isImageIncluded()) {
+            removeImage();
+        } else {
+            setImage(OfflineDataService.getCachedImage());
         }
     }
 
+    public final void populateTicket(final Ticket ticket) {
+        ticket.setImageIncluded(imageLoaded);
+        ticket.setThumbnailUrl(thumbnailUrl);
+    }
 }

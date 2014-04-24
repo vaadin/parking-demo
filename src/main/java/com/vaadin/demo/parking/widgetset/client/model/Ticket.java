@@ -11,17 +11,17 @@ public class Ticket implements Serializable {
     private String area;
 
     private String imageUrl;
-    private int imageOrientation;
     private String thumbnailUrl;
     private String notes;
+    private boolean imageIncluded;
     private boolean myTicket;
 
-    public int getImageOrientation() {
-        return imageOrientation;
+    public boolean isImageIncluded() {
+        return imageIncluded;
     }
 
-    public void setImageOrientation(int imageOrientation) {
-        this.imageOrientation = imageOrientation;
+    public void setImageIncluded(boolean imageIncluded) {
+        this.imageIncluded = imageIncluded;
     }
 
     public Location getLocation() {
@@ -106,7 +106,7 @@ public class Ticket implements Serializable {
         sb.append(violation.name() + DELIMITER);
         sb.append(notes + DELIMITER);
         sb.append(area + DELIMITER);
-        sb.append(imageOrientation + DELIMITER);
+        sb.append(imageIncluded + DELIMITER);
         sb.append(imageUrl + DELIMITER);
         sb.append(thumbnailUrl + DELIMITER);
         return sb.toString();
@@ -123,7 +123,7 @@ public class Ticket implements Serializable {
             result.setViolation(Violation.valueOf(split[3]));
             result.setNotes(split[4]);
             result.setArea(split[5]);
-            result.setImageOrientation(Integer.parseInt(split[6]));
+            result.setImageIncluded("true".equals(split[6]));
             result.setImageUrl("null".equals(split[7]) ? null : split[7]);
             result.setThumbnailUrl("null".equals(split[8]) ? null : split[8]);
         }

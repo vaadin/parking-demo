@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import com.google.gwt.thirdparty.guava.common.base.Function;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.google.gwt.thirdparty.guava.common.collect.Maps;
@@ -200,8 +198,7 @@ public class StatsView extends NavigationView {
         List<String> orderedStrings = Lists.transform(orderedDates,
                 new Function<Date, String>() {
                     @Override
-                    public String apply(@Nullable
-                    Date input) {
+                    public String apply(Date input) {
                         return dateFormat.format(input);
                     }
                 });

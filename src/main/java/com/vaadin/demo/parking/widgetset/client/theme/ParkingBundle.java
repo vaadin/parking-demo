@@ -1,14 +1,16 @@
 package com.vaadin.demo.parking.widgetset.client.theme;
 
-import org.helios.gwt.fonts.client.FontResource;
-
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.DataResource.DoNotEmbed;
 
 public interface ParkingBundle extends ClientBundle {
 
     ParkingBundle INSTANCE = GWT.create(ParkingBundle.class);
+
+    @Source("fonts.css")
+    FontsCss fontsCss();
 
     @Source("map.css")
     MapCss mapCss();
@@ -26,8 +28,7 @@ public interface ParkingBundle extends ClientBundle {
     ShiftsCss shiftsCss();
 
     @Source("parking.ttf")
-    FontResource parkingFont();
+    @DoNotEmbed
+    DataResource parkingFont();
 
-    @Source("switch.png")
-    ImageResource switchImage();
 }

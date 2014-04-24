@@ -1,4 +1,4 @@
-@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel, orientation6, orientation8, orientation3, v-touchkit-verticalcomponentgroup, leaflet-bottom, v-window-ticketdetail, v-touchkit-navbar, mapview, v-button-wrap, locatebutton;
+@external v-touchkit-popover, v-window-wrap, v-touchkit-popover-pointer-bottom, v-touchkit-relative, tickettitle, inforowlayout, inforowvalue, ticketinfolayout, inforowtitle, ticketlayout, ticketimage, closelabel, imagepanel, v-touchkit-verticalcomponentgroup, leaflet-bottom, v-window-ticketdetail, v-touchkit-navbar, mapview, v-button-wrap, locatebutton;
 
 .mapview {
 	padding: 0 !important;
@@ -23,11 +23,12 @@
 
 
 .mapview .locatebutton .v-button-wrap:BEFORE{
-	font-family: value('parkingFont.getFontName');
+	font-family: parkingFont;
 	content: "\e00A";
+	color: #fff;
 	position: absolute;
 	left: 3px;
-	top: -3px;
+	top: -8px;
 	font-size: 24px;
 	font-weight: normal;
 	text-shadow: none;
@@ -66,17 +67,6 @@
 	background-repeat: no-repeat;
 	cursor: pointer;
 }
-
-.v-touchkit-popover .imagepanel.orientation6 {
-	-webkit-transform:rotate(90deg);
-}
-.v-touchkit-popover .imagepanel.orientation8 {
-	-webkit-transform:rotate(270deg);
-}
-.v-touchkit-popover .imagepanel.orientation3 {
-	-webkit-transform:rotate(180deg);
-}
-
 
 .v-touchkit-popover .ticketinfolayout{
 	float: left;

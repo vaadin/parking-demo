@@ -115,7 +115,7 @@ public class DataUtil {
         ticket.setImageUrl("VAADIN/themes/parking/tickets/" + 1 + ".jpg");
         ticket.setThumbnailUrl("VAADIN/themes/parking/tickets/" + 1
                 + "thumbnail.jpg");
-        ticket.setImageOrientation(1);
+        ticket.setImageIncluded(true);
         ticket.setRegisterPlateNumber("ABC-" + (random.nextInt(800) + 100));
 
         ticket.setViolation(Violation.values()[random.nextInt(Violation
