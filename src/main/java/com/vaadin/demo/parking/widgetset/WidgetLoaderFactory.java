@@ -3,9 +3,11 @@ package com.vaadin.demo.parking.widgetset;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.vaadin.addon.leaflet.client.vaadin.LeafletCircleConnector;
-import org.vaadin.addon.leaflet.client.vaadin.LeafletMapConnector;
-import org.vaadin.addon.leaflet.client.vaadin.LeafletMarkerConnector;
+import org.vaadin.addon.leaflet.client.LeafletCircleConnector;
+import org.vaadin.addon.leaflet.client.LeafletLayersConnector;
+import org.vaadin.addon.leaflet.client.LeafletMapConnector;
+import org.vaadin.addon.leaflet.client.LeafletMarkerConnector;
+import org.vaadin.addon.leaflet.client.LeafletTileLayerConnector;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -65,7 +67,9 @@ public class WidgetLoaderFactory extends TouchKitBundleLoaderFactory {
         usedConnectors.add(LabelConnector.class.getName());
         usedConnectors.add(LeafletCircleConnector.class.getName());
         usedConnectors.add(LeafletMapConnector.class.getName());
+        usedConnectors.add(LeafletTileLayerConnector.class.getName());
         usedConnectors.add(LeafletMarkerConnector.class.getName());
+        usedConnectors.add(LeafletLayersConnector.class.getName());
         usedConnectors.add(LinkConnector.class.getName());
         usedConnectors.add(NativeSelectConnector.class.getName());
         usedConnectors.add(NavigationBarConnector.class.getName());
