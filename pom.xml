@@ -18,9 +18,9 @@
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
 		<repository>
-            <id>vaadin-snapshots</id>
-            <url>${snapshot.repository.url}</url>
-        </repository>
+			<id>vaadin-snapshots</id>
+			<url>${snapshot.repository.url}</url>
+		</repository>
 	</repositories>
 	<pluginRepositories>
         <pluginRepository>
@@ -53,11 +53,6 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-		   <groupId>org.vaadin.addon</groupId>
-		   <artifactId>ios7hotfixes</artifactId>
-		   <version>5.0.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client</artifactId>
 			<scope>provided</scope>
@@ -83,7 +78,7 @@
 		<dependency>
 			<groupId>org.vaadin.addon</groupId>
 			<artifactId>v-leaflet</artifactId>
-			<version>0.0.7</version>
+			<version>0.5.6</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -102,8 +97,6 @@
 			<version>2.0.1</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-servlets</artifactId> 
-			<version>8.1.7.v20120910</version> </dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
