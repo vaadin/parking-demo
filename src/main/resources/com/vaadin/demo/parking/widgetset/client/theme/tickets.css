@@ -1,4 +1,4 @@
-@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, uploadbutton, removebutton, v-csslayout, v-touchkit-verticalcomponentgroup, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, offlineindicator, v-touchkit-switch-wrapper, invalid, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection, v-caption;
+@external v-ui, tickets, photolayout, informationlayout, noteslayout, tablet, imagepanel, parkingbutton, uploadbutton, removebutton, v-csslayout, v-touchkit-verticalcomponentgroup, buttonslayout, empty, v-button, v-button-wrap, v-button-caption, sectioncaption, storagedtickets, offlineindicator, v-touchkit-switch-wrapper, invalid, photoinnerlayout, parkingbutton-wrap, parkingbutton-caption, onlineindicator, gwt-Label, connection, v-caption, loading, loadinglabel;
 
 /*
  * Tickets view
@@ -21,6 +21,7 @@
 	text-shadow: none;
 	margin-top: 9px;
 	margin-left: 40px;
+	font-size: 18px;
 }
 
 .tickets .offlineindicator.connection .gwt-Label {
@@ -41,6 +42,7 @@
 	text-shadow: none;
 	margin-top: 9px;
 	margin-right: 20px;
+	font-size: 18px;
 }
 
 .tickets .sectioncaption {
@@ -202,4 +204,24 @@
 
 .tickets .invalid > .v-caption {
 	color: #e61e6e !important;
+}
+
+.tickets.loading .loadinglabel {
+	font-family: parkingFont;
+	font-size: 150%;
+	color: #00b4f0;
+	line-height: 40px;
+}
+
+.tickets.loading .loadinglabel:before {
+	color: #a09f91;
+	position: absolute;
+	left: -46px;
+	font-size: 40px;
+	content: "\e004";
+	-webkit-animation-name: spinnerRotate;
+	-webkit-animation-duration: 4s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-webkit-transform-origin: 20px;
 }

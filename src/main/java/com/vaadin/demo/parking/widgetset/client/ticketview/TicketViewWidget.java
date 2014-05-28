@@ -1,7 +1,5 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -18,6 +16,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
+import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineModeEntrypoint;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationView;
 import com.vaadin.addon.touchkit.gwt.client.ui.VTabBar;
@@ -31,7 +30,8 @@ import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
 public class TicketViewWidget extends VOverlay implements OfflineMode,
-        TicketViewModuleListener, RepeatingCommand {
+        TicketViewModuleListener {
+
     private InformationLayout informationLayout;
     private PhotoLayout photoLayout;
     private VTextArea notesField;
@@ -51,10 +51,16 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private boolean refreshOnSave;
     private Anchor reconnectLabel;
 
+    private VOverlay loading;
+
     public TicketViewWidget() {
-        addStyleName("v-window");
-        addStyleName("v-touchkit-offlinemode");
-        addStyleName("tickets");
+        addStyleName("v-window v-touchkit-offlinemode tickets");
+
+        loading = new VOverlay();
+        Label loadingLabel = new Label("Loading UI");
+        loading.setWidget(loadingLabel);
+        loading.addStyleName("tickets loading");
+        loadingLabel.addStyleName("loadinglabel");
 
         tabBar = new VTabBar();
         setWidget(tabBar);
@@ -66,7 +72,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         tabBar.setToolbar(buildFakeToolbar());
 
         setShadowEnabled(false);
-        show();
         getElement().getStyle().setWidth(100, Unit.PCT);
         getElement().getStyle().setHeight(100, Unit.PCT);
         getElement().getFirstChildElement().getStyle().setHeight(100, Unit.PCT);
@@ -79,7 +84,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         });
         checkDeviceSize();
         ticketUpdated(new Ticket(), false, true);
-        Scheduler.get().scheduleFixedPeriod(this, 1000);
     }
 
     private void checkDeviceSize() {
@@ -172,7 +176,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                 ticket.setImageUrl(OfflineDataService.getCachedImage());
             }
 
-            if (isNetworkOnline() && listener != null) {
+            if (listener != null && isApplicationOnline()) {
                 listener.persistTicket(ticket);
             } else {
                 OfflineDataService.localStoreTicket(ticket);
@@ -192,9 +196,13 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         if (validateFields) {
             validateFields();
         }
-        if (isNetworkOnline() && listener != null) {
+        if (listener != null && isApplicationOnline()) {
             listener.updateState(getTicket());
         }
+    }
+
+    private boolean isApplicationOnline() {
+        return OfflineModeEntrypoint.get().getNetworkStatus().isAppOnline();
     }
 
     private boolean validateFields() {
@@ -281,37 +289,30 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     @Override
     public boolean deactivate() {
+        loading.hide();
+
+        offlineOnlineIndicator.addStyleName("connection");
+        reconnectLabel.setVisible(true);
+        onlineStatusLabel.setText("Connection Available");
+
         // Don't get out off offline mode automatically as user may be actively
         // filling a ticket
         return false;
     }
 
     @Override
-    public boolean execute() {
-        if (isActive()) {
-            if (isNetworkOnline()) {
-                // offline -> online
-                offlineOnlineIndicator.addStyleName("connection");
-                reconnectLabel.setVisible(true);
-                onlineStatusLabel.setText("Connection Available");
-            }
+    public void activate(final ActivationReason event) {
+        if (event == ActivationReason.APP_STARTING) {
+            loading.center();
+        } else if (event == ActivationReason.ONLINE_APP_NOT_STARTED) {
+            deactivate();
         } else {
-            if (!isNetworkOnline()) {
-                // online -> offline
-                listener = null;
-                refreshOnSave = true;
-            }
+            loading.hide();
+            offlineOnlineIndicator.removeStyleName("connection");
+            reconnectLabel.setVisible(false);
+            onlineStatusLabel.setText("Connection Offline");
+            this.show();
         }
-        return true;
-    }
-
-    private static native boolean isNetworkOnline()
-    /*-{
-        return $wnd.navigator.onLine;
-    }-*/;
-
-    @Override
-    public void activate(final ActivationEvent event) {
     }
 
     @Override

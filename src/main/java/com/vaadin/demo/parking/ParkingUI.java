@@ -58,7 +58,8 @@ public class ParkingUI extends UI {
         new Responsive(this);
         setImmediate(true);
 
-        if (!getPage().getWebBrowser().isTouchDevice()) {
+        if (request.getParameter("mobile") == null
+                && !getPage().getWebBrowser().isTouchDevice()) {
             showNonMobileNotification();
         }
     }
@@ -71,7 +72,7 @@ public class ParkingUI extends UI {
      * The location information is stored in Application instance to be
      * available for all components. It is detected by the map view during
      * application init, but also used by other maps in the application.
-     * 
+     *
      * @return the current latitude as degrees
      */
     public double getCurrentLatitude() {
@@ -102,7 +103,7 @@ public class ParkingUI extends UI {
 
     /**
      * A typed version of {@link UI#getCurrent()}
-     * 
+     *
      * @return the currently active Parking UI.
      */
     public static ParkingUI getApp() {
