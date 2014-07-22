@@ -6,6 +6,8 @@ import java.net.URL;
 import java.net.UnknownHostException;
 
 import com.vaadin.addon.responsive.Responsive;
+import com.vaadin.addon.touchkit.annotations.CacheManifestEnabled;
+import com.vaadin.addon.touchkit.annotations.OfflineModeEnabled;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -29,6 +31,8 @@ import fi.jasoft.qrcode.QRCode;
 @Widgetset("com.vaadin.demo.parking.widgetset.ParkingWidgetset")
 @PreserveOnRefresh
 @Title("Vaadin Parking Demo")
+@OfflineModeEnabled()
+@CacheManifestEnabled()
 public class ParkingUI extends UI {
 
     /*

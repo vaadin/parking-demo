@@ -1,5 +1,7 @@
 package com.vaadin.demo.parking;
 
+import com.vaadin.addon.touchkit.annotations.CacheManifestEnabled;
+import com.vaadin.addon.touchkit.annotations.OfflineModeEnabled;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
@@ -11,6 +13,8 @@ import com.vaadin.ui.VerticalLayout;
  * just contains a simple message. For a non-demo application it could contain a
  * simplified version of the UI built without Vaadin TouchKit.
  */
+@OfflineModeEnabled(false)
+@CacheManifestEnabled(false)
 public class ParkingFallbackUI extends UI {
 
     // FIXME review message
