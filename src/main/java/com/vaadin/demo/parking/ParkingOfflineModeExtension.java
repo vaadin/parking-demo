@@ -23,7 +23,6 @@ public class ParkingOfflineModeExtension extends OfflineMode {
     };
 
     public ParkingOfflineModeExtension() {
-        setOfflineModeTimeout(60);
         registerRpc(serverRpc);
     }
 

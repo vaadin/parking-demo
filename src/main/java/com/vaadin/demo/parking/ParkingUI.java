@@ -31,8 +31,8 @@ import fi.jasoft.qrcode.QRCode;
 @Widgetset("com.vaadin.demo.parking.widgetset.ParkingWidgetset")
 @PreserveOnRefresh
 @Title("Vaadin Parking Demo")
-@OfflineModeEnabled()
-@CacheManifestEnabled()
+@OfflineModeEnabled
+@CacheManifestEnabled
 public class ParkingUI extends UI {
 
     /*
@@ -57,10 +57,10 @@ public class ParkingUI extends UI {
         offlineModeSettings = new ParkingOfflineModeExtension();
         offlineModeSettings.extend(this);
         offlineModeSettings.setPersistentSessionCookie(true);
-        offlineModeSettings.setOfflineModeEnabled(true);
+        // Default is 10 secs.
+        offlineModeSettings.setOfflineModeTimeout(15);
 
         new Responsive(this);
-        setImmediate(true);
 
         if (request.getParameter("mobile") == null
                 && !getPage().getWebBrowser().isTouchDevice()) {

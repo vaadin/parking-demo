@@ -1,15 +1,15 @@
 package com.vaadin.demo.parking.widgetset.client;
 
-import java.util.List;
+import static com.vaadin.demo.parking.widgetset.client.OfflineDataService.getAndResetLocallyStoredTickets;
+import static com.vaadin.demo.parking.widgetset.client.OfflineDataService.getStoredTicketCount;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode.OnlineEvent;
 import com.vaadin.addon.touchkit.gwt.client.vcom.OfflineModeConnector;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.demo.parking.ParkingOfflineModeExtension;
-import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.shared.ui.Connect;
 
+@SuppressWarnings("serial")
 @Connect(ParkingOfflineModeExtension.class)
 public class ParkingOfflineConnector extends OfflineModeConnector {
 
@@ -18,22 +18,16 @@ public class ParkingOfflineConnector extends OfflineModeConnector {
 
     @Override
     protected void init() {
+        getConnection().addHandler(OnlineEvent.TYPE,
+                new OnlineEvent.OnlineHandler() {
+                    public void onOnline(OnlineEvent event) {
+                        if (getStoredTicketCount() > 0) {
+                            rpc.persistTickets(getAndResetLocallyStoredTickets());
+                        }
+                    }
+                });
+
+        // Call super.init after we listen to online events
         super.init();
-
-        // When connected to server, check if there is locally stored data to be
-        // synchronized to server side
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                final int storedTickets = OfflineDataService
-                        .getStoredTicketCount();
-                if (storedTickets > 0) {
-                    List<Ticket> tickets = OfflineDataService
-                            .getAndResetLocallyStoredTickets();
-                    rpc.persistTickets(tickets);
-                }
-            }
-        });
     }
-
 }

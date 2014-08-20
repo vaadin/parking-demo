@@ -1,5 +1,8 @@
 package com.vaadin.demo.parking.widgetset.client.ticketview;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,7 +13,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -37,6 +39,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private VTextArea notesField;
     private boolean validateFields;
 
+    // TODO(manolo): We could make this less prominent so as off/online views
+    // have the same height, maybe a red flag somewhere.
     private VCssLayout offlineOnlineIndicator;
     private Label onlineStatusLabel;
 
@@ -49,11 +53,17 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private final Widget contentView;
 
     private boolean refreshOnSave;
-    private Anchor reconnectLabel;
 
     private VOverlay loading;
 
+    // TODO(manolo): This class is messy since we use two instances (off/online) with different
+    // behaviors, we could split in two classes.
+    private static List<TicketViewWidget> instances = new ArrayList<TicketViewWidget>();
+
     public TicketViewWidget() {
+        assert instances.size() < 2;
+        instances.add(this);
+
         addStyleName("v-window v-touchkit-offlinemode tickets");
 
         loading = new VOverlay();
@@ -143,10 +153,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         onlineStatusLabel = new Label("Connection Offline");
         indicatorWrapper.add(onlineStatusLabel);
-
-        reconnectLabel = new Anchor("Reconnect", Window.Location.getHref());
-        reconnectLabel.setVisible(false);
-        indicatorWrapper.add(reconnectLabel);
 
         offlineOnlineIndicator.add(indicatorWrapper);
         panel.add(offlineOnlineIndicator);
@@ -290,14 +296,9 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     @Override
     public boolean deactivate() {
         loading.hide();
-
-        offlineOnlineIndicator.addStyleName("connection");
-        reconnectLabel.setVisible(true);
-        onlineStatusLabel.setText("Connection Available");
-
-        // Don't get out off offline mode automatically as user may be actively
-        // filling a ticket
-        return false;
+        syncViews(false);
+        this.hide();
+        return true;
     }
 
     @Override
@@ -307,11 +308,29 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         } else if (event == ActivationReason.ONLINE_APP_NOT_STARTED) {
             deactivate();
         } else {
+            syncViews(true);
             loading.hide();
             offlineOnlineIndicator.removeStyleName("connection");
-            reconnectLabel.setVisible(false);
             onlineStatusLabel.setText("Connection Offline");
+            updateStoredTicketsIndicator();
             this.show();
+        }
+    }
+
+    // Copy the data that the user has entered between offline and online views.
+    private void syncViews(boolean activate) {
+        if (instances.size() > 1) {
+            TicketViewWidget that = instances.get(0).equals(this) ? instances.get(1) : instances.get(0);
+            TicketViewWidget source = activate ? that : this;
+            TicketViewWidget target = activate ? this : that;
+            target.ticketUpdated(source.getTicket(), false, false);
+
+            target.validateFields = source.validateFields;
+            if (validateFields) {
+                target.validateFields();
+            } else {
+                target.resetValidations();
+            }
         }
     }
 
