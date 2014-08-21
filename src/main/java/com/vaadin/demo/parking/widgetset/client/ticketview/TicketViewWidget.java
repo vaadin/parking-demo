@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.addon.touchkit.gwt.client.offlinemode.CacheManifestStatusIndicator;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
 import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineModeEntrypoint;
 import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
@@ -38,6 +39,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
     private PhotoLayout photoLayout;
     private VTextArea notesField;
     private boolean validateFields;
+    private boolean fieldsChanged = false;
 
     // TODO(manolo): We could make this less prominent so as off/online views
     // have the same height, maybe a red flag somewhere.
@@ -81,7 +83,6 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         tabBar.setContent(contentView);
         tabBar.setToolbar(buildFakeToolbar());
 
-        setShadowEnabled(false);
         getElement().getStyle().setWidth(100, Unit.PCT);
         getElement().getStyle().setHeight(100, Unit.PCT);
         getElement().getFirstChildElement().getStyle().setHeight(100, Unit.PCT);
@@ -93,7 +94,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             }
         });
         checkDeviceSize();
-        ticketUpdated(new Ticket(), false, true);
+        ticketUpdated(new Ticket(), true);
     }
 
     private void checkDeviceSize() {
@@ -116,7 +117,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         clearTicketButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                ticketUpdated(new Ticket(), false, false);
+                ticketUpdated(new Ticket(), true);
                 resetValidations();
                 validateFields = false;
             }
@@ -186,7 +187,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
                 listener.persistTicket(ticket);
             } else {
                 OfflineDataService.localStoreTicket(ticket);
-                ticketUpdated(new Ticket(), false, false);
+                ticketUpdated(new Ticket(), true);
             }
 
             if (refreshOnSave) {
@@ -205,6 +206,10 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         if (listener != null && isApplicationOnline()) {
             listener.updateState(getTicket());
         }
+
+        fieldsChanged = true;
+        CacheManifestStatusIndicator.setConfirmationRequired(true);
+        saveTicketButton.setEnabled(true);
     }
 
     private boolean isApplicationOnline() {
@@ -323,7 +328,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             TicketViewWidget that = instances.get(0).equals(this) ? instances.get(1) : instances.get(0);
             TicketViewWidget source = activate ? that : this;
             TicketViewWidget target = activate ? this : that;
-            target.ticketUpdated(source.getTicket(), false, false);
+            target.ticketUpdated(source.getTicket(), false);
 
             target.validateFields = source.validateFields;
             if (validateFields) {
@@ -362,8 +367,7 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         return ticket;
     }
 
-    public final void ticketUpdated(final Ticket ticket,
-            final boolean skipStateChange, final boolean initialize) {
+    protected final void ticketUpdated(final Ticket ticket, final boolean initialize) {
         final TicketViewWidgetListener listener = this.listener;
         this.listener = null;
 
@@ -377,11 +381,12 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
         this.listener = listener;
 
-        if (!skipStateChange) {
-            fieldsChanged();
+        if (initialize) {
+            fieldsChanged = false;
         }
 
-        saveTicketButton.setEnabled(true);
+        CacheManifestStatusIndicator.setConfirmationRequired(fieldsChanged);
+        saveTicketButton.setEnabled(fieldsChanged);
     }
 
     private void updateStoredTicketsIndicator() {

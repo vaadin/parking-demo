@@ -12,6 +12,7 @@ import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewWidget.TicketViewWidgetListener;
 import com.vaadin.shared.ui.Connect;
 
+@SuppressWarnings("serial")
 @Connect(TicketView.class)
 public class TicketViewConnector extends AbstractComponentConnector implements
         TicketViewWidgetListener {
@@ -38,7 +39,7 @@ public class TicketViewConnector extends AbstractComponentConnector implements
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        getWidget().ticketUpdated(getState().getTicket(), true, false);
+        getWidget().ticketUpdated(getState().getTicket(), true);
         super.onStateChanged(stateChangeEvent);
     }
 
