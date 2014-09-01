@@ -13,44 +13,10 @@ a {
 	text-decoration: none;
 }
 
-.v-touchkit-popover {
-	background: #000;
-}
-
+/* Set button icons using css */
 .v-touchkit-toolbar {
    font-family: parkingFont;
 }
-
-
-/* Sizing etc for tab icons */
-.v-touchkit-tabbar {
-	padding: 0;
-}
-
-.v-touchkit-tabbar-wrapper {
-	bottom: 60px;
-}
-
-.v-touchkit-tabbar-toolbar .v-touchkit-toolbar {
-	background: #fcfcfb;
-	height: 60px;
-}
-
-.v-touchkit-tabbar-toolbar .v-button:before {
-	color: #a09f91;
-	position: absolute;
-	left: 0;
-	right: 0;
-	font-size: 27px;
-	text-shadow: none;
-}
-.v-touchkit-tabbar-toolbar .v-button.selected:before {
-	color: #00b4f0;
-}
-
-/*
- * Main Tab sheets icons via css
- */
 .v-touchkit-tabbar-toolbar .ticketstab:before {
 	content: "\e003";
 }
@@ -67,89 +33,26 @@ a {
 	content: "\e00C";
 }
 
+/* Hack to have buttons grouped in the center instead of expanding
+to fill all the width */
 .v-touchkit-tabbar-toolbar .v-button {
 	width: 80px !important;
 	height: 100% !important;
-	border-radius: 0 !important;
 	position: absolute !important;
 	left: 50%;
-	box-sizing: border-box;
 }
-
-.v-touchkit-tabbar-toolbar .v-button-caption {
-	font-size: 12px;
-	bottom: 0;
-	font-weight: normal;
-}
-
-.v-touchkit-tabbar-toolbar .v-button-wrap:AFTER {
-	background: transparent !important;
-}
-
 .v-touchkit-tabbar-toolbar .v-button.ticketstab {
 	border-left: 1px solid #e7e7e7;
 }
-
 .v-touchkit-tabbar-toolbar .v-button.ticketstab {
 	margin-left: -160px;
 }
-
 .v-touchkit-tabbar-toolbar .v-button.maptab {
 	margin-left: -80px;
 }
-
 .v-touchkit-tabbar-toolbar .v-button.statstab {
 	margin-left: 80px;
 	border-right: 1px solid #e7e7e7;
-}
-
-.v-touchkit-tabbar-toolbar .v-button span {
-	color: #a09f91;
-	text-shadow: none;
-	margin-bottom: 9px;
-}
-.v-touchkit-tabbar-toolbar .v-button.selected span {
-	color: #00b4f0;
-}
-
-/*
- * Common styles
- */
-.v-touchkit-navbutton-back,
-.v-touchkit-navbutton-back:ACTIVE,
-.v-touchkit-navbar .v-button {
-	background: #00b4f0;
-}
-
-.v-touchkit-navbutton-back,
-.v-touchkit-navbar .v-button-caption {
-	color: #fff;
-	letter-spacing: 1px;
-}
-
-.v-touchkit-navbutton-back {
-	margin-left: 10px;
-	overflow: visible;
-}
-
-.v-touchkit-navbutton-back:BEFORE {
-	content: "";
-	position: absolute;
-	left: -24px;
-	border: 15px solid transparent;
-	border-right-color: #00b4f0;
-	width: 0;
-	height: 0;
-	border-right-width: 10px;
-}
-
-.v-touchkit-navbutton-back:AFTER {
-	content: none;
-}
-
-.v-touchkit-navbar-caption span {
-	color: #00b4f0;
-	font-size: 25px;
 }
 
 .parkingbutton {
