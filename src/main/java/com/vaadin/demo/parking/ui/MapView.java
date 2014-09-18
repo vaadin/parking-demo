@@ -59,6 +59,7 @@ public class MapView extends CssLayout implements PositionCallback,
         // Note, if you wish to use Mapbox base maps, get your own API key.
         LTileLayer mapBoxTiles = new LTileLayer(
                 "http://{s}.tiles.mapbox.com/v3/vaadin.i1pikm9o/{z}/{x}/{y}.png");
+        mapBoxTiles.setDetectRetina(true);
         map.addLayer(mapBoxTiles);
 
         map.setAttributionPrefix("Powered by <a href=\"leafletjs.com\">Leaflet</a> — &copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors");
