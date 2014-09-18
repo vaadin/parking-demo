@@ -1,9 +1,10 @@
 
 @url parkingFont parkingFont;
+@url parkingFontWoff parkingFontWoff;
 
 @font-face {
     font-family: "parkingFont";
-    src: parkingFont;
+    src: parkingFontWoff format('woff'), parkingFont format('truetype');
     font-weight: normal;
     font-style: normal;
 }

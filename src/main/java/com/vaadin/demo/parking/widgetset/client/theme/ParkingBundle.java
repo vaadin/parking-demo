@@ -31,4 +31,8 @@ public interface ParkingBundle extends ClientBundle {
     @DoNotEmbed
     DataResource parkingFont();
 
+    @Source("parking.woff")
+    @DoNotEmbed
+    DataResource parkingFontWoff();
+
 }

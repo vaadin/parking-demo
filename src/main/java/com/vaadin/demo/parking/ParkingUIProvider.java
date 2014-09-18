@@ -10,7 +10,10 @@ public class ParkingUIProvider extends UIProvider {
     public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
         String userAgent = event.getRequest().getHeader("user-agent")
                 .toLowerCase();
-        if (userAgent.contains("webkit")) {
+
+        if (userAgent.toLowerCase().contains("webkit")
+                || userAgent.toLowerCase().contains("windows phone 8")
+                || userAgent.toLowerCase().contains("windows phone 9")) {
             return ParkingUI.class;
         } else {
             return ParkingFallbackUI.class;
