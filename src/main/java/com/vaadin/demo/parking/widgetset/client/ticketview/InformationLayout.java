@@ -8,6 +8,8 @@ import com.google.gwt.core.client.Callback;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.geolocation.client.Geolocation;
@@ -143,12 +145,25 @@ public class InformationLayout extends VerticalComponentGroupWidget {
         addressField = new VTextField();
         addressField.addValueChangeHandler(vch);
         addressField.setWidth("100%");
+
+        /*
+         * ClickHandler is needed for fixing bug #14743 with WP
+         */
+        addressField.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                addressField.setFocus(true);
+            }
+        });
+
         add(addressField);
         updateCaption(addressField, "Address", null, "100.0%", "v-caption");
 
         timeField = new DatePicker();
         timeField.setResolution(Resolution.TIME);
         timeField.setDate(date);
+
         timeField.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(final ValueChangeEvent<String> event) {
@@ -156,12 +171,26 @@ public class InformationLayout extends VerticalComponentGroupWidget {
                 listener.fieldsChanged();
             }
         });
+
         add(timeField);
         updateCaption(timeField, "Time", null, "100.0%", "v-caption");
 
         vehicleIdField = new VTextField();
         vehicleIdField.addValueChangeHandler(vch);
         vehicleIdField.setWidth("100%");
+
+        /*
+         * ClickHandler is needed for fixing bug #14743 with WP
+         */
+        vehicleIdField.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                vehicleIdField.setFocus(true);
+
+            }
+        });
+
         add(vehicleIdField);
         updateCaption(vehicleIdField, "Vehicle ID", null, "100.0%", "v-caption");
 

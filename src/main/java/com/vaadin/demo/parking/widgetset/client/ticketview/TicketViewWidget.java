@@ -58,7 +58,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
 
     private VOverlay loading;
 
-    // TODO(manolo): This class is messy since we use two instances (off/online) with different
+    // TODO(manolo): This class is messy since we use two instances (off/online)
+    // with different
     // behaviors, we could split in two classes.
     private static List<TicketViewWidget> instances = new ArrayList<TicketViewWidget>();
 
@@ -251,6 +252,18 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             }
         });
         notesField.setSize("100%", "100px");
+
+        /*
+         * ClickHandler is needed for fixing bug #14743 with WP
+         */
+        notesField.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                notesField.setFocus(true);
+            }
+        });
+
         innerLayout.add(notesField);
 
         return buildSectionWrapper(innerLayout, "Notes", "noteslayout");
@@ -318,14 +331,15 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             offlineOnlineIndicator.removeStyleName("connection");
             onlineStatusLabel.setText("Connection Offline");
             updateStoredTicketsIndicator();
-            this.show();
+            show();
         }
     }
 
     // Copy the data that the user has entered between offline and online views.
     private void syncViews(boolean activate) {
         if (instances.size() > 1) {
-            TicketViewWidget that = instances.get(0).equals(this) ? instances.get(1) : instances.get(0);
+            TicketViewWidget that = instances.get(0).equals(this) ? instances
+                    .get(1) : instances.get(0);
             TicketViewWidget source = activate ? that : this;
             TicketViewWidget target = activate ? this : that;
             target.ticketUpdated(source.getTicket(), false);
@@ -367,7 +381,8 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         return ticket;
     }
 
-    protected final void ticketUpdated(final Ticket ticket, final boolean initialize) {
+    protected final void ticketUpdated(final Ticket ticket,
+            final boolean initialize) {
         final TicketViewWidgetListener listener = this.listener;
         this.listener = null;
 
@@ -413,4 +428,5 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
             return getOverlayContainer(ac);
         }
     }
+
 }
