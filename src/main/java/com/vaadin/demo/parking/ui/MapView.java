@@ -42,11 +42,11 @@ public class MapView extends CssLayout implements PositionCallback,
 
     @Override
     public void attach() {
+        super.attach();
         if (map == null) {
             buildView();
         }
         updateMarkers();
-        super.attach();
     };
 
     private void buildView() {
