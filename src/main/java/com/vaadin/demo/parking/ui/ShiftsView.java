@@ -54,10 +54,10 @@ public class ShiftsView extends NavigationManager {
 
     @Override
     public void attach() {
+        super.attach();
         if (shiftContainer == null) {
             buildUi();
         }
-        super.attach();
     };
 
     private void buildUi() {
