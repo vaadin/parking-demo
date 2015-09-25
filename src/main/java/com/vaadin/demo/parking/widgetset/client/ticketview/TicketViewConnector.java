@@ -58,4 +58,10 @@ public class TicketViewConnector extends AbstractComponentConnector implements
     public void updateState(final Ticket ticket) {
         rpc.updateState(ticket);
     }
+
+    @Override
+    public void onUnregister() {
+        getWidget().destroy();
+        super.onUnregister();
+    }
 }

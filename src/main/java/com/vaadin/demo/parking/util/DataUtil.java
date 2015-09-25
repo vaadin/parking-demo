@@ -10,9 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.model.Shift;
@@ -20,6 +17,10 @@ import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;
 import com.vaadin.ui.JavaScript;
+
+import elemental.json.Json;
+import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 
 public class DataUtil {
 
@@ -204,14 +205,15 @@ public class DataUtil {
                     builder.append(line);
                 }
                 builder.append("]");
-                final JSONArray jsa = new JSONArray(builder.toString());
-                final JSONObject jo = (JSONObject) jsa.get(0);
-                JSONArray results = jo.getJSONArray("results");
-                JSONObject geometry = results.getJSONObject(0).getJSONObject(
-                        "geometry");
-                JSONObject loc = geometry.getJSONObject("location");
-                latitude = loc.getDouble("lat");
-                longitude = loc.getDouble("lng");
+                final JsonArray jsa = (JsonArray) Json
+                        .parse(builder.toString());
+                final JsonObject jo = (JsonObject) jsa.get(0);
+                JsonArray results = jo.getArray("results");
+                JsonObject geometry = results.getObject(0)
+                        .getObject("geometry");
+                JsonObject loc = geometry.getObject("location");
+                latitude = loc.getNumber("lat");
+                longitude = loc.getNumber("lng");
             }
         } catch (Exception e) {
             // Ignore

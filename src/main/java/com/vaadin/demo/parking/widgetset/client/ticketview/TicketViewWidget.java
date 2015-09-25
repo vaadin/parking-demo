@@ -429,4 +429,13 @@ public class TicketViewWidget extends VOverlay implements OfflineMode,
         }
     }
 
+    /**
+     * If messages are lost the Framework resynchronizes and repaints all
+     * creating a new connector and widget resulting in the old connector being
+     * unregistered and old widget removed from parent
+     */
+    public void destroy() {
+        instances.remove(this);
+    }
+
 }
