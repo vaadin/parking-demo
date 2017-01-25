@@ -22,8 +22,6 @@
 	
 	<inherits name="com.vaadin.addon.responsive.ResponsiveWidgetSet" />
 	
-	<inherits name="fi.jasoft.qrcode.QrcodeWidgetset" />
-	
 	<inherits name="org.vaadin.juho.imageupload.libgwtimageupload"/>
 
  	<generate-with class="com.vaadin.demo.parking.widgetset.WidgetLoaderFactory">

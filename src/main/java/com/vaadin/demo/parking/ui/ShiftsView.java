@@ -237,7 +237,7 @@ public class ShiftsView extends NavigationManager {
             addValueChangeListener(new ValueChangeListener() {
                 @Override
                 public void valueChange(
-                        final com.vaadin.data.Property.ValueChangeEvent event) {
+                        final Property.ValueChangeEvent event) {
                     textChanged((String) event.getProperty().getValue());
                 }
             });
@@ -262,7 +262,7 @@ public class ShiftsView extends NavigationManager {
             addValueChangeListener(new ValueChangeListener() {
                 @Override
                 public void valueChange(
-                        final com.vaadin.data.Property.ValueChangeEvent event) {
+                        final Property.ValueChangeEvent event) {
                     shiftContainer.removeContainerFilter(filter);
                     final Date filterValue = (Date) event.getProperty()
                             .getValue();
@@ -314,7 +314,7 @@ public class ShiftsView extends NavigationManager {
             addValueChangeListener(new ValueChangeListener() {
                 @Override
                 public void valueChange(
-                        final com.vaadin.data.Property.ValueChangeEvent event) {
+                        final Property.ValueChangeEvent event) {
                     shiftContainer.removeContainerFilter(filter);
                     final Integer filterValue = (Integer) event.getProperty()
                             .getValue();

@@ -19,10 +19,10 @@ import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
-import fi.jasoft.qrcode.QRCode;
 
 /**
  * The UI class for Parking demo.
@@ -127,6 +127,9 @@ public class ParkingUI extends UI {
     }
 
     private void showNonMobileNotification() {
+        Notification.show( "You appear to be running this demo on a non-portable device. "
+                            + "Parking is intended for touch devices primarily. ");
+    /*
         try {
             URL appUrl = Page.getCurrent().getLocation().toURL();
             String myIp = Inet4Address.getLocalHost().getHostAddress();
@@ -157,6 +160,7 @@ public class ParkingUI extends UI {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        */
     }
 
 }

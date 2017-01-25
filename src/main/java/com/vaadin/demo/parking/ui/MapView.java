@@ -64,8 +64,6 @@ public class MapView extends CssLayout implements PositionCallback,
 
         map.setAttributionPrefix("Powered by <a href=\"leafletjs.com\">Leaflet</a> — &copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors");
 
-        map.setImmediate(true);
-
         map.setSizeFull();
         map.setZoomLevel(12);
         addComponent(map);
