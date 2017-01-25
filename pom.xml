@@ -7,9 +7,9 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<vaadin.version>7.6.0.beta1</vaadin.version>
+		<vaadin.version>8.0.0.beta1</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
-		<vaadin.touchkit.version>4.1-SNAPSHOT</vaadin.touchkit.version>
+		<vaadin.touchkit.version>5.0-SNAPSHOT</vaadin.touchkit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<snapshot.repository.url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</snapshot.repository.url>
 	</properties>
@@ -48,7 +48,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-server</artifactId>
+			<artifactId>vaadin-compatibility-server</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
@@ -57,8 +57,13 @@
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-compatibility-themes</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.vaadin.addon</groupId>
-			<artifactId>vaadin-touchkit-agpl</artifactId>
+			<artifactId>vaadin-touchkit</artifactId>
 			<version>${vaadin.touchkit.version}</version>
 			<exclusions>
 				<exclusion>
@@ -76,7 +81,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client</artifactId>
+			<artifactId>vaadin-compatibility-client</artifactId>
 			<scope>provided</scope>
 			<version>${vaadin.version}</version>
 		</dependency>
@@ -112,11 +117,6 @@
 			<groupId>com.vaadin.addon.responsive</groupId>
 			<artifactId>responsive</artifactId>
 			<version>1.0.0.alpha1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.vaadin.addons</groupId>
-			<artifactId>qrcode</artifactId>
-			<version>2.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -203,9 +203,9 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.8.v20121106</version>
+				<version>9.3.15.v20161220</version>
 				<configuration>
 					<systemProperties>
 						<systemProperty>
