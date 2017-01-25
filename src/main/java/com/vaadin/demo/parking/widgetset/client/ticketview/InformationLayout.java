@@ -21,7 +21,7 @@ import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker;
 import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker.Resolution;
 import com.vaadin.addon.touchkit.gwt.client.ui.VSwitch;
 import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
-import com.vaadin.client.ui.VTextField;
+import com.vaadin.v7.client.ui.VTextField;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.demo.parking.widgetset.client.model.Violation;

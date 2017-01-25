@@ -12,7 +12,7 @@ import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ui.MainTabsheet;
 import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;

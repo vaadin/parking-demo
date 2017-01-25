@@ -31,7 +31,7 @@ import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.addon.charts.themes.VaadinTheme;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.ui.Component;

@@ -28,7 +28,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VOverlay;
-import com.vaadin.client.ui.VTextArea;
+import com.vaadin.v7.client.ui.VTextArea;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 
