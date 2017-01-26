@@ -126,6 +126,11 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.6</version>
+		</dependency>
 		<!-- This is needed for fallback app displayed for non webkit browsers -->
 		<dependency>
 			<groupId>com.vaadin</groupId>
