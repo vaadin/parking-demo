@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LMarker;
-import org.vaadin.addon.leaflet.LTileLayer;
 import org.vaadin.addon.leaflet.LeafletClickEvent;
 import org.vaadin.addon.leaflet.LeafletClickListener;
 import org.vaadin.addon.leaflet.shared.Point;
@@ -16,7 +15,6 @@ import org.vaadin.addon.leaflet.shared.Point;
 import com.vaadin.addon.touchkit.extensions.Geolocator;
 import com.vaadin.addon.touchkit.extensions.PositionCallback;
 import com.vaadin.addon.touchkit.gwt.client.vcom.Position;
-import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
@@ -29,11 +27,13 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Label;
 
-public class MapView extends CssLayout implements PositionCallback,
-        LeafletClickListener {
+public class MapView extends CssLayout
+        implements PositionCallback, LeafletClickListener {
 
-    private LMap map;
+    private final LMap map = null;
     private Button locatebutton;
     private final LMarker you = new LMarker();
 
@@ -43,7 +43,7 @@ public class MapView extends CssLayout implements PositionCallback,
     @Override
     public void attach() {
         super.attach();
-        if (map == null) {
+        if (locatebutton == null) {
             buildView();
         }
         updateMarkers();
@@ -54,19 +54,22 @@ public class MapView extends CssLayout implements PositionCallback,
         addStyleName("mapview");
         setSizeFull();
 
-        map = new LMap();
-
-        // Note, if you wish to use Mapbox base maps, get your own API key.
-        LTileLayer mapBoxTiles = new LTileLayer(
-                "http://{s}.tiles.mapbox.com/v3/vaadin.i1pikm9o/{z}/{x}/{y}.png");
-        mapBoxTiles.setDetectRetina(true);
-        map.addLayer(mapBoxTiles);
-
-        map.setAttributionPrefix("Powered by <a href=\"leafletjs.com\">Leaflet</a> — &copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors");
-
-        map.setSizeFull();
-        map.setZoomLevel(12);
-        addComponent(map);
+        // map = new LMap();
+        //
+        // // Note, if you wish to use Mapbox base maps, get your own API key.
+        // LTileLayer mapBoxTiles = new LTileLayer(
+        // "http://{s}.tiles.mapbox.com/v3/vaadin.i1pikm9o/{z}/{x}/{y}.png");
+        // mapBoxTiles.setDetectRetina(true);
+        // map.addLayer(mapBoxTiles);
+        //
+        // map.setAttributionPrefix(
+        // "Powered by <a href=\"leafletjs.com\">Leaflet</a> — &copy; <a
+        // href='http://osm.org/copyright'>OpenStreetMap</a> contributors");
+        //
+        // map.setSizeFull();
+        // map.setZoomLevel(12);
+        // addComponent(map);
+        addComponent(new Label("Leaflet 0.5.7 does not support FW8"));
 
         // Default to Vaadin HQ
         you.setPoint(new Point(60.452, 22.301));
@@ -82,14 +85,18 @@ public class MapView extends CssLayout implements PositionCallback,
         locatebutton.setWidth(30, Unit.PIXELS);
         locatebutton.setHeight(30, Unit.PIXELS);
         locatebutton.setDisableOnClick(true);
-        addComponent(locatebutton);
+        // addComponent(locatebutton);
     }
 
     public final void updateMarkers() {
+        if (true) {
+            return;
+        }
+
         List<Ticket> tickets = ticketContainer.getItemIds();
 
         Iterator<Component> iterator = map.iterator();
-        Collection<Component> remove = new ArrayList<Component>();
+        Collection<Component> remove = new ArrayList<>();
         while (iterator.hasNext()) {
             Component next = iterator.next();
             if (next instanceof LMarker) {
@@ -144,9 +151,9 @@ public class MapView extends CssLayout implements PositionCallback,
 
     @Override
     public void onFailure(final int errorCode) {
-        Notification
-                .show("Geolocation request failed. You must grant access for geolocation requests.",
-                        Type.ERROR_MESSAGE);
+        Notification.show(
+                "Geolocation request failed. You must grant access for geolocation requests.",
+                Type.ERROR_MESSAGE);
     }
 
     private void showPopup(final Ticket ticket) {
