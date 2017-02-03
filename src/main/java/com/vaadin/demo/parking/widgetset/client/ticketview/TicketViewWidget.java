@@ -3,6 +3,14 @@ package com.vaadin.demo.parking.widgetset.client.ticketview;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.vaadin.touchkit.gwt.client.offlinemode.CacheManifestStatusIndicator;
+import org.vaadin.touchkit.gwt.client.offlinemode.OfflineMode;
+import org.vaadin.touchkit.gwt.client.offlinemode.OfflineModeEntrypoint;
+import org.vaadin.touchkit.gwt.client.ui.VNavigationBar;
+import org.vaadin.touchkit.gwt.client.ui.VNavigationView;
+import org.vaadin.touchkit.gwt.client.ui.VTabBar;
+import org.vaadin.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
+
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,13 +25,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.addon.touchkit.gwt.client.offlinemode.CacheManifestStatusIndicator;
-import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode;
-import com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineModeEntrypoint;
-import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationBar;
-import com.vaadin.addon.touchkit.gwt.client.ui.VNavigationView;
-import com.vaadin.addon.touchkit.gwt.client.ui.VTabBar;
-import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;

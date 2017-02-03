@@ -5,9 +5,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+import org.vaadin.touchkit.annotations.CacheManifestEnabled;
+import org.vaadin.touchkit.annotations.OfflineModeEnabled;
+
 import com.vaadin.addon.responsive.Responsive;
-import com.vaadin.addon.touchkit.annotations.CacheManifestEnabled;
-import com.vaadin.addon.touchkit.annotations.OfflineModeEnabled;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;

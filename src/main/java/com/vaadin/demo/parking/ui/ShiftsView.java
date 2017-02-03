@@ -5,14 +5,15 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
+import org.vaadin.touchkit.ui.DatePicker;
+import org.vaadin.touchkit.ui.NavigationButton;
+import org.vaadin.touchkit.ui.NavigationManager;
+import org.vaadin.touchkit.ui.NavigationView;
+import org.vaadin.touchkit.ui.VerticalComponentGroup;
+import org.vaadin.touchkit.ui.NavigationManager.NavigationEvent.Direction;
+
 import com.google.gwt.thirdparty.guava.common.base.Objects;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
-import com.vaadin.addon.touchkit.ui.DatePicker;
-import com.vaadin.addon.touchkit.ui.NavigationButton;
-import com.vaadin.addon.touchkit.ui.NavigationManager;
-import com.vaadin.addon.touchkit.ui.NavigationManager.NavigationEvent.Direction;
-import com.vaadin.addon.touchkit.ui.NavigationView;
-import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;

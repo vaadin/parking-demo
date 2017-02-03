@@ -2,8 +2,9 @@ package com.vaadin.demo.parking.ui;
 
 import java.text.DateFormat;
 
-import com.vaadin.addon.touchkit.ui.Popover;
-import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
+import org.vaadin.touchkit.ui.Popover;
+import org.vaadin.touchkit.ui.VerticalComponentGroup;
+
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;

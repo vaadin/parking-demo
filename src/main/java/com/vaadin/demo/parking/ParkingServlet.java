@@ -2,8 +2,8 @@ package com.vaadin.demo.parking;
 
 import javax.servlet.ServletException;
 
-import com.vaadin.addon.touchkit.server.TouchKitServlet;
-import com.vaadin.addon.touchkit.settings.TouchKitSettings;
+import org.vaadin.touchkit.server.TouchKitServlet;
+import org.vaadin.touchkit.settings.TouchKitSettings;
 
 public class ParkingServlet extends TouchKitServlet {
 

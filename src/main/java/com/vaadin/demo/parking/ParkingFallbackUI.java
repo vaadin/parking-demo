@@ -1,7 +1,8 @@
 package com.vaadin.demo.parking;
 
-import com.vaadin.addon.touchkit.annotations.CacheManifestEnabled;
-import com.vaadin.addon.touchkit.annotations.OfflineModeEnabled;
+import org.vaadin.touchkit.annotations.CacheManifestEnabled;
+import org.vaadin.touchkit.annotations.OfflineModeEnabled;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Label;

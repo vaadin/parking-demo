@@ -1,6 +1,6 @@
 package com.vaadin.demo.parking.widgetset.client.theme;
 
-import com.vaadin.addon.touchkit.gwt.client.ThemeLoader;
+import org.vaadin.touchkit.gwt.client.ThemeLoader;
 
 public class ParkingThemeLoader extends ThemeLoader {
 

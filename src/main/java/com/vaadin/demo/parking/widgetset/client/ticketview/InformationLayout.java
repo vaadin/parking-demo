@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.vaadin.touchkit.gwt.client.ui.DatePicker;
+import org.vaadin.touchkit.gwt.client.ui.VSwitch;
+import org.vaadin.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
+import org.vaadin.touchkit.gwt.client.ui.DatePicker.Resolution;
+
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -17,10 +22,6 @@ import com.google.gwt.geolocation.client.PositionError;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker;
-import com.vaadin.addon.touchkit.gwt.client.ui.DatePicker.Resolution;
-import com.vaadin.addon.touchkit.gwt.client.ui.VSwitch;
-import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.v7.client.ui.VTextField;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;

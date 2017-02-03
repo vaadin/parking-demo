@@ -7,7 +7,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<vaadin.version>8.0.0.beta1</vaadin.version>
+		<vaadin.version>8.0.0.beta2</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<vaadin.touchkit.version>5.0-SNAPSHOT</vaadin.touchkit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -62,8 +62,8 @@
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.vaadin.addon</groupId>
-			<artifactId>vaadin-touchkit</artifactId>
+			<groupId>org.vaadin.touchkit</groupId>
+			<artifactId>touchkit</artifactId>
 			<version>${vaadin.touchkit.version}</version>
 			<exclusions>
 				<exclusion>

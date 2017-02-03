@@ -11,10 +11,10 @@ import org.vaadin.addon.leaflet.LMarker;
 import org.vaadin.addon.leaflet.LeafletClickEvent;
 import org.vaadin.addon.leaflet.LeafletClickListener;
 import org.vaadin.addon.leaflet.shared.Point;
+import org.vaadin.touchkit.extensions.Geolocator;
+import org.vaadin.touchkit.extensions.PositionCallback;
+import org.vaadin.touchkit.gwt.client.vcom.Position;
 
-import com.vaadin.addon.touchkit.extensions.Geolocator;
-import com.vaadin.addon.touchkit.extensions.PositionCallback;
-import com.vaadin.addon.touchkit.gwt.client.vcom.Position;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Location;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;

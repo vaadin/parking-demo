@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.vaadin.touchkit.ui.NavigationView;
+import org.vaadin.touchkit.ui.VerticalComponentGroup;
+
 import com.google.gwt.thirdparty.guava.common.base.Function;
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.google.gwt.thirdparty.guava.common.collect.Maps;
@@ -29,8 +32,6 @@ import com.vaadin.addon.charts.model.YAxis;
 import com.vaadin.addon.charts.model.style.Color;
 import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.addon.charts.themes.VaadinTheme;
-import com.vaadin.addon.touchkit.ui.NavigationView;
-import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.demo.parking.ParkingUI;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;

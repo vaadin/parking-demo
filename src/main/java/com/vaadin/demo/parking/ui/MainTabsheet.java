@@ -1,6 +1,7 @@
 package com.vaadin.demo.parking.ui;
 
-import com.vaadin.addon.touchkit.ui.TabBarView;
+import org.vaadin.touchkit.ui.TabBarView;
+
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet.Tab;
 

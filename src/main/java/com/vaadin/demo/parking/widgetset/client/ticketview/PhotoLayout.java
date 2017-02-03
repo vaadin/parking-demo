@@ -5,6 +5,7 @@ import org.vaadin.juho.imageupload.client.ImageLoadedEvent;
 import org.vaadin.juho.imageupload.client.ImageLoadedHandler;
 import org.vaadin.juho.imageupload.client.ImageTransformer;
 import org.vaadin.juho.imageupload.client.ImageUpload;
+import org.vaadin.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,7 +15,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.addon.touchkit.gwt.client.ui.VerticalComponentGroupWidget;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.demo.parking.widgetset.client.OfflineDataService;

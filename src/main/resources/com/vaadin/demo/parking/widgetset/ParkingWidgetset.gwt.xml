@@ -14,7 +14,7 @@
 		webkit based browsers including Google Chrome. -->
 	<!-- <set-property name="user.agent" value="gecko1_8"/> -->
 
-	<inherits name="com.vaadin.addon.touchkit.gwt.TouchKitWidgetSet" />
+	<inherits name="org.vaadin.touchkit.gwt.TouchKitWidgetSet" />
 
 	<inherits name="org.vaadin.addon.leaflet.Widgetset" />
 	
@@ -41,13 +41,13 @@
 	<replace-with
 		class="com.vaadin.demo.parking.widgetset.client.ticketview.TicketViewWidget">
 		<when-type-is
-			class="com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode" />
+			class="org.vaadin.touchkit.gwt.client.offlinemode.OfflineMode" />
 	</replace-with>
 	
 	<replace-with
 		class="com.vaadin.demo.parking.widgetset.client.theme.ParkingThemeLoader">
 		<when-type-is
-			class="com.vaadin.addon.touchkit.gwt.client.ThemeLoader" />
+			class="org.vaadin.touchkit.gwt.client.ThemeLoader" />
 	</replace-with>
 	
 

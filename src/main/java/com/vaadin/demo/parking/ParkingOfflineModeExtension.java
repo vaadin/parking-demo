@@ -2,7 +2,8 @@ package com.vaadin.demo.parking;
 
 import java.util.List;
 
-import com.vaadin.addon.touchkit.extensions.OfflineMode;
+import org.vaadin.touchkit.extensions.OfflineMode;
+
 import com.vaadin.demo.parking.util.DataUtil;
 import com.vaadin.demo.parking.widgetset.client.PersistOfflineTicketsServerRpc;
 import com.vaadin.demo.parking.widgetset.client.model.Ticket;
