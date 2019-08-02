@@ -11,13 +11,13 @@
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<vaadin.touchkit.version>4.1-SNAPSHOT</vaadin.touchkit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<snapshot.repository.url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</snapshot.repository.url>
+		<snapshot.repository.url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</snapshot.repository.url>
 	</properties>
 
 	<repositories>
 		<repository>
 			<id>vaadin-addons</id>
-			<url>http://maven.vaadin.com/vaadin-addons</url>
+			<url>https://maven.vaadin.com/vaadin-addons</url>
 		</repository>
 		<repository>
 			<id>vaadin-snapshots</id>
@@ -31,7 +31,7 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>vaadin-snapshots</id>
-			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+			<url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
