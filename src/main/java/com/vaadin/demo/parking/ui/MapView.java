@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LMarker;
-import org.vaadin.addon.leaflet.LTileLayer;
+import org.vaadin.addon.leaflet.LOpenStreetMapLayer;
 import org.vaadin.addon.leaflet.LeafletClickEvent;
 import org.vaadin.addon.leaflet.LeafletClickListener;
 import org.vaadin.addon.leaflet.shared.Point;
@@ -56,9 +56,8 @@ public class MapView extends CssLayout implements PositionCallback,
 
         map = new LMap();
 
-        // Note, if you wish to use Mapbox base maps, get your own API key.
-        LTileLayer mapBoxTiles = new LTileLayer(
-                "http://{s}.tiles.mapbox.com/v3/vaadin.i1pikm9o/{z}/{x}/{y}.png");
+        // Use OpenStreetMap
+        LOpenStreetMapLayer mapBoxTiles = new LOpenStreetMapLayer();
         mapBoxTiles.setDetectRetina(true);
         map.addLayer(mapBoxTiles);
 
