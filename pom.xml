@@ -58,7 +58,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin.addon</groupId>
-			<artifactId>vaadin-touchkit-agpl</artifactId>
+			<artifactId>vaadin-touchkit-cval</artifactId>
 			<version>${vaadin.touchkit.version}</version>
 			<exclusions>
 				<exclusion>
